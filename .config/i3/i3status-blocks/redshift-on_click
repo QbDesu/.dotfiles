@@ -1,0 +1,12 @@
+#!/bin/bash
+
+pid=$(pgrep -x redshift)
+
+if [[ $? == 0 ]]; then
+    kill "$pid"
+    redshift -x </dev/null &>/dev/null &
+    echo "OFF"
+else
+    redshift -P </dev/null &>/dev/null &
+    echo "ON"
+fi

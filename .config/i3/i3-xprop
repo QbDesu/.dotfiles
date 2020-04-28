@@ -1,0 +1,2 @@
+#!/bin/bash
+xprop > /tmp/.xprop && konsole -e "i3-sensible-pager /tmp/.xprop" && rm /tmp/.xprop
