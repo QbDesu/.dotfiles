@@ -1,0 +1,2 @@
+#!/bin/bash
+i3-sensible-editor ~/.config/i3/config

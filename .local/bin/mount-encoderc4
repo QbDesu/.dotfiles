@@ -1,0 +1,5 @@
+#!/bin/bash
+sudo mount.cifs //encoderc4/video /video -orw,guest,uid=necro
+sudo mount.cifs //encoderc4/fuse /video/fuse -orw,guest,uid=necro
+sudo mount.cifs //encoderc4/tmp /video/tmp -orw,guest,uid=necro
+sudo mount.cifs //encoderc4/encoded /video/encoded -orw,guest,uid=necro

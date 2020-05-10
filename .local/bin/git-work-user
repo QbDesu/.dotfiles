@@ -1,0 +1,4 @@
+ #! /bin/bash
+ 
+ git config --local user.name "André Kramp"
+ git config --local user.email "andre.kramp@bevuta.com"
