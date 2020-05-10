@@ -28,7 +28,6 @@ sudo dnf install \
     libreoffice \
     lxappearance \
     neofetch \
-    nm-tray \
     okular \
     pavucontrol-qt \
     pulseaudio-module-zeroconf \
