@@ -1,0 +1,42 @@
+#!/bin/bash
+
+sudo dnf install \
+    arandr \
+    autorandr \
+    breeze-cursor-theme \
+    chromium \
+    code \
+    compton \
+    dolphin \
+    dolphin-plugins \
+    firefox \
+    feh \
+    dunst \
+    ffmpeg \
+    git \
+    gnome-keyring \
+    gnome-keyring-pam \
+    htop \
+    i3 \
+    i3status-rust \
+    konsole \
+    mosh \
+    most \
+    mpv \
+    ncdu \
+    vim \
+    libreoffice \
+    lxappearance \
+    neofetch \
+    nm-tray \
+    okular \
+    pavucontrol-qt \
+    pulseaudio-module-zeroconf \
+    qt5-qtconfiguration \
+    redshift \
+    rofi \
+    thunderbird \
+    tmux \
+    xss-lock \
+    yadm \
+    youtube-dl

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+sudo dnf install \
+    discord \
+    gimp \
+    inkscape \
+    mumble \
+    ncmpcpp \
+    pandoc \
+    qemu \
+    sqlitebrowser \
+    steam \
+    telegram-desktop \
+    virt-manager \
+    vlc \
+    \
+    lolcat \
+    sl

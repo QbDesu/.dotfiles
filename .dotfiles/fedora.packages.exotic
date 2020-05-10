@@ -1,0 +1,10 @@
+#!/bin/bash
+
+sudo dnf install \
+    cura \
+    kdenlive \
+    openscad \
+    prusa-slicer \
+    scribus \
+    shotcut \
+    texlive

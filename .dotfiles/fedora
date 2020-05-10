@@ -1,0 +1,29 @@
+#!/bin/bash
+promptyn () {
+    while true; do
+        read -p "$1 [Y/n] " yn
+        case $yn in
+            [Yy]*) return 0;;
+            ""*)   return 0;;
+            [Nn]*) return 1;;
+            *)     ;;
+        esac
+    done
+}
+
+
+
+$HOME/.dotfiles/fedora.packages.pre
+$HOME/.dotfiles./fedora.packages.essential
+
+if promptyn "Install packages from extra?"; then
+    $HOME/.dotfiles/fedora.packages.extra
+fi
+
+if promptyn "Install packages from dev?"; then
+    $HOME/.dotfiles/fedora.packages.dev
+fi
+
+if promptyn "Install packages from exotic?"; then
+    $HOME/.dotfiles/fedora.packages.exotic
+fi
