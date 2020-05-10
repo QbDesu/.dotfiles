@@ -2,7 +2,6 @@
 
 sudo dnf install \
     arandr \
-    autorandr \
     breeze-cursor-theme \
     chromium \
     code \
@@ -41,3 +40,5 @@ sudo dnf install \
     xss-lock \
     yadm \
     youtube-dl
+
+sudo pip install autorandr
