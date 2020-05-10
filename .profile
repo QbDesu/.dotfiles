@@ -1,5 +1,7 @@
 export PATH="$HOME/.cargo/bin:$PATH"
 export QT_QPA_PLATFORMTHEME="qt5ct"
+export TERMINAL=/usr/bin/konsole
+export EDITOR=/usr/bin/vim
 
 if [ -n "$DESKTOP_SESSION" ];then
     eval $(gnome-keyring-daemon --start)
