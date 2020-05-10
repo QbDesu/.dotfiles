@@ -19,6 +19,7 @@ sudo dnf install \
     htop \
     i3 \
     i3status-rust \
+    keepassxc \
     konsole \
     mosh \
     most \
