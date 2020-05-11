@@ -4,17 +4,22 @@ promptyn () {
         read -p "$1 [Y/n] " yn
         case $yn in
             [Yy]*) return 0;;
-            ""*)   return 0;;
             [Nn]*) return 1;;
-            *)     ;;
+            ""*) return 0;;
+            *) continue;;
         esac
     done
 }
 
 
 
-$HOME/.dotfiles/fedora.packages.pre
-$HOME/.dotfiles/fedora.packages.essential
+if promptyn "Prepare for package installation?"; then
+    $HOME/.dotfiles/fedora.packages.pre
+fi
+
+if promptyn "Install packages from essential?"; then
+    $HOME/.dotfiles/fedora.packages.essential
+fi
 
 if promptyn "Install packages from extra?"; then
     $HOME/.dotfiles/fedora.packages.extra
