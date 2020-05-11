@@ -37,6 +37,7 @@ sudo dnf install \
     vim \
     libreoffice \
     lxappearance \
+    lxpolkit \
     neofetch \
     okular \
     pavucontrol-qt \

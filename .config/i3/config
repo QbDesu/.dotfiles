@@ -25,6 +25,9 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 bindsym $ctrl+$alt+l exec --no:-startup-id "loginctl lock-session"
 bindsym XF86ScreenSaver exec --no-startup-id "loginctl lock-session"
 
+# PolKit Agent
+exec --no-startup-id lxpolkit
+
 # Compositor
 exec compton
 
