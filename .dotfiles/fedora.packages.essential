@@ -1,13 +1,13 @@
 #!/bin/bash
 
 sudo dnf install \
+    adwaita-qt5 \
     arandr \
+    breeze-icon-theme \
     breeze-cursor-theme \
     chromium \
     code \
     compton \
-    dolphin \
-    dolphin-plugins \
     firefox \
     feh \
     dunst \
@@ -18,14 +18,22 @@ sudo dnf install \
     gparted \
     htop \
     i3 \
+    i3lock \
     i3status-rust \
     kate \
+    kde-partitionmanager \
     keepassxc \
     konsole \
     mosh \
     most \
     mpv \
     ncdu \
+    nemo \
+    nemo-compare \
+    nemo-preview \
+    nemo-terminal \
+    nextcloud-client \
+    nextcloud-client-nemo \
     vim \
     libreoffice \
     lxappearance \
@@ -34,8 +42,10 @@ sudo dnf install \
     pavucontrol-qt \
     pulseaudio-module-zeroconf \
     qt5-qtconfiguration \
+    qt5ct \
     redshift \
     rofi \
+    rsync \
     thunderbird \
     tmux \
     xss-lock \
