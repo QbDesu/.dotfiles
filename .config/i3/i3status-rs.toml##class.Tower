@@ -2,10 +2,6 @@ theme = "solarized-dark"
 icons = "awesome"
 
 [[block]]
-block = "backlight"
-device = "intel_backlight"
-
-[[block]]
 block = "custom"
 command = "~/.config/i3/i3status-blocks/redshift-command"
 on_click = "~/.config/i3/i3status-blocks/redshift-on_click"
@@ -65,12 +61,6 @@ format = "{1m}"
 block = "sound"
 
 [[block]]
-block = "battery"
-device = "BAT0"
-format = "{percentage}%"
-
-[[block]]
 block = "time"
 interval = 1
 format = "%a %d.%m %H:%M:%S"
-
