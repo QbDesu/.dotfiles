@@ -14,7 +14,7 @@ promptyn () {
 
 
 $HOME/.dotfiles/fedora.packages.pre
-$HOME/.dotfiles./fedora.packages.essential
+$HOME/.dotfiles/fedora.packages.essential
 
 if promptyn "Install packages from extra?"; then
     $HOME/.dotfiles/fedora.packages.extra
