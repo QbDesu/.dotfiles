@@ -15,9 +15,11 @@ sudo dnf install \
     git \
     gnome-keyring \
     gnome-keyring-pam \
+    gparted \
     htop \
     i3 \
     i3status-rust \
+    kate \
     keepassxc \
     konsole \
     mosh \
