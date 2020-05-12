@@ -3,6 +3,7 @@
 sudo dnf install \
     adwaita-qt5 \
     arandr \
+    avahi \
     breeze-icon-theme \
     breeze-cursor-theme \
     chromium \
@@ -51,6 +52,7 @@ sudo dnf install \
     tmux \
     xss-lock \
     yadm \
-    youtube-dl
+    youtube-dl \
+    zsh
 
 sudo pip install autorandr

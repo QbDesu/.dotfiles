@@ -2,4 +2,5 @@
 
 sudo dnf install \
     node \
-    npm
+    npm \
+    java-11-openjdk

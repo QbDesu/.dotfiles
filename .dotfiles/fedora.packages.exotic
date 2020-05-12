@@ -2,6 +2,7 @@
 
 sudo dnf install \
     cura \
+    ghostscript \
     kdenlive \
     openscad \
     prusa-slicer \
