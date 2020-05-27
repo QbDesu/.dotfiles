@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sudo dnf install \
+    dino \
     discord \
     gimp \
     inkscape \
@@ -14,6 +15,8 @@ sudo dnf install \
     telegram-desktop \
     virt-manager \
     vlc \
+    wine \
     \
+    gti \
     lolcat \
     sl
