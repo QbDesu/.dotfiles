@@ -16,6 +16,7 @@ sudo dnf install \
     gnome-keyring \
     gnome-keyring-pam \
     gparted \
+    gwenview \
     htop \
     i3 \
     i3lock \

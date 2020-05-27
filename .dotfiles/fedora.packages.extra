@@ -8,6 +8,7 @@ sudo dnf install \
     ncmpcpp \
     pandoc \
     qemu \
+    signal-desktop \
     sqlitebrowser \
     steam \
     telegram-desktop \
