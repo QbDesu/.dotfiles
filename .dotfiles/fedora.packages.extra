@@ -5,6 +5,7 @@ sudo dnf install \
     discord \
     gimp \
     inkscape \
+    kio-extras \
     mumble \
     ncmpcpp \
     pandoc \

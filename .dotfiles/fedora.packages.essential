@@ -13,6 +13,7 @@ sudo dnf install \
     feh \
     dunst \
     ffmpeg \
+    gdm \
     git \
     gnome-keyring \
     gnome-keyring-pam \
@@ -25,7 +26,6 @@ sudo dnf install \
     kate \
     kde-partitionmanager \
     keepassxc \
-    konsole \
     mosh \
     most \
     mpv \
@@ -51,6 +51,7 @@ sudo dnf install \
     rsync \
     thunderbird \
     tmux \
+    xfce4-terminal \
     xss-lock \
     yadm \
     youtube-dl \
