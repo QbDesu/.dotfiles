@@ -58,3 +58,9 @@ sudo dnf install \
     zsh
 
 sudo pip install autorandr
+
+chsh --shell $(which zsh)
+sudo chsh --shell $(which zsh)
+
+sudo systemctl enable gdm.service
+sudo systemctl disable sddm.service

@@ -24,6 +24,7 @@ font pango:monospace 8
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 bindsym $ctrl+$alt+l exec --no-startup-id "loginctl lock-session"
 bindsym XF86ScreenSaver exec --no-startup-id "loginctl lock-session"
+bindsym $ctrl+$alt+F12 exec "loginctl lock-session && systemctl suspend"
 
 # PolKit Agent
 exec --no-startup-id lxpolkit
