@@ -36,7 +36,6 @@ sudo dnf install \
     nemo-terminal \
     nextcloud-client \
     nextcloud-client-nemo \
-    vim \
     libreoffice \
     lxappearance \
     lxpolkit \
@@ -51,6 +50,7 @@ sudo dnf install \
     rsync \
     thunderbird \
     tmux \
+    vim \
     xfce4-terminal \
     xss-lock \
     yadm \
@@ -61,6 +61,7 @@ sudo pip install autorandr
 
 chsh --shell $(which zsh)
 sudo chsh --shell $(which zsh)
+sudo cp $HOME/.zshrc /root/.zshrc
 
 sudo systemctl enable gdm.service
 sudo systemctl disable sddm.service

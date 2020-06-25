@@ -1,0 +1,5 @@
+#!/bin/bash
+
+chsh --shell $(which zsh)
+sudo chsh --shell $(which zsh)
+sudo cp $HOME/.zshrc /root/.zshrc
