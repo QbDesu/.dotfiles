@@ -16,7 +16,6 @@ sudo dnf install \
     telegram-desktop \
     virt-manager \
     vlc \
-    wine \
     \
     gti \
     lolcat \

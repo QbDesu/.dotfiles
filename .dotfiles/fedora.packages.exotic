@@ -8,4 +8,5 @@ sudo dnf install \
     prusa-slicer \
     scribus \
     shotcut \
-    texlive
+    texlive \
+    wine
