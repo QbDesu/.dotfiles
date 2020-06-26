@@ -185,9 +185,3 @@ function go() {
  builtin cd ${shortcut_dirs[$1]}
 }
 
-# editor
-export EDITOR=vim
-# pager
-export PAGER="zless"
-export LESS=SRMwi
-
