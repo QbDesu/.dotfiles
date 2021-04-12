@@ -9,10 +9,12 @@ sudo dnf install \
     chromium \
     code \
     compton \
-    firefox \
-    feh \
+    dex-autostart \
+    dolphin \
     dunst \
+    feh \
     ffmpeg \
+    firefox \
     gdm \
     git \
     gnome-keyring \
@@ -22,36 +24,35 @@ sudo dnf install \
     htop \
     i3 \
     i3lock \
-    i3status-rust \
     kate \
     kde-partitionmanager \
     keepassxc \
+    kio-extras \
+    konsole \
     mosh \
-    most \
     mpv \
     ncdu \
-    nemo \
-    nemo-compare \
-    nemo-preview \
-    nemo-terminal \
     nextcloud-client \
-    nextcloud-client-nemo \
     libreoffice \
-    lxappearance \
-    lxpolkit \
+    lxqt-conftg \
+    lxqt-policykit \
+    mate-panel \
     neofetch \
+    network-manager-applet \
     okular \
+    pasystray \
     pavucontrol-qt \
     pulseaudio-module-zeroconf \
+    qlipper \
     qt5-qtconfiguration \
     qt5ct \
-    redshift \
+    redshift-gtk \
     rofi \
     rsync \
     thunderbird \
     tmux \
+    v4l2loopback \
     vim \
-    xfce4-terminal \
     xss-lock \
     yadm \
     youtube-dl \

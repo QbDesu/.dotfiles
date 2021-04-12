@@ -2,8 +2,8 @@
 # voc .zshrc #
 ##############
 
-HOSTNAME=`hostname -f`
-HOSTANDSUBDOMAIN="$(hostname -f | cut -f 1-2 -d .)"
+HOSTNAME=`hostname`
+HOSTANDSUBDOMAIN="$(hostname | cut -f 1-2 -d .)"
 
 zstyle ':completion:*' completer _complete
 zstyle ':completion:*' insert-unambiguous true

@@ -26,25 +26,42 @@ bindsym $ctrl+$alt+l exec --no-startup-id "loginctl lock-session"
 bindsym XF86ScreenSaver exec --no-startup-id "loginctl lock-session"
 bindsym $ctrl+$alt+End exec --no-startup-id "systemctl suspend"
 
+
 # PolKit Agent
-exec --no-startup-id lxpolkit
+exec --no-startup-id lxqt-policykit
 
 # Compositor
 exec compton
 
+# Wallpaper
+exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper 
+
+# Panel
+exec mate-panel
+# Audio Control
+# now handled via dex
+# exec --no-startup-id pasystray
+# Network Control Applet
+exec --no-startup-id nm-applet
+# Clipboard Manager Applet
+exec --no-startup-id qlipper
+
+# automatic screen management
+exec --no-startup-id autorandr -c
+
+# autostart .desktop files
+exec dex-autostart -ae i3
+
+##################
+# HOTKEYS
+##################
+
 # Screen Config
 bindsym XF86Display exec arandr
 
-# Notification Server
-exec --no-startup-id dunst
-
-# NetworkManager is the most popular way to manage wireless networks on Linux,
-# and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id nm-applet
-
 # Use amixer to adjust volume in ALSA.
-bindsym XF86AudioRaiseVolume exec amixer set Master 3%+ >/dev/null
-bindsym XF86AudioLowerVolume exec amixer set Master 3%- >/dev/null
+#bindsym XF86AudioRaiseVolume exec amixer set Master 3%+ >/dev/null
+#bindsym XF86AudioLowerVolume exec amixer set Master 3%- >/dev/null
 bindsym XF86AudioMicMute exec amixer set Capture toggle >/dev/null
 bindsym XF86AudioMute exec amixer set Master toggle >/dev/null
 
@@ -112,12 +129,16 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+Prior focus parent
 bindsym $mod+Next focus child
 
+##################
+# WORKSPACES
+##################
+
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1 Web"
-set $ws2 "2 Shell"
-set $ws3 "3 Comm"
-set $ws4 "4 File"
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
 set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
@@ -220,40 +241,23 @@ bindsym $mod+r mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-    font pango:monospace, FontAwesome 9
-    status_command i3status-rs ~/.config/i3/i3status-rs.toml
-    colors {
-        separator #666666
+#bar {
+#    font pango:monospace, FontAwesome 9
+#    status_command i3status-rs ~/.config/i3/i3status-rs.toml
+#    colors {
+#        separator #666666
 #       background #222222
-        statusline #dddddd
-        focused_workspace #0088CC #0088CC #ffffff
-        active_workspace #333333 #333333 #ffffff
-        inactive_workspace #333333 #333333 #888888
-        urgent_workspace #2f343a #900000 #ffffff
-    }
-}
+#        statusline #dddddd
+#        focused_workspace #0088CC #0088CC #ffffff
+#        active_workspace #333333 #333333 #ffffff
+#        inactive_workspace #333333 #333333 #888888
+#        urgent_workspace #2f343a #900000 #ffffff
+#    }
+#}
 
 # Starting things with i3
 # exec --no-startup-id xcompmgr -C &    # Bare compositor to allow transparency
 for_window [class="yakuake"] floating enable
 for_window [class="systemsettings"] floating enable
 
-exec --no-startup-id autorandr -c
-exec --no-startup-id feh --bg-fill ~/Pictures/wallpaper 
-
-## Plasma Integration
-# Try to kill the wallpaper set by Plasma (it takes up the entire workspace and hides everythiing)
-#exec --no-startup-id wmctrl -c Plasma
-#for_window [title="Desktop — Plasma"] kill, floating enable, border none
-
-## Avoid tiling popups, dropdown windows from plasma
-#for the first time, manually resize them, i3 will remember the setting for floating windows
-#for_window [class="plasmashell"] floating enable
-#for_window [class="Plasma"] floating enable, border none
-#for_window [title="plasma-desktop"] floating enable, border none
-#for_window [title="win7"] floating enable, border none
-#for_window [class="Kmix"] floating enable, border none
-#for_window [class="Klipper"] floating enable, border none
-#for_window [class="Plasmoidviewer"] floating enable, border none
 
