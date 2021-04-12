@@ -34,9 +34,10 @@ sudo dnf install \
     ncdu \
     nextcloud-client \
     libreoffice \
-    lxqt-conftg \
+    lxqt-config \
     lxqt-policykit \
     mate-panel \
+    mate-notification-daemon \
     neofetch \
     network-manager-applet \
     okular \
