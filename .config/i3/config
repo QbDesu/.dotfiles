@@ -38,13 +38,6 @@ exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper
 
 # Panel
 exec mate-panel
-# Audio Control
-# now handled via dex
-# exec --no-startup-id pasystray
-# Network Control Applet
-exec --no-startup-id nm-applet
-# Clipboard Manager Applet
-exec --no-startup-id qlipper
 
 # automatic screen management
 exec --no-startup-id autorandr -c

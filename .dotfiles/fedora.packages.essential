@@ -11,7 +11,6 @@ sudo dnf install \
     compton \
     dex-autostart \
     dolphin \
-    dunst \
     feh \
     ffmpeg \
     firefox \
@@ -43,7 +42,6 @@ sudo dnf install \
     okular \
     pasystray \
     pavucontrol-qt \
-    pulseaudio-module-zeroconf \
     qlipper \
     qt5-qtconfiguration \
     qt5ct \
@@ -65,5 +63,3 @@ chsh --shell $(which zsh)
 sudo chsh --shell $(which zsh)
 sudo cp $HOME/.zshrc /root/.zshrc
 
-sudo systemctl enable gdm.service
-sudo systemctl disable sddm.service
