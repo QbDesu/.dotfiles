@@ -17,6 +17,7 @@ sudo dnf install \
     firefox \
     gdm \
     git \
+    git-lfs \
     gnome-keyring \
     gnome-keyring-pam \
     gparted \
@@ -32,7 +33,6 @@ sudo dnf install \
     mosh \
     mpv \
     ncdu \
-    nextcloud-client \
     libreoffice \
     lxqt-config \
     lxqt-policykit \

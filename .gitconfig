@@ -1,0 +1,31 @@
+[user]
+  email = necro@necro.dev
+  name = Qb
+
+[init]
+  defaultBranch = potato
+
+[core]
+  filemode = true
+  excludesfile = ~/.dotfiles/git/excludes
+  quotepath = false
+
+[branch]
+  autosetupmerge = true
+  autosetuprebase = always
+
+[color]
+  ui = auto
+
+[push]
+  default = simple
+
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  required = true
+  process = git-lfs filter-process
+
+[diff]
+  ignoreSubmodules = untracked
+

@@ -5,9 +5,12 @@ sudo dnf install \
     gimp \
     inkscape \
     mumble \
+    nextcloud-client \
     ncmpcpp \
     pandoc \
+    peek \
     qemu \
+    qjackctl \
     signal-desktop \
     sqlitebrowser \
     steam \
