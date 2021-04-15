@@ -1,15 +1,5 @@
 #!/bin/bash
-promptyn () {
-    while true; do
-        read -p "$1 [Y/n] " yn
-        case $yn in
-            [Yy]*) return 0;;
-            [Nn]*) return 1;;
-            ""*) return 0;;
-            *) continue;;
-        esac
-    done
-}
+source $HOME/.dotfiles/prompt-yn
 
 if promptyn "Configure shell?"; then
     $HOME/.dotfiles/fedora.configure.shell

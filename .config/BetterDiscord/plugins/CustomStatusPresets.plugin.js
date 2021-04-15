@@ -1,12 +1,15 @@
 /**
  * @name CustomStatusPresets
+ * @author DevilBro
  * @authorId 278543574059057154
+ * @version 1.0.6
+ * @description Allows you to save Custom Statuses as Quick Select
  * @invite Jx3TjNS
  * @donate https://www.paypal.me/MircoWittrien
  * @patreon https://www.patreon.com/MircoWittrien
- * @website https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/CustomStatusPresets
- * @source https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/master/Plugins/CustomStatusPresets/CustomStatusPresets.plugin.js
- * @updateUrl https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/master/Plugins/CustomStatusPresets/CustomStatusPresets.plugin.js
+ * @website https://mwittrien.github.io/
+ * @source https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/CustomStatusPresets/
+ * @updateUrl https://mwittrien.github.io/BetterDiscordAddons/Plugins/CustomStatusPresets/CustomStatusPresets.plugin.js
  */
 
 module.exports = (_ => {
@@ -14,12 +17,12 @@ module.exports = (_ => {
 		"info": {
 			"name": "CustomStatusPresets",
 			"author": "DevilBro",
-			"version": "1.0.5",
-			"description": "Allows you to save custom statuses as quick select"
+			"version": "1.0.6",
+			"description": "Allows you to save Custom Statuses as Quick Select"
 		},
 		"changeLog": {
-			"improved": {
-				"Settings": "You can now reorder the presets in the plugin settings and 'disable' them which stops them from showing in the quick menu"
+			"added": {
+				"Online Status": "The online status now also gets saved in the preset"
 			}
 		}
 	};
@@ -32,8 +35,8 @@ module.exports = (_ => {
 		
 		downloadLibrary () {
 			require("request").get("https://mwittrien.github.io/BetterDiscordAddons/Library/0BDFDB.plugin.js", (e, r, b) => {
-				if (!e && b && b.indexOf(`* @name BDFDB`) > -1) require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0BDFDB.plugin.js"), b, _ => BdApi.showToast("Finished downloading BDFDB Library", {type: "success"}));
-				else BdApi.alert("Error", "Could not download BDFDB Library Plugin, try again later or download it manually from GitHub: https://github.com/mwittrien/BetterDiscordAddons/tree/master/Library/");
+				if (!e && b && r.statusCode == 200) require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0BDFDB.plugin.js"), b, _ => BdApi.showToast("Finished downloading BDFDB Library", {type: "success"}));
+				else BdApi.alert("Error", "Could not download BDFDB Library Plugin. Try again later or download it manually from GitHub: https://mwittrien.github.io/downloader/?library");
 			});
 		}
 		
@@ -65,7 +68,7 @@ module.exports = (_ => {
 		var _this;
 		var presets = {};
 		
-		const CustomStatusInput = class CustomStatusInput extends BdApi.React.Component {
+		const CustomStatusInputComponent = class CustomStatusInput extends BdApi.React.Component {
 			handleChange() {
 				this.props.onChange(this.props);
 			}
@@ -109,7 +112,7 @@ module.exports = (_ => {
 			}
 		};
 		
-		const SortableList = class SortableList extends BdApi.React.Component {
+		const SortableListComponent = class SortableList extends BdApi.React.Component {
 			createDragPreview(div, event) {
 				if (!Node.prototype.isPrototypeOf(div)) return;
 				let dragPreview = div.cloneNode(true);
@@ -128,7 +131,9 @@ module.exports = (_ => {
 				this.props.dragPreview.style.setProperty("top", event.clientY - 25 + "px", "important");
 			}
 			render() {
-				return Object.keys(BDFDB.ObjectUtils.sort(this.props.entries, this.props.sortKey)).map(id => [
+				return !Object.keys(this.props.entries).length ? BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.TextElement, {
+					children: "You haven't added any Custom Status Presets. You can add some via the Custom Status Modal, where you usually configure your Custom Status."
+				}) : Object.keys(BDFDB.ObjectUtils.sort(this.props.entries, this.props.sortKey)).map(id => [
 					this.props.hovered == id && BDFDB.ReactUtils.createElement("div", {
 						className: BDFDB.disCN._customstatuspresetssortdivider
 					}),
@@ -149,7 +154,8 @@ module.exports = (_ => {
 									document.removeEventListener("mouseup", mouseUp);
 									let dragging = event3 => {
 										this.updateDragPreview(event3);
-										let hoveredId = BDFDB.DOMUtils.getParent(BDFDB.dotCN._customstatuspresetssortablecard, event3.target)?.getAttribute("cardId");
+										let hoveredId = BDFDB.DOMUtils.getParent(BDFDB.dotCN._customstatuspresetssortablecard, event3.target);
+										hoveredId = hoveredId && hoveredId.getAttribute("cardId");
 										let update = hoveredId != this.props.hovered;
 										this.props.hovered = hoveredId;
 										if (update) BDFDB.ReactUtils.forceUpdate(this);
@@ -186,7 +192,7 @@ module.exports = (_ => {
 							children: [
 								BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.Flex.Child, {
 									wrap: true,
-									children: BDFDB.ReactUtils.createElement(CustomStatusInput, {
+									children: BDFDB.ReactUtils.createElement(CustomStatusInputComponent, {
 										text: presets[id].text,
 										emoji: presets[id].emojiInfo,
 										onChange: value => {
@@ -276,6 +282,9 @@ module.exports = (_ => {
 						display: flex;
 						margin-right: 6px;
 					}
+					${BDFDB.dotCN._customstatuspresetsstatus} {
+						margin-right: 6px;
+					}
 					${BDFDB.dotCN._customstatuspresetssortdivider} {
 						background: ${BDFDB.DiscordConstants.Colors.STATUS_GREEN};
 						height: 2px;
@@ -304,7 +313,7 @@ module.exports = (_ => {
 				settingsItems.push(BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SettingsPanelList, {
 					title: "Custom Status Presets:",
 					dividerTop: true,
-					children: BDFDB.ReactUtils.createElement(SortableList, {
+					children: BDFDB.ReactUtils.createElement(SortableListComponent, {
 						entries: presets,
 						sortKey: "pos"
 					})
@@ -354,6 +363,10 @@ module.exports = (_ => {
 												})
 											})
 										}),
+										BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.Status, {
+											className: BDFDB.disCN._customstatuspresetsstatus,
+											status: presets[id].status || BDFDB.DiscordConstants.StatusTypes.ONLINE
+										}),
 										presets[id].text
 									]
 								}),
@@ -367,6 +380,7 @@ module.exports = (_ => {
 										expiresAt = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).getTime() - date.getTime();
 									}
 									BDFDB.LibraryModules.SettingsUtils.updateRemoteSettings({
+										status: presets[id].status,
 										customStatus: {
 											text: presets[id].text && presets[id].text.length > 0 ? presets[id].text : null,
 											expiresAt: expiresAt ? BDFDB.DiscordObjects.Timestamp().add(expiresAt, "ms").toISOString() : null,
@@ -388,7 +402,7 @@ module.exports = (_ => {
 					color: BDFDB.disCN.modalcancelbutton,
 					look: BDFDB.LibraryComponents.Button.Looks.LINK,
 					onClick: event => {
-						presets[id] = Object.assign({pos: Object.keys(presets).length}, BDFDB.ObjectUtils.extract(e.instance.state, "clearAfter", "emojiInfo", "text"));
+						presets[id] = Object.assign({pos: Object.keys(presets).length}, BDFDB.ObjectUtils.extract(e.instance.state, "clearAfter", "emojiInfo", "status", "text"));
 						BDFDB.DataUtils.save(presets, this, "presets");
 						if (!event.shiftKey) e.instance.props.onClose();
 						else id = BDFDB.NumberUtils.generateId(Object.keys(presets));

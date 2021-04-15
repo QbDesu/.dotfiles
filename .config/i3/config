@@ -26,7 +26,6 @@ bindsym $ctrl+$alt+l exec --no-startup-id "loginctl lock-session"
 bindsym XF86ScreenSaver exec --no-startup-id "loginctl lock-session"
 bindsym $ctrl+$alt+End exec --no-startup-id "systemctl suspend"
 
-
 # PolKit Agent
 exec --no-startup-id lxqt-policykit
 
@@ -34,10 +33,7 @@ exec --no-startup-id lxqt-policykit
 exec compton
 
 # Wallpaper
-exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper 
-
-# Panel
-exec mate-panel
+exec --no-startup-id feh --bg-fill ~/Pictures/wallpaper 
 
 # automatic screen management
 exec --no-startup-id autorandr -c

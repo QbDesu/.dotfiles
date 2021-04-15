@@ -42,6 +42,8 @@ sudo dnf install \
     okular \
     pasystray \
     pavucontrol-qt \
+    python3 \
+    python3-pip \
     qlipper \
     qt5-qtconfiguration \
     qt5ct \
@@ -62,4 +64,3 @@ sudo pip install autorandr
 chsh --shell $(which zsh)
 sudo chsh --shell $(which zsh)
 sudo cp $HOME/.zshrc /root/.zshrc
-

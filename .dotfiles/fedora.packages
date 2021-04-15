@@ -1,28 +1,5 @@
 #!/bin/bash
-
-promptyn () {
-    while true; do
-        read -p "$1 [Y/n] " yn
-        case $yn in
-            [Yy]*) return 0;;
-            [Nn]*) return 1;;
-            ""*) return 0;;
-            *) continue;;
-        esac
-    done
-}
-
-promptny () {
-    while true; do
-        read -p "$1 [y/N] " yn
-        case $yn in
-            [Yy]*) return 0;;
-            [Nn]*) return 1;;
-            ""*) return 1;;
-            *) continue;;
-        esac
-    done
-}
+source $HOME/.dotfiles/prompt-yn
 
 if promptyn "Prepare custom repositories?"; then
     $HOME/.dotfiles/fedora.packages.pre
@@ -36,8 +13,16 @@ if promptyn "Install packages from extra?"; then
     $HOME/.dotfiles/fedora.packages.extra
 fi
 
+if promptyn "Install packages from monitoring?"; then
+    $HOME/.dotfiles/fedora.packages.monitoring
+fi
+
 if promptyn "Install packages from dev?"; then
     $HOME/.dotfiles/fedora.packages.dev
+fi
+
+if promptny "Install packages from laptop?"; then
+    $HOME/.dotfiles/fedora.packages.laptop
 fi
 
 if promptny "Install packages from exotic?"; then
