@@ -26,16 +26,11 @@ bindsym $ctrl+$alt+l exec --no-startup-id "loginctl lock-session"
 bindsym XF86ScreenSaver exec --no-startup-id "loginctl lock-session"
 bindsym $ctrl+$alt+End exec --no-startup-id "systemctl suspend"
 
-# PolKit Agent
-exec --no-startup-id lxqt-policykit
-
 # Compositor
 exec compton
 
-# Wallpaper
-exec --no-startup-id feh --bg-fill ~/Pictures/wallpaper 
-
 # automatic screen management
+exec --no-startup-id apply-wallpaper 
 exec --no-startup-id autorandr -c
 
 # autostart .desktop files
@@ -248,5 +243,3 @@ bindsym $mod+r mode "resize"
 # exec --no-startup-id xcompmgr -C &    # Bare compositor to allow transparency
 for_window [class="yakuake"] floating enable
 for_window [class="systemsettings"] floating enable
-
-

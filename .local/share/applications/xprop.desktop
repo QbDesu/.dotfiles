@@ -1,0 +1,5 @@
+[Desktop Entry]
+Exec=xprop-inspect
+Name=Xprop Window Inspector
+Comment=Inspect windows using xprop
+Type=Application
