@@ -1,5 +1,5 @@
 #!/bin/bash
-source $HOME/.dotfiles/prompt-yn
+source $HOME/.local/lib/prompt-yn
 
 if promptyn "Prepare custom repositories?"; then
     $HOME/.dotfiles/fedora.packages.pre

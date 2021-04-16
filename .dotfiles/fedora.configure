@@ -1,5 +1,5 @@
 #!/bin/bash
-source $HOME/.dotfiles/prompt-yn
+source $HOME/.local/lib/prompt-yn
 
 if promptyn "Configure shell?"; then
     $HOME/.dotfiles/fedora.configure.shell

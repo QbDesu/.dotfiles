@@ -9,6 +9,7 @@ promptyn () {
         esac
     done
 }
+export -f promptyn
 
 promptny () {
     while true; do
@@ -21,3 +22,4 @@ promptny () {
         esac
     done
 }
+export -f promptny
