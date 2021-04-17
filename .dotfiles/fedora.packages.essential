@@ -16,8 +16,10 @@ sudo dnf install \
     kate \
     mosh \
     mpv \
-    ncdu \
     libreoffice \
     neofetch \
     okular \
-    youtube-dl
+    unzip \
+    wget \
+    youtube-dl \
+    zip

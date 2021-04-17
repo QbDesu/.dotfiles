@@ -1,6 +1,9 @@
 #!/bin/bash
 
 sudo dnf install \
-    ytop \
+    atop \
     iftop \
-    atop
+    iotop \
+    ncdu \
+    tcpdump \
+    ytop

@@ -5,10 +5,10 @@ if promptyn "Configure shell?"; then
     $HOME/.dotfiles/fedora.configure.shell
 fi
 
-if promptyn "Configure display manager?"; then
+if promptyn "Configure xdg settings?"; then
     $HOME/.dotfiles/fedora.configure.dm
 fi
 
-if promptyn "Configure xdg settings?"; then
+if promptyn "Configure display manager?"; then
     $HOME/.dotfiles/fedora.configure.dm
 fi

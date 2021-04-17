@@ -17,6 +17,7 @@ sudo dnf install \
     i3 \
     i3lock \
     lxqt-config \
+    lxqt-qtplugin \
     lxqt-policykit \
     mate-panel \
     mate-notification-daemon \
@@ -30,6 +31,7 @@ sudo dnf install \
     redshift-gtk \
     rofi \
     rsync \
+    screen \
     thunderbird \
     tmux \
     vim \
