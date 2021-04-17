@@ -107,9 +107,7 @@ esac
 # Aliases
 alias ry='ruby'
 
-alias a='sudo aptitude'
 alias sv='sudo service'
-alias p='sudo pacman'
 alias rh='rehash'
 alias g='gem'
 

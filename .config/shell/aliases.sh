@@ -50,7 +50,14 @@ alias co="git commit -a"
 alias commit="co"
 alias pull="git pull"
 alias push="git push"
+
 alias ssync="rsync -a -e 'ssh' --rsync-path='sudo rsync' "
+
+alias dnf="sudo dnf"
+alias apt="sudo apt"
+alias apt-get="sudo apt-get"
+alias aptitude='sudo aptitude'
+alias pacman="sudo pacman"
 
 alias sstart='sudo systemctl start'
 alias sstop='sudo systemctl stop'
@@ -61,3 +68,5 @@ alias senable='sudo systemctl enable'
 alias edit='i3-sensible-editor'
 alias page='i3-sensible-pager'
 alias chx='chmod +x'
+alias vii3='edit ~/.config/i3/config'
+alias vii3='edit ~/.config/i3/config'
