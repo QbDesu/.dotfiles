@@ -1,6 +1,8 @@
-##############
-# voc .zshrc #
-##############
+#######################
+# modified voc .zshrc #
+#######################
+
+source $HOME/.config/shell/aliases.sh
 
 HOSTNAME=`hostname`
 HOSTANDSUBDOMAIN="$(hostname | cut -f 1-2 -d .)"
@@ -30,8 +32,8 @@ HISTFILE=~/.zsh/zshhist
 HISTSIZE=9000
 SAVEHIST=900000000
 
-if [ ! -d .zsh ]; then
-  mkdir .zsh
+if [ ! -d ~/.zsh ]; then
+  mkdir ~/.zsh
 fi
 
 # General options
@@ -103,65 +105,16 @@ case $TERM in
 esac
 
 # Aliases
-alias s='sudo'
 alias ry='ruby'
 
-if [ `uname` = 'Linux' ]; then
-  alias ls='ls --color=auto'
-else
-  alias ls='ls -G'
-fi
-
-alias l='ls -lh'
-alias ll='ls -lah'
-alias c='clear'
-alias less='zless'
 alias a='sudo aptitude'
 alias sv='sudo service'
 alias p='sudo pacman'
 alias rh='rehash'
 alias g='gem'
 
-alias vipw='sudo vipw'
-alias vigr='sudo vigr'
-alias visudo='sudo visudo'
-
-if [ `command -v vim` ]; then
-  alias vi="vim"
-fi
-
-alias m='mosh'
-
-alias ..1="cd .."
-alias ..2="cd ../../"
-alias ..3="cd ../../../"
-alias ..4="cd ../../../../"
-alias ..5="cd ../../../../../"
-alias ..6="cd ../../../../../../"
-alias ..7="cd ../../../../../../../"
-alias ..8="cd ../../../../../../../../"
-alias ..9="cd ../../../../../../../../../"
-alias ..10="cd ../../../../../../../../../../"
-
-alias ..="cd .."
-alias ...="cd ../../"
-alias ....="cd ../../../"
-alias .....="cd ../../../../"
-alias ......="cd ../../../../../"
-alias .......="cd ../../../../../../"
-alias ........="cd ../../../../../../../"
-alias .........="cd ../../../../../../../../"
-alias ..........="cd ../../../../../../../../../"
-alias ...........="cd ../../../../../../../../../../"
-
-alias status="git status"
-alias co="git commit -a"
-alias commit="co"
-alias pull="git pull"
-alias push="git push"
 alias r="rscreen"
 alias update="sudo aptitude update && sudo aptitude upgrade"
-alias ssync="rsync -a -e 'ssh' --rsync-path='sudo rsync' "
 alias irb="pry"
 
 # Glob aliases

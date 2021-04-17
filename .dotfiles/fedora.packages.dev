@@ -3,5 +3,4 @@
 sudo dnf install \
     node \
     npm \
-    java-11-openjdk \
-    gradle
+    java-11-openjdk

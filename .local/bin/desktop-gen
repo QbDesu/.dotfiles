@@ -1,0 +1,3 @@
+#!/bin/bash
+
+dex-autostart -c $(which $1) -

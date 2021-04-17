@@ -1,2 +1,4 @@
 #!/bin/bash
 apply-wallpaper
+current=$(autorandr --current)
+notify-send -u low "Loaded screen config \"$current\"."

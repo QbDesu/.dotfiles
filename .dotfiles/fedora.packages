@@ -5,6 +5,10 @@ if promptyn "Prepare custom repositories?"; then
     $HOME/.dotfiles/fedora.packages.pre
 fi
 
+if promptyn "Install packages from system?"; then
+    $HOME/.dotfiles/fedora.packages.essential
+fi
+
 if promptyn "Install packages from essential?"; then
     $HOME/.dotfiles/fedora.packages.essential
 fi

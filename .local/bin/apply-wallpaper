@@ -1,6 +1,2 @@
 #!/bin/bash
-
 feh --bg-fill ~/Pictures/wallpaper
-
-current=$(autorandr --current)
-notify-send -u low "Adjusted screen config."

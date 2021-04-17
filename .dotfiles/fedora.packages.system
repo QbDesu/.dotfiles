@@ -1,0 +1,41 @@
+#!/bin/bash
+
+sudo dnf install \
+    adwaita-qt5 \
+    arandr \
+    avahi \
+    breeze-icon-theme \
+    breeze-cursor-theme \
+    compton \
+    dex-autostart \
+    feh \
+    gdm \
+    git \
+    git-lfs \
+    gnome-keyring \
+    gnome-keyring-pam \
+    i3 \
+    i3lock \
+    lxqt-config \
+    lxqt-policykit \
+    mate-panel \
+    mate-notification-daemon \
+    network-manager-applet \
+    pasystray \
+    pavucontrol-qt \
+    python3 \
+    python3-pip \
+    qlipper \
+    qt5-qtconfiguration \
+    redshift-gtk \
+    rofi \
+    rsync \
+    thunderbird \
+    tmux \
+    vim \
+    xdg-utils \
+    xss-lock \
+    yadm \
+    zsh
+
+sudo pip install autorandr

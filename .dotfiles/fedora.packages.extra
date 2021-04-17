@@ -17,6 +17,7 @@ sudo dnf install \
     telegram-desktop \
     tiled \
     virt-manager \
+    v4l2loopback \
     vlc \
     \
     gti \

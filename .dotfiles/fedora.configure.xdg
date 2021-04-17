@@ -1,0 +1,46 @@
+#!/bin/bash
+source $HOME/.local/lib/prompt-yn
+
+if promptyn "Set default browser?"; then
+    xdg-settings set default-web-browser firefox.desktop
+    xdg-mime default firefox.desktop x-scheme-handler/http
+    xdg-mime default firefox.desktop x-scheme-handler/https
+    xdg-mime default firefox.desktop x-scheme-handler/about
+    xdg-mime default firefox.desktop x-scheme-handler/unknown
+fi
+
+if promptyn "Set default mail application?"; then
+    xdg-settings set default-url-scheme-handler mailto mozilla-thunderbird.desktop
+fi
+
+if promptyn "Set default file browser?"; then
+    xdg-mime default org.kde.dolphin.desktop inode/directory
+fi
+
+if promptyn "Set default file associations?"; then
+    xdg-mime default org.kde.gwenview.desktop image/bmp
+    xdg-mime default org.kde.gwenview.desktop image/png
+    xdg-mime default org.kde.gwenview.desktop image/jpeg
+    xdg-mime default org.kde.gwenview.desktop image/gif
+
+    xdg-mime default mpv.desktop video/mp4
+    xdg-mime default mpv.desktop video/webm
+    xdg-mime default mpv.desktop video/mkv
+    xdg-mime default mpv.desktop video/avi
+    xdg-mime default mpv.desktop video/flv
+    xdg-mime default mpv.desktop video/x-flv
+
+    xdg-mime default mpv.desktop video/mp4
+    xdg-mime default mpv.desktop video/webm
+    xdg-mime default mpv.desktop video/mkv
+    xdg-mime default mpv.desktop video/avi
+    xdg-mime default mpv.desktop video/flv
+    xdg-mime default mpv.desktop video/x-flv
+
+    xdg-mime default code.desktop application/json
+    xdg-mime default code.desktop text/json
+    xdg-mime default code.desktop application/javascript
+    xdg-mime default code.desktop text/javascript
+    xdg-mime default code.desktop text/html
+fi
+

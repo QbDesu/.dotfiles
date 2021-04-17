@@ -1,66 +1,23 @@
 #!/bin/bash
 
 sudo dnf install \
-    adwaita-qt5 \
-    arandr \
-    avahi \
-    breeze-icon-theme \
-    breeze-cursor-theme \
     chromium \
     code \
-    compton \
-    dex-autostart \
     dolphin \
-    feh \
     ffmpeg \
     firefox \
-    gdm \
-    git \
-    git-lfs \
-    gnome-keyring \
-    gnome-keyring-pam \
     gparted \
     gwenview \
     htop \
-    i3 \
-    i3lock \
-    kate \
     kde-partitionmanager \
     keepassxc \
     kio-extras \
     konsole \
+    kate \
     mosh \
     mpv \
     ncdu \
     libreoffice \
-    lxqt-config \
-    lxqt-policykit \
-    mate-panel \
-    mate-notification-daemon \
     neofetch \
-    network-manager-applet \
     okular \
-    pasystray \
-    pavucontrol-qt \
-    python3 \
-    python3-pip \
-    qlipper \
-    qt5-qtconfiguration \
-    qt5ct \
-    redshift-gtk \
-    rofi \
-    rsync \
-    thunderbird \
-    tmux \
-    v4l2loopback \
-    vim \
-    xss-lock \
-    yadm \
-    youtube-dl \
-    zsh
-
-sudo pip install autorandr
-
-chsh --shell $(which zsh)
-sudo chsh --shell $(which zsh)
-sudo cp $HOME/.zshrc /root/.zshrc
+    youtube-dl
