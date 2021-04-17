@@ -6,7 +6,7 @@ if promptyn "Configure shell?"; then
 fi
 
 if promptyn "Configure xdg settings?"; then
-    $HOME/.dotfiles/fedora.configure.dm
+    $HOME/.dotfiles/fedora.configure.xdg
 fi
 
 if promptyn "Configure display manager?"; then
