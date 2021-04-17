@@ -1,4 +1,4 @@
 #!/bin/bash
 
 sudo dnf install \
-    battray
+    mate-power-manager
