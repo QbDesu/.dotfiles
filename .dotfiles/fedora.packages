@@ -25,8 +25,14 @@ if promptyn "Install packages from dev?"; then
     $HOME/.dotfiles/fedora.packages.dev
 fi
 
-if promptny "Install packages from laptop?"; then
-    $HOME/.dotfiles/fedora.packages.laptop
+if [ -z "$(ls -A /sys/class/power_supply)" ]; then
+    if promptny "Install packages from laptop?"; then
+        $HOME/.dotfiles/fedora.packages.laptop
+    fi
+else
+    if promptyn "Install packages from laptop?"; then
+        $HOME/.dotfiles/fedora.packages.laptop
+    fi
 fi
 
 if promptny "Install packages from exotic?"; then
