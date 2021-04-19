@@ -97,6 +97,8 @@ case $TERM in
     bindkey '\e[3~' delete-char
     bindkey '\e[2~' overwrite-mode
     bindkey '\e[3;3~' delete-word
+    bindkey "^[[1;5C" forward-word
+    bindkey "^[[1;5D" backward-word    
     ;;
 
   *)
