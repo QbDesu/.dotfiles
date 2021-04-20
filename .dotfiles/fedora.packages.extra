@@ -9,6 +9,7 @@ sudo dnf install \
     ncmpcpp \
     pandoc \
     peek \
+    pipewire-jack-audio-connection-kit \
     qemu \
     qjackctl \
     signal-desktop \

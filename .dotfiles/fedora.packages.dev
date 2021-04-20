@@ -4,4 +4,6 @@ sudo dnf install \
     java-11-openjdk \
     node \
     npm \
+    sqlite3 \
     sqlitebrowser
+
