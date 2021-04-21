@@ -7,7 +7,7 @@
 
 [core]
   filemode = true
-  excludesfile = ~/.dotfiles/git/excludes
+  excludesfile = ~/.config/git/excludes
   quotepath = false
 
 [branch]
