@@ -3,6 +3,7 @@
 sudo dnf install \
     discord \
     gimp \
+    ImageMagick \
     inkscape \
     mumble \
     nextcloud-client \

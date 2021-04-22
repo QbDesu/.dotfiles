@@ -1,12 +1,15 @@
 /**
  * @name ServerHider
+ * @author DevilBro
  * @authorId 278543574059057154
+ * @version 6.2.0
+ * @description Allows you to hide certain Servers in your Server List
  * @invite Jx3TjNS
  * @donate https://www.paypal.me/MircoWittrien
  * @patreon https://www.patreon.com/MircoWittrien
- * @website https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/ServerHider
- * @source https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/master/Plugins/ServerHider/ServerHider.plugin.js
- * @updateUrl https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/master/Plugins/ServerHider/ServerHider.plugin.js
+ * @website https://mwittrien.github.io/
+ * @source https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/ServerHider/
+ * @updateUrl https://mwittrien.github.io/BetterDiscordAddons/Plugins/ServerHider/ServerHider.plugin.js
  */
 
 module.exports = (_ => {
@@ -14,12 +17,12 @@ module.exports = (_ => {
 		"info": {
 			"name": "ServerHider",
 			"author": "DevilBro",
-			"version": "6.1.9",
-			"description": "Hide Servers in your Serverlist"
+			"version": "6.2.0",
+			"description": "Allows you to hide certain Servers in your Server List"
 		},
 		"changeLog": {
-			"fixed": {
-				"Works again": "Can discord stop messing with the server list, jeez"
+			"added": {
+				"Streamer Mode": "Added Option to only hide Servers while in Streamer Mode"
 			}
 		}
 	};
@@ -28,7 +31,14 @@ module.exports = (_ => {
 		getName () {return config.info.name;}
 		getAuthor () {return config.info.author;}
 		getVersion () {return config.info.version;}
-		getDescription () {return `The Library Plugin needed for ${config.info.name} is missing. Open the Plugin Settings to download it.\n\n${config.info.description}`;}
+		getDescription () {return `The Library Plugin needed for ${config.info.name} is missing. Open the Plugin Settings to download it. \n\n${config.info.description}`;}
+		
+		downloadLibrary () {
+			require("request").get("https://mwittrien.github.io/BetterDiscordAddons/Library/0BDFDB.plugin.js", (e, r, b) => {
+				if (!e && b && r.statusCode == 200) require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0BDFDB.plugin.js"), b, _ => BdApi.showToast("Finished downloading BDFDB Library", {type: "success"}));
+				else BdApi.alert("Error", "Could not download BDFDB Library Plugin. Try again later or download it manually from GitHub: https://mwittrien.github.io/downloader/?library");
+			});
+		}
 		
 		load () {
 			if (!window.BDFDB_Global || !Array.isArray(window.BDFDB_Global.pluginQueue)) window.BDFDB_Global = Object.assign({}, window.BDFDB_Global, {pluginQueue: []});
@@ -40,10 +50,7 @@ module.exports = (_ => {
 					onCancel: _ => {delete window.BDFDB_Global.downloadModal;},
 					onConfirm: _ => {
 						delete window.BDFDB_Global.downloadModal;
-						require("request").get("https://mwittrien.github.io/BetterDiscordAddons/Library/0BDFDB.plugin.js", (e, r, b) => {
-							if (!e && b && b.indexOf(`* @name BDFDB`) > -1) require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0BDFDB.plugin.js"), b, _ => {});
-							else BdApi.alert("Error", "Could not download BDFDB Library Plugin, try again later or download it manually from GitHub: https://github.com/mwittrien/BetterDiscordAddons/tree/master/Library/");
-						});
+						this.downloadLibrary();
 					}
 				});
 			}
@@ -54,17 +61,18 @@ module.exports = (_ => {
 		getSettingsPanel () {
 			let template = document.createElement("template");
 			template.innerHTML = `<div style="color: var(--header-primary); font-size: 16px; font-weight: 300; white-space: pre; line-height: 22px;">The Library Plugin needed for ${config.info.name} is missing.\nPlease click <a style="font-weight: 500;">Download Now</a> to install it.</div>`;
-			template.content.firstElementChild.querySelector("a").addEventListener("click", _ => {
-				require("request").get("https://mwittrien.github.io/BetterDiscordAddons/Library/0BDFDB.plugin.js", (e, r, b) => {
-					if (!e && b && b.indexOf(`* @name BDFDB`) > -1) require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0BDFDB.plugin.js"), b, _ => {});
-					else BdApi.alert("Error", "Could not download BDFDB Library Plugin, try again later or download it manually from GitHub: https://github.com/mwittrien/BetterDiscordAddons/tree/master/Library/");
-				});
-			});
+			template.content.firstElementChild.querySelector("a").addEventListener("click", this.downloadLibrary);
 			return template.content.firstElementChild;
 		}
 	} : (([Plugin, BDFDB]) => {
 		return class ServerHider extends Plugin {
 			onLoad () {
+				this.defaults = {
+					general: {
+						onlyHideInStream:	{value: false, 	description: "Only hide selected Servers while in Streamer Mode"}
+					}
+				};
+				
 				this.patchedModules = {
 					after: {
 						Guilds: "render"
@@ -73,6 +81,10 @@ module.exports = (_ => {
 			}
 			
 			onStart () {
+				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.DispatchApiUtils, "dispatch", {after: e => {
+					if (e.methodArguments[0].type == BDFDB.DiscordConstants.ActionTypes.STREAMER_MODE_UPDATE) BDFDB.PatchUtils.forceAllUpdates(this);
+				}});
+				
 				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.FolderStore, "getGuildFolderById", {after: e => {
 					let hiddenGuildIds = BDFDB.DataUtils.load(this, "hidden", "servers") || [];
 					if (e.returnValue && hiddenGuildIds.length) {
@@ -91,22 +103,36 @@ module.exports = (_ => {
 			}
 
 			getSettingsPanel (collapseStates = {}) {
-				let settingsPanel, settingsItems = [];
+				let settingsPanel;
+				return settingsPanel = BDFDB.PluginUtils.createSettingsPanel(this, {
+					collapseStates: collapseStates,
+					children: _ => {
+						let settingsItems = [];
+						
+						for (let key in this.defaults.general) settingsItems.push(BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SettingsSaveItem, {
+							type: "Switch",
+							plugin: this,
+							keys: ["general", key],
+							label: this.defaults.general[key].description,
+							value: this.settings.general[key],
+						}));
 				
-				settingsItems.push(BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SettingsItem, {
-					type: "Button",
-					color: BDFDB.LibraryComponents.Button.Colors.RED,
-					label: "Unhide all Servers/Folders",
-					onClick: _ => {
-						BDFDB.ModalUtils.confirm(this, "Are you sure you want to unhide all servers and folders?", _ => {
-							BDFDB.DataUtils.save([], this, "hidden");
-							BDFDB.PatchUtils.forceAllUpdates(this);
-						});
-					},
-					children: BDFDB.LanguageUtils.LanguageStrings.RESET
-				}));
-				
-				return settingsPanel = BDFDB.PluginUtils.createSettingsPanel(this, settingsItems);
+						settingsItems.push(BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SettingsItem, {
+							type: "Button",
+							color: BDFDB.LibraryComponents.Button.Colors.RED,
+							label: "Unhide all Servers/Folders",
+							onClick: _ => {
+								BDFDB.ModalUtils.confirm(this, "Are you sure you want to unhide all Servers and Folders?", _ => {
+									BDFDB.DataUtils.save([], this, "hidden");
+									BDFDB.PatchUtils.forceAllUpdates(this);
+								});
+							},
+							children: BDFDB.LanguageUtils.LanguageStrings.RESET
+						}));
+						
+						return settingsItems;
+					}
+				});
 			}
 			
 			onGuildContextMenu (e) {
@@ -183,6 +209,7 @@ module.exports = (_ => {
 			}
 
 			handleGuilds (returnvalue) {
+				if (this.settings.general.onlyHideInStream && !BDFDB.LibraryModules.StreamerModeStore.enabled) return;
 				let hiddenEles = BDFDB.DataUtils.load(this, "hidden");
 				let hiddenGuildIds = hiddenEles.servers || [];
 				let hiddenFolderIds = hiddenEles.folders || [];
@@ -215,7 +242,7 @@ module.exports = (_ => {
 				BDFDB.ModalUtils.open(this, {
 					size: "MEDIUM",
 					header: this.labels.modal_header,
-					subheader: "",
+					subHeader: "",
 					contentClassName: BDFDB.disCN.listscroller,
 					children: guilds.map((guild, i) => {
 						let folder = folders.find(folder => folder.guildIds.includes(guild.id) && !foldersAdded.includes(folder.folderId));
@@ -286,7 +313,7 @@ module.exports = (_ => {
 						contents: BDFDB.LanguageUtils.LanguageStrings.FORM_LABEL_ALL,
 						color: "TRANSPARENT",
 						look: "LINK",
-						click: (modal, instance) => {
+						onClick: (modal, instance) => {
 							let enabled = hiddenGuildIds.includes(guilds[0].id);
 							hiddenGuildIds = [].concat(enabled ? [] : guilds.map(n => n.id));
 							BDFDB.DataUtils.save(hiddenGuildIds, this, "hidden", "servers");
