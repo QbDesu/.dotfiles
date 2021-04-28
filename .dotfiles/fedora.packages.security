@@ -1,0 +1,9 @@
+#!/bin/bash
+
+sudo dnf install \
+    fedora-gpg-keys \
+    gnome-keyring \
+    gnome-keyring-pam \
+    gnupg2
+
+pipx install solo-python

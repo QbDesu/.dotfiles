@@ -20,8 +20,4 @@ sudo dnf install \
     tiled \
     virt-manager \
     v4l2loopback \
-    vlc \
-    \
-    gti \
-    lolcat \
-    sl
+    vlc

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+sudo dnf install \
+    arandr \
+    breeze-icon-theme \
+    breeze-cursor-theme \
+    compton \
+    dejavu-fonts-all \
+    dex-autostart \
+    feh \
+    gdm \
+    i3 \
+    i3lock \
+    lxqt-config \
+    lxqt-qtplugin \
+    lxqt-policykit \
+    mate-panel \
+    mate-notification-daemon \
+    network-manager-applet \
+    pasystray \
+    pavucontrol-qt \
+    qlipper \
+    qt5-qtconfiguration \
+    redshift-gtk \
+    rofi \
+    xdg-utils \
+    xss-lock
+
+sudo pip install autorandr

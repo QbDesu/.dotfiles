@@ -1,10 +1,10 @@
 #!/bin/bash
 
 sudo dnf install \
+    golang \
     java-11-openjdk \
     node \
     npm \
     pipenv \
     sqlite3 \
     sqlitebrowser
-

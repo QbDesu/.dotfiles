@@ -1,0 +1,4 @@
+#!/bin/bash
+
+sudo cp $HOME/.dotfiles/files/udev/* /etc/udev/rules.d/
+sudo udevadm control --reload-rules && sudo udevadm trigger

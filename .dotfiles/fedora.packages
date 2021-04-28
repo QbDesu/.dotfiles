@@ -9,6 +9,14 @@ if promptyn "Install packages from system?"; then
     $HOME/.dotfiles/fedora.packages.system
 fi
 
+if promptyn "Install packages from security?"; then
+    $HOME/.dotfiles/fedora.packages.security
+fi
+
+if promptyn "Install packages from desktop?"; then
+    $HOME/.dotfiles/fedora.packages.desktop
+fi
+
 if promptyn "Install packages from essential?"; then
     $HOME/.dotfiles/fedora.packages.essential
 fi
@@ -37,4 +45,8 @@ fi
 
 if promptny "Install packages from exotic?"; then
     $HOME/.dotfiles/fedora.packages.exotic
+fi
+
+if promptny "Install packages from fun?"; then
+    $HOME/.dotfiles/fedora.packages.fun
 fi

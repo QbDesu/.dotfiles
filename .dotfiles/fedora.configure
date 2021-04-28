@@ -12,3 +12,7 @@ fi
 if promptyn "Configure display manager?"; then
     $HOME/.dotfiles/fedora.configure.dm
 fi
+
+if promptyn "Install udev rules?"; then
+    $HOME/.dotfiles/fedora.configure.udev
+fi

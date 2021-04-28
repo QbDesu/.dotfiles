@@ -36,6 +36,9 @@ exec --no-startup-id autorandr -c
 # autostart .desktop files
 exec dex-autostart -ae i3
 
+# stop mouse from jumping around
+mouse_warping none
+
 ##################
 # HOTKEYS
 ##################

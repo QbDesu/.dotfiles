@@ -19,7 +19,7 @@ sudo dnf install \
     libreoffice \
     neofetch \
     okular \
-    pipx \
+    thunderbird \
     unzip \
     wget \
     youtube-dl \
