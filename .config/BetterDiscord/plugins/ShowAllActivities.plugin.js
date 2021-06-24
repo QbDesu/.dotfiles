@@ -1,8 +1,9 @@
 /**
 * @name ShowAllActivities
 * @displayName ShowAllActivities
-* @authorId 415849376598982656
-* @invite gvA2ree
+* @authorId 133659541198864384
+* @invite gj7JFa6mF8
+* @updateUrl https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Plugins/ShowAllActivities/ShowAllActivities.plugin.js
 */
 /*@cc_on
 @if (@_jscript)
@@ -34,6 +35,11 @@ module.exports = (() => {
             name: "ShowAllActivities",
             authors: [
                 {
+                    name: "Qb",
+                    discord_id: "133659541198864384",
+                    github_username: "QbDesu"
+                },
+                {
                     name: "Strencher",
                     discord_id: "415849376598982656",
                     github_username: "Strencher",
@@ -41,9 +47,9 @@ module.exports = (() => {
                 }
             ],
             version: "0.0.3",
-            description: "See every status a user has enabled. Original made by Juby210#0577.",
-            github: "https://github.com/Strencher/BetterDiscordStuff/blob/master/ShowAllActivities/ShowAllActivities.plugin.js",
-            github_raw: "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/ShowAllActivities/ShowAllActivities.plugin.js"
+            description: "See every status a user has enabled. Original made by Juby210#0577 and later Strencher#1044.",
+            github: "https://github.com/QbDesu/BetterDiscordAddons/blob/potato/Plugins/ShowAllActivities",
+            github_raw: "https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Plugins/ShowAllActivities/ShowAllActivities.plugin.js"
         },
         changelog: [
             {
@@ -61,29 +67,27 @@ module.exports = (() => {
         getDescription() { return config.info.description; }
         getVersion() { return config.info.version; }
         load() {
-            BdApi.showConfirmationModal("Library plugin is needed", 
+            BdApi.showConfirmationModal("Library plugin is needed",
                 [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], {
-                    confirmText: "Download",
-                    cancelText: "Cancel",
-                    onConfirm: () => {
-                        require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
+                confirmText: "Download",
+                cancelText: "Cancel",
+                onConfirm: () => {
+                    require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
                         if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
                         await new Promise(r => require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0PluginLibrary.plugin.js"), body, r));
-                        });
-                    }
-                });
+                    });
+                }
+            });
         }
         start() { }
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
 
-            const {WebpackModules, PluginUtilities, ReactComponents, Patcher, DiscordModules: {React, ButtonData}, Utilities} = Api;
-            const classes = WebpackModules.getByProps('iconButtonSize');
+            const { WebpackModules, PluginUtilities, Patcher, DiscordModules: { React }, Utilities } = Api;
             const ActivityStore = WebpackModules.getByProps('getActivities');
             const GameStore = WebpackModules.getByProps('getGame', 'getGameByName');
-            const {TooltipContainer: Tooltip} = WebpackModules.getByProps('TooltipContainer');
-            const Arrow = WebpackModules.getModule(m => m.displayName === 'Arrow' && !m.prototype?.render)
+            const { TooltipContainer: Tooltip } = WebpackModules.getByProps('TooltipContainer');
             const LabelStore = WebpackModules.getByProps('Messages', 'setLocale')
             const Button = WebpackModules.getByProps('DropdownSizes');
             var temp;
@@ -101,18 +105,26 @@ module.exports = (() => {
                 get css() {
                     return `
                         .allactivities-left {
+                            margin-left: -12px;
                             margin-right: 8px;
                         }
                         .allactivities-right {
+                            margin-right: -12px;
                             margin-left: 8px;
                         }
+
                         .allactivities-margin {
                             margin-top: 12px;
+                        }
+                        
+                        .allactivities-left > button,
+                        .allactivities-right > button {
+                            height: 3em;
                         }
                     `;
                 }
 
-                onStart() { 
+                onStart() {
                     PluginUtilities.addStyle(config.info.name, this.css);
                     this.patchUserActivity();
                 }
@@ -121,47 +133,45 @@ module.exports = (() => {
                     const UserActivity = WebpackModules.getByDisplayName('UserActivity');
                     Patcher.before(UserActivity.prototype, 'render', _this => {
                         const activities = ActivityStore.getActivities(_this.props.user.id).filter(activitiesFilter);
-                        if(!activities) return;
-                        if(!_this.state) _this.state = {activity: activities.indexOf(_this.props.activity)};
+                        if (!activities) return;
+                        if (!_this.state) _this.state = { activity: activities.indexOf(_this.props.activity) };
                         else {
                             const activity = activities[_this.state.activity];
-                            if(!activity) return;
+                            if (!activity) return;
                             _this.props.activity = activity;
                             _this.props.game = GameStore.getGame(activity.application_id);
                         }
                     });
                     Patcher.after(UserActivity.prototype, 'render', (_this, _, ret) => {
-                        if(!ret) return;
+                        if (!ret) return;
                         const activities = ActivityStore.getActivities(_this.props.user.id).filter(activitiesFilter);
-                        if(!activities) return ret;
+                        if (!activities) return ret;
                         const children = Utilities.getNestedProp(ret, 'props.children.1.props.children');
-                        if(!Array.isArray(children)) return ret;
+                        if (!Array.isArray(children)) return ret;
                         const marginClass = _this.props.activity.details || _this.props.activity.state ? ' allactivities-margin' : '';
-                        
-                        if(_this.state.activity != 0) children.unshift(React.createElement(Tooltip, {
+
+                        if (_this.state.activity != 0) children.unshift(React.createElement(Tooltip, {
                             className: `allactivities-left${marginClass}`,
                             text: LabelStore.Messages.PAGINATION_PREVIOUS,
                         }, React.createElement(Button, {
-                            className: classes.iconButtonSize,
                             size: Button.Sizes.MIN,
                             color: Button.Colors.WHITE,
                             look: Button.Looks.OUTLINED,
-                            onClick: () => _this.setState({activity: _this.state.activity - 1})
-                        }, React.createElement(Arrow, { direction: 'LEFT' }))));
+                            onClick: () => _this.setState({ activity: _this.state.activity - 1 })
+                        },  React.createElement("img",{ src: "https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Shared/Images/chevron-left.svg" }))));
 
-                        if(_this.state.activity < activities.length - 1) children.push(React.createElement(Tooltip, {
+                        if (_this.state.activity < activities.length - 1) children.push(React.createElement(Tooltip, {
                             className: `allactivities-right${marginClass}`,
                             text: LabelStore.Messages.NEXT,
                         }, React.createElement(Button, {
-                            className: classes.iconButtonSize,
                             size: Button.Sizes.MIN,
                             color: Button.Colors.WHITE,
                             look: Button.Looks.OUTLINED,
-                            onClick: () => _this.setState({activity: _this.state.activity + 1})
-                        }, React.createElement(Arrow, { direction: 'RIGHT' }))));
+                            onClick: () => _this.setState({ activity: _this.state.activity + 1 })
+                        },  React.createElement("img",{ src: "https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Shared/Images/chevron-right.svg" }))));
 
                         const actions = Utilities.findInReactTree(ret.props, e => e && e.onOpenConnections);
-                        if(actions) actions.activity = _this.props.activity;
+                        if (actions) actions.activity = _this.props.activity;
                     });
                 }
 

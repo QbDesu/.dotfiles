@@ -42,6 +42,8 @@ if promptyn "Set default file associations?"; then
         video/mp4
         video/webm
         video/mkv
+	video/matroska
+	video/x-matroska
         video/avi
         video/flv
         video/x-flv

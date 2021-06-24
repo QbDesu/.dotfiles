@@ -9,6 +9,7 @@ sudo dnf install \
     gparted \
     gwenview \
     htop \
+    xdg-desktop-portal-kde \
     kde-partitionmanager \
     keepassxc \
     kio-extras \

@@ -1,24 +1,29 @@
-/**
- * @name RevealAllSpoilersOption
+﻿/**
+ * @name UserNotes
  * @author DevilBro
  * @authorId 278543574059057154
- * @version 1.0.5
- * @description Allows you to reveal all Spoilers within a Message
+ * @version 1.0.6
+ * @description Allows you to write User Notes locally
  * @invite Jx3TjNS
  * @donate https://www.paypal.me/MircoWittrien
  * @patreon https://www.patreon.com/MircoWittrien
- * @website https://mwittrien.github.io/
- * @source https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/RevealAllSpoilersOption/
- * @updateUrl https://mwittrien.github.io/BetterDiscordAddons/Plugins/RevealAllSpoilersOption/RevealAllSpoilersOption.plugin.js
+ * @website https://github.com/mwittrien/BetterDiscordAddons/tree/master/Plugins/UserNotes
+ * @source https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/master/Plugins/UserNotes/UserNotes.plugin.js
+ * @updateUrl https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/master/Plugins/UserNotes/UserNotes.plugin.js
  */
 
 module.exports = (_ => {
 	const config = {
 		"info": {
-			"name": "RevealAllSpoilersOption",
+			"name": "UserNotes",
 			"author": "DevilBro",
-			"version": "1.0.5",
-			"description": "Allows you to reveal all Spoilers within a Message"
+			"version": "1.0.6",
+			"description": "Allows you to write User Notes locally"
+		},
+		"changeLog": {
+			"improved": {
+				"Canary Changes": "Preparing Plugins for the changes that are already done on Discord Canary"
+			}
 		}
 	};
 
@@ -60,151 +65,190 @@ module.exports = (_ => {
 			return template.content.firstElementChild;
 		}
 	} : (([Plugin, BDFDB]) => {
-		return class RevealAllSpoilersOption extends Plugin {
-			onLoad () {}
+		return class UserNotes extends Plugin {
+			onLoad () {
+				this.css = `
+					.${this.name}-modal textarea {
+						height: 50vh;
+					}
+				`;
+			}
 			
 			onStart () {}
 			
 			onStop () {}
 
-			onMessageContextMenu (e) {
-				if (e.instance.props.message && e.instance.props.target) {
-					let messageDiv = BDFDB.DOMUtils.getParent(BDFDB.dotCN.message, e.instance.props.target);
-					if (!messageDiv || !messageDiv.querySelector(BDFDB.dotCN.spoilerhidden)) return;
-					let hint = BDFDB.BDUtils.isPluginEnabled("MessageUtilities") ? BDFDB.BDUtils.getPlugin("MessageUtilities").getActiveShortcutString("__Reveal_Spoilers") : null;
+			getSettingsPanel (collapseStates = {}) {
+				let settingsPanel, settingsItems = [];
+				
+				settingsItems.push(BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.SettingsItem, {
+					type: "Button",
+					className: BDFDB.disCN.marginbottom8,
+					color: BDFDB.LibraryComponents.Button.Colors.RED,
+					label: "Delete all Usernotes",
+					onClick: _ => {
+						BDFDB.ModalUtils.confirm(this, "Are you sure you want to remove all usernotes?", _ => {
+							BDFDB.DataUtils.remove(this, "notes");
+						});
+					},
+					children: BDFDB.LanguageUtils.LanguageStrings.DELETE
+				}));
+				
+				return settingsPanel = BDFDB.PluginUtils.createSettingsPanel(this, settingsItems);
+			}
+
+			onUserContextMenu (e) {
+				if (e.instance.props.user) {
 					let [children, index] = BDFDB.ContextMenuUtils.findItem(e.returnvalue, {id: "devmode-copy-id", group: true});
 					children.splice(index > -1 ? index : children.length, 0, BDFDB.ContextMenuUtils.createItem(BDFDB.LibraryComponents.MenuItems.MenuGroup, {
 						children: BDFDB.ContextMenuUtils.createItem(BDFDB.LibraryComponents.MenuItems.MenuItem, {
-							label: this.labels.reveal_all,
-							id: BDFDB.ContextMenuUtils.createItemId(this.name, "reveal-all"),
-							hint: hint && (_ => {
-								return BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.MenuItems.MenuHint, {
-									hint: hint
-								});
-							}),
-							action: _ => {
-								this.revealAllSpoilers(messageDiv);
-							}
+							label: this.labels.user_note,
+							id: BDFDB.ContextMenuUtils.createItemId(this.name, "user-note"),
+							action: _ => this.openNotesModal(e.instance.props.user)
 						})
 					}));
 				}
 			}
 
-			revealAllSpoilers (target) {
-				let messageDiv = BDFDB.DOMUtils.getParent(BDFDB.dotCN.message, target);
-				if (!messageDiv) return;
-				for (let spoiler of messageDiv.querySelectorAll(BDFDB.dotCN.spoilerhidden)) spoiler.click();
+			openNotesModal (user) {
+				let note = BDFDB.DataUtils.load(this, "notes", user.id);
+				let textarea;
+				
+				BDFDB.ModalUtils.open(this, {
+					size: "LARGE",
+					header: BDFDB.LanguageUtils.LanguageStrings.USERS + " " + BDFDB.LanguageUtils.LanguageStrings.NOTE,
+					subHeader: user.username,
+					scroller: false,
+					children: [
+						BDFDB.ReactUtils.createElement(BDFDB.LibraryComponents.TextArea, {
+							value: note,
+							placeholder: note,
+							autoFocus: true,
+							ref: instance => {if (instance) textarea = instance;}
+						})
+					],
+					buttons: [{
+						contents: BDFDB.LanguageUtils.LanguageStrings.SAVE,
+						color: "BRAND",
+						close: true,
+						onClick: _ => {
+							note = textarea.props.value;
+							if (note) BDFDB.DataUtils.save(note, this, "notes", user.id);
+							else BDFDB.DataUtils.remove(this, "notes", user.id);
+						}
+					}]
+				});
 			}
 
 			setLabelsByLanguage () {
 				switch (BDFDB.LanguageUtils.getLanguage().id) {
 					case "bg":		// Bulgarian
 						return {
-							reveal_all:							"Разкрийте всички спойлери"
+							user_note:							"Потребителска бележка"
 						};
 					case "da":		// Danish
 						return {
-							reveal_all:							"Afslør alle spoilere"
+							user_note:							"Brugernote"
 						};
 					case "de":		// German
 						return {
-							reveal_all:							"Zeige alle Spoiler"
+							user_note:							"Benutzer Notiz"
 						};
 					case "el":		// Greek
 						return {
-							reveal_all:							"Αποκαλύψτε όλα τα Spoilers"
+							user_note:							"Σημείωση χρήστη"
 						};
 					case "es":		// Spanish
 						return {
-							reveal_all:							"Revelar todos los spoilers"
+							user_note:							"Nota de usuario"
 						};
 					case "fi":		// Finnish
 						return {
-							reveal_all:							"Paljasta kaikki spoilerit"
+							user_note:							"Käyttäjän huomautus"
 						};
 					case "fr":		// French
 						return {
-							reveal_all:							"Révéler tous les spoilers"
+							user_note:							"Note de l'utilisateur"
 						};
 					case "hr":		// Croatian
 						return {
-							reveal_all:							"Otkrijte sve spojlere"
+							user_note:							"Napomena korisnika"
 						};
 					case "hu":		// Hungarian
 						return {
-							reveal_all:							"Feltárja az összes spoilert"
+							user_note:							"Felhasználói megjegyzés"
 						};
 					case "it":		// Italian
 						return {
-							reveal_all:							"Rivela tutti gli spoiler"
+							user_note:							"Nota dell'utente"
 						};
 					case "ja":		// Japanese
 						return {
-							reveal_all:							"すべてのネタバレを明らかにする"
+							user_note:							"ユーザーノート"
 						};
 					case "ko":		// Korean
 						return {
-							reveal_all:							"모든 스포일러 공개"
+							user_note:							"사용자 참고"
 						};
 					case "lt":		// Lithuanian
 						return {
-							reveal_all:							"Atskleiskite visus spoilerius"
+							user_note:							"Vartotojo pastaba"
 						};
 					case "nl":		// Dutch
 						return {
-							reveal_all:							"Onthul alle spoilers"
+							user_note:							"Opmerking van de gebruiker"
 						};
 					case "no":		// Norwegian
 						return {
-							reveal_all:							"Avslør alle spoilere"
+							user_note:							"Brukermerknad"
 						};
 					case "pl":		// Polish
 						return {
-							reveal_all:							"Odkryj wszystkie spoilery"
+							user_note:							"Uwaga użytkownika"
 						};
 					case "pt-BR":	// Portuguese (Brazil)
 						return {
-							reveal_all:							"Revelar todos os spoilers"
+							user_note:							"Nota do usuário"
 						};
 					case "ro":		// Romanian
 						return {
-							reveal_all:							"Dezvăluie toate spoilerele"
+							user_note:							"Notă utilizator"
 						};
 					case "ru":		// Russian
 						return {
-							reveal_all:							"Показать все спойлеры"
+							user_note:							"Примечание пользователя"
 						};
 					case "sv":		// Swedish
 						return {
-							reveal_all:							"Avslöja alla spoilers"
+							user_note:							"Användaranteckning"
 						};
 					case "th":		// Thai
 						return {
-							reveal_all:							"เปิดเผยสปอยเลอร์ทั้งหมด"
+							user_note:							"หมายเหตุผู้ใช้"
 						};
 					case "tr":		// Turkish
 						return {
-							reveal_all:							"Tüm Spoilerleri Göster"
+							user_note:							"Kullanıcı notu"
 						};
 					case "uk":		// Ukrainian
 						return {
-							reveal_all:							"Розкрийте всі спойлери"
+							user_note:							"Примітка користувача"
 						};
 					case "vi":		// Vietnamese
 						return {
-							reveal_all:							"Tiết lộ tất cả Spoilers"
+							user_note:							"Ghi chú của người dùng"
 						};
 					case "zh-CN":	// Chinese (China)
 						return {
-							reveal_all:							"显示所有剧透"
+							user_note:							"用户须知"
 						};
 					case "zh-TW":	// Chinese (Taiwan)
 						return {
-							reveal_all:							"顯示所有劇透"
+							user_note:							"用戶須知"
 						};
 					default:		// English
 						return {
-							reveal_all:							"Reveal all Spoilers"
+							user_note:							"User Note"
 						};
 				}
 			}
