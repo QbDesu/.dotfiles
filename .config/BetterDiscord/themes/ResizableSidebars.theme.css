@@ -22,14 +22,8 @@
     resize: horizontal;
     width: var(--sidebar-initial-width);
 }
-
-.sidebar-2K8pFh .channel-2QD9_O {
-    max-width: unset;
-}
-
-.bannerImage-3KhIJ6 {
-    width: 100%;
-}
+.sidebar-2K8pFh .channel-2QD9_O { max-width: unset; }
+.bannerImage-3KhIJ6 { width: 100%; }
 
 /* Server Members */
 
@@ -43,7 +37,7 @@
 }
 
 .membersWrap-2h-GB4 .members-1998pB .content-3YMskv {
-    msargin-right: -8px;
+    margin-right: -8px;
 }
 
 .membersWrap-2h-GB4 .members-1998pB .content-3YMskv .member-3-YXUe {

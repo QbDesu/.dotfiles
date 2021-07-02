@@ -1,11 +1,9 @@
 /**
-* @name USRBG
-* @displayName USRBG
-* @authorId 133659541198864384
-* @invite gj7JFa6mF8
-* @updateUrl https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Plugins/USRBG/USRBG.plugin.js
+* @name CustomJS
+* @displayName CustomJS
+* @authorId 415849376598982656
+* @invite gvA2ree
 */
-
 /*@cc_on
 @if (@_jscript)
     
@@ -33,28 +31,29 @@
 module.exports = (() => {
     const config = {
         info: {
-            name: "USRBG",
+            name: "CustomJS",
             authors: [
                 {
                     name: "Qb",
-                    discord_id: "133659541198864384",
-                    github_username: "QbDesu"
+                    discord_id: "415849376598982656",
+                    github_username: "Qb_Desu",
+                    twitter_username: "Strencher3"
                 }
             ],
-            version: "0.0.1",
-            description: "See every status a user has enabled. Original made by Juby210#0577 and later Strencher#1044.",
-            github: "https://github.com/QbDesu/BetterDiscordAddons/blob/potato/Plugins/USRBG",
-            github_raw: "https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Plugins/USRBG/USRBG.plugin.js"
+            version: "1.0.0",
+            description: "Allows you to specify a custom JavaScript file similar to custom CSS.",
+            github: "",
+            github_raw: ""
         },
-        changelog: [
+        defaultConfig: [
             {
-                title: "Initial",
-                type: "fixed",
-                items: ["Initial Release"]
+                type: 'textbox',
+                name: 'JavaScript Code',
+                id: 'code',
+                value: true
             }
         ]
     };
-
     return !global.ZeresPluginLibrary ? class {
         constructor() { this._config = config; }
         getName() { return config.info.name; }
@@ -62,54 +61,64 @@ module.exports = (() => {
         getDescription() { return config.info.description; }
         getVersion() { return config.info.version; }
         load() {
-            BdApi.showConfirmationModal("Library plugin is needed",
+            BdApi.showConfirmationModal("Library plugin is needed", 
                 [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], {
-                confirmText: "Download",
-                cancelText: "Cancel",
-                onConfirm: () => {
-                    require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
+                    confirmText: "Download",
+                    cancelText: "Cancel",
+                    onConfirm: () => {
+                        require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
                         if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
                         await new Promise(r => require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0PluginLibrary.plugin.js"), body, r));
-                    });
-                }
-            });
+                        });
+                    }
+                });
         }
         start() { }
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
+            const {DiscordModules: {React, DiscordConstants}, WebpackModules, PluginUtilities, DiscordModules, Patcher, Utilities, Toasts} = Api;
 
-            const { WebpackModules, PluginUtilities, Patcher, DiscordModules: { React }, Utilities } = Api;
-            
-            return class ShowAllActivities extends Plugin {
+            return class CustomJS extends Plugin {
                 constructor() {
                     super();
                 }
-
-                get css() {
-                    return `@import url('https://discord-custom-covers.github.io/usrbg/dist/usrbg.css');`;
-                }
+                css = ``;
 
                 onStart() {
                     PluginUtilities.addStyle(config.info.name, this.css);
-                    this.patchUserProfile();
+                    this.reloadJs();
+                    this.rewatch();
                 }
 
-                patchUserProfile() {
-                    const UserBanner = WebpackModules.getByDisplayName('UserBanner');
-                    console.info(UserBanner)
-                    Patcher.after(UserBanner.prototype, 'render', (_this, _, ret) => {
-                        debugger;
-                        console.info("render",_this);
-                        console.info("render",ret);
-                        if (!ret) return;
-                        
+                rewatch() {
+                    /*
+                    const fs = require("fs");
+                    
+                    if(this.watcher) this.watcher.close();
+                    
+                    if(this.settings.filepath) this.watcher = fs.watch(this.settings.filepath, () => {
+                        const current = fs.readFileSync(this.settings.filepath, "utf-8");
+                        if(!current) return;
+                        if(this.last != current) this.reloadJs();
                     });
+                    */
+                }
+                
+                reloadJs() {
+                    try {
+                        const js = this.script = eval(this.settings.code);
+                    } catch(err) {
+                        Toasts.error("Error evaluating CustomJS: " + err);
+                        console.error(err);
+                    }
+                    
                 }
 
-                onStop() {
-                    Patcher.unpatchAll();
-                    PluginUtilities.removeStyle(config.info.name);
+                onStop() {}
+
+                getSettingsPanel(){
+                    return this.buildSettingsPanel().getElement();
                 }
 
             }
@@ -118,3 +127,4 @@ module.exports = (() => {
         return plugin(Plugin, Api);
     })(global.ZeresPluginLibrary.buildPlugin(config));
 })();
+/*@end@*/

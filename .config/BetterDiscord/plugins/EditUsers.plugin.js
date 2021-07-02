@@ -2,7 +2,7 @@
  * @name EditUsers
  * @author DevilBro
  * @authorId 278543574059057154
- * @version 4.3.3
+ * @version 4.3.6
  * @description Allows you to locally edit Users
  * @invite Jx3TjNS
  * @donate https://www.paypal.me/MircoWittrien
@@ -17,12 +17,12 @@ module.exports = (_ => {
 		"info": {
 			"name": "EditUsers",
 			"author": "DevilBro",
-			"version": "4.3.3",
+			"version": "4.3.6",
 			"description": "Allows you to locally edit Users"
 		},
 		"changeLog": {
-			"improved": {
-				"Custom Status": "You can now use nitro walled emojis in the local custom status changer"
+			"fixed": {
+				"Message Avatar": "Fixed Avatar being squashed for non squarish icons"
 			}
 		}
 	};
@@ -101,7 +101,7 @@ module.exports = (_ => {
 						userPopout:			{value: true, 		description: "User Popouts"},
 						userProfile:		{value: true, 		description: "User Profile Modal"},
 						mutualFriends:		{value: true, 		description: "Mutual Friends"},
-						autcocompletes:		{value: true, 		description: "Autocomplete Menu"},
+						autocompletes:		{value: true, 		description: "Autocomplete Menu"},
 						guildSettings:		{value: true, 		description: "Server Settings"},
 						quickSwitcher:		{value: true, 		description: "Quick Switcher"},
 						searchPopout:		{value: true, 		description: "Search Popout"},
@@ -115,8 +115,9 @@ module.exports = (_ => {
 						HeaderBarContainer: "render",
 						ChannelEditorContainer: "render",
 						AutocompleteUserResult: "render",
-						UserPopout: "render",
+						UserPopoutInfo: "UserPopoutInfo",
 						UserProfileModal: "default",
+						UserProfileModalHeader: "default",
 						UserInfo: "default",
 						NowPlayingItem: "default",
 						VoiceUser: "render",
@@ -149,7 +150,8 @@ module.exports = (_ => {
 						AutocompleteUserResult: "render",
 						DiscordTag: "default",
 						NameTag: "default",
-						UserPopoutInfo: "default",
+						UserPopoutContainer: "type",
+						UserPopoutInfo: "UserPopoutInfo",
 						MutualFriends: "default",
 						VoiceUser: "render",
 						Account: "render",
@@ -178,6 +180,10 @@ module.exports = (_ => {
 				this.patchPriority = 3;
 				
 				this.css = `
+					${BDFDB.dotCN.messageavatar} {
+						background-size: cover;
+						object-fit: cover;
+					}
 					${BDFDB.dotCNS.chat + BDFDB.dotCN.messageusername}:hover > span[style*="color"],
 					${BDFDB.dotCN.voicedetailschannel}:hover > span[style*="color"] {
 						text-decoration: underline;
@@ -243,13 +249,16 @@ module.exports = (_ => {
 					let userArray = [];
 					for (let id in changedUsers) if (changedUsers[id] && changedUsers[id].name) {
 						let user = BDFDB.LibraryModules.UserStore.getUser(id);
-						if (user && (e.methodArguments[0].recipients.includes(id) || (e.methodArguments[0].guild_id && BDFDB.LibraryModules.MemberStore.getMember(e.methodArguments[0].guild_id, id)))) userArray.push(Object.assign({
-							lowerCaseName: changedUsers[id].name.toLowerCase(),
-							user
+						let member = user && e.methodArguments[0].guild_id && BDFDB.LibraryModules.MemberStore.getMember(e.methodArguments[0].guild_id, id);
+						if (user && (e.methodArguments[0].recipients.includes(id) || member)) userArray.push(Object.assign({
+							comparator: changedUsers[id].name,
+							nick: member && member.nick || null,
+							score: 0,
+							user: user
 						}, changedUsers[id]));
 					}
-					userArray = BDFDB.ArrayUtils.keySort(userArray.filter(n => e.returnValue.users.every(comp => comp.user.id != n.user.id) && n.lowerCaseName.indexOf(e.methodArguments[1]) != -1), "lowerCaseName");
-					e.returnValue.users = [].concat(e.returnValue.users, userArray.map(n => {return {user: n.user};})).slice(0, BDFDB.DiscordConstants.MAX_AUTOCOMPLETE_RESULTS);
+					userArray = BDFDB.ArrayUtils.keySort(userArray.filter(n => e.returnValue.results.users.every(comp => comp.user.id != n.user.id) && n.comparator.toLowerCase().indexOf(e.methodArguments[2].toLowerCase()) != -1), "lowerCaseName");
+					e.returnValue.results.users = [].concat(e.returnValue.results.users, userArray.map(n => ({user: n.user}))).slice(0, BDFDB.DiscordConstants.MAX_AUTOCOMPLETE_RESULTS);
 				}});
 				
 				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.IconUtils, "getUserBannerURL", {instead: e => {
@@ -263,8 +272,8 @@ module.exports = (_ => {
 				}});
 				
 				BDFDB.PatchUtils.patch(this, BDFDB.LibraryModules.StatusMetaUtils, "findActivity", {after: e => {
-					let data = e.returnValue && changedUsers[e.methodArguments[0]];
-					if (data && (data.removeStatus || data.status || data.statusEmoji) && e.returnValue.type === BDFDB.DiscordConstants.ActivityTypes.CUSTOM_STATUS) return this.createCustomStatus(changedUsers[e.methodArguments[0]]);
+					let data = changedUsers[e.methodArguments[0]];
+					if (data && (data.removeStatus || data.status || data.statusEmoji) && (e.returnValue && e.returnValue.type === BDFDB.DiscordConstants.ActivityTypes.CUSTOM_STATUS || !e.returnValue && e.methodArguments[1] && e.methodArguments[1].toString().indexOf("type===") > -1 && e.methodArguments[1].toString().indexOf("CUSTOM_STATUS") > -1)) return this.createCustomStatus(changedUsers[e.methodArguments[0]]);
 				}});
 				
 				this.forceUpdateAll();
@@ -413,8 +422,15 @@ module.exports = (_ => {
 						if (data && data.name) e.instance.props.nick = data.name;
 					}
 					else {
-						let userName = BDFDB.ReactUtils.findChild(e.returnvalue, {name: "AutocompleteRowHeading"});
-						if (userName) this.changeUserColor(userName, e.instance.props.user.id);
+						if (typeof e.returnvalue.props.children == "function") {
+							let childrenRender = e.returnvalue.props.children;
+							e.returnvalue.props.children = (...args) => {
+								let children = childrenRender(...args);
+								let userName = BDFDB.ReactUtils.findChild(children, {name: "AutocompleteRowHeading"});
+								if (userName) this.changeUserColor(userName, e.instance.props.user.id);
+								return children;
+							};
+						}
 					}
 				}
 			}
@@ -491,32 +507,28 @@ module.exports = (_ => {
 				}
 			}
 
-			processUserPopout (e) {
-				if (e.instance.props.user && this.settings.places.userPopout) {
-					let data = changedUsers[e.instance.props.user.id];
-					if (data) {
-						e.instance.props.user = this.getUserData(e.instance.props.user.id, true, true);
-						if (data.name && !(data.useServerNick && e.instance.props.nickname)) {
-							let name = [data.name, data.showServerNick && e.instance.props.nickname && `(${e.instance.props.nickname})`].filter(n => n).join(" ");
-							e.instance.props.nickname = name;
-							if (e.instance.props.guildMember) e.instance.props.guildMember = Object.assign({}, e.instance.props.guildMember, {nick: name});
-						}
-					}
-				}
+			processUserPopoutContainer (e) {
+				if (e.returnvalue.props.user && this.settings.places.userPopout && changedUsers[e.returnvalue.props.user.id]) e.returnvalue.props.user = this.getUserData(e.returnvalue.props.user.id, true, true);
 			}
 
 			processUserPopoutInfo (e) {
 				if (e.instance.props.user && this.settings.places.userPopout) {
 					let data = changedUsers[e.instance.props.user.id];
-					if (data && (data.color1 || data.color2 || data.tag)) {
-						let [children, index] = BDFDB.ReactUtils.findParent(e.returnvalue, {props: [["className", BDFDB.disCN.userpopoutheadernickname]]});
-						if (index > -1) {
-							this.changeUserColor(children[index], e.instance.props.user.id, {changeBackground: true});
-							if (!BDFDB.ArrayUtils.is(children[index].props.children)) children[index].props.children = [children[index].props.children].flat(10);
-							this.injectBadge(children[index].props.children, e.instance.props.user.id, BDFDB.LibraryModules.LastGuildStore.getGuildId(), 2, {
-								tagClass: BDFDB.disCNS.userpopoutheaderbottag + BDFDB.disCN.bottagnametag,
-								inverted: typeof e.instance.getMode == "function" && e.instance.getMode() !== "Normal"
-							});
+					if (!data) return;
+					if (!e.returnvalue) {
+						if (data.name && !(data.useServerNick && e.instance.props.nickname)) e.instance.props.nickname = [data.name, data.showServerNick && e.instance.props.nickname && `(${e.instance.props.nickname})`].filter(n => n).join(" ");
+					}
+					else {
+						if (data.color1 || data.color2 || data.tag) {
+							let [children, index] = BDFDB.ReactUtils.findParent(e.returnvalue, {props: [["className", BDFDB.disCN.userpopoutheadernickname]]});
+							if (index > -1) {
+								this.changeUserColor(children[index], e.instance.props.user.id, {changeBackground: true});
+								if (!BDFDB.ArrayUtils.is(children[index].props.children)) children[index].props.children = [children[index].props.children].flat(10);
+								this.injectBadge(children[index].props.children, e.instance.props.user.id, BDFDB.LibraryModules.LastGuildStore.getGuildId(), 2, {
+									tagClass: BDFDB.disCNS.userpopoutheaderbottag + BDFDB.disCN.bottagnametag,
+									inverted: typeof e.instance.getMode == "function" && e.instance.getMode() !== "Normal"
+								});
+							}
 						}
 					}
 				}
@@ -526,8 +538,8 @@ module.exports = (_ => {
 				if (e.instance.props.user && this.settings.places.userProfile) e.instance.props.user = this.getUserData(e.instance.props.user.id);
 			}
 
-			processCustomStatusActivity (e) {
-				console.log(e);
+			processUserProfileModalHeader (e) {
+				if (e.instance.props.user && this.settings.places.userProfile) e.instance.props.user = this.getUserData(e.instance.props.user.id);
 			}
 
 			processMutualFriends (e) {

@@ -82,6 +82,7 @@ module.exports = (() => {
             // Resolve weird loading issues
             await new Promise(resolve => setTimeout(resolve, 1000));
             this.doSetup();
+            window["ADP"]=this;
         }
 
         onStop() {
