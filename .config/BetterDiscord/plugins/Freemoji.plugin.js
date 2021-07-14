@@ -1,8 +1,13 @@
 /**
 * @name Freemoji
 * @displayName Freemoji
+* @description Send emoji external emoji and animated emoji without Nitro.
+* @author Qb, An0
 * @authorId 133659541198864384
+* @license LGPLv3 - https://www.gnu.org/licenses/lgpl-3.0.txt
+* @version 1.3.0
 * @invite gj7JFa6mF8
+* @source https://github.com/QbDesu/BetterDiscordAddons/blob/potato/Plugins/Freemoji
 * @updateUrl https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Plugins/Freemoji/Freemoji.plugin.js
 */
 /*@cc_on
@@ -40,32 +45,89 @@ module.exports = (() => {
                     github_username: "QbDesu"
                 },
                 {
-                    name: "lemons",
-                    discord_id: "407348579376693260",
-                    github_username: "respecting"
+                    name: "An0",
+                    github_username: "An00nymushun"
                 }
             ],
-            version: "1.1.0",
-            description: "Send emoji without Nitro.",
+            version: "1.3.0",
+            description: "Send emoji external emoji and animated emoji without Nitro.",
             github: "https://github.com/QbDesu/BetterDiscordAddons/blob/potato/Plugins/Freemoji",
             github_raw: "https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Plugins/Freemoji/Freemoji.plugin.js"
-        }
+        },
+        changelog: [
+            { title: "Features", type: "added", items: ["Added the ability to send emoji that would normally even be unavailable to Nitro users. This does however not enable you to send emoji from other servers if the server has external emoji disabled."] },
+        ],
+        defaultConfig: [
+            {
+                type: "dropdown",
+                id: "removeGrayscale",
+                name: "Remove Grayscale Filter",
+                note: "Remove the grayscale filter on emoji that would normally not be usable.",
+                value: 'embedPerms',
+                options: [
+                    {
+                        label: 'Always',
+                        value: 'always'
+                    },
+                    {
+                        label: 'With Embed Perms',
+                        value: 'embedPerms'
+                    },
+                    {
+                        label: 'Never',
+                        value: 'never'
+                    }
+                ]
+            },
+            {
+                type: "dropdown",
+                id: "missingEmbedPerms",
+                name: "Missing Embed Perms Behaviour",
+                note: "What should happen if the user selects an emote even though they have no embed permissions.",
+                value: 'showDialog',
+                options: [
+                    {
+                        label: 'Show Confirmation Dialog',
+                        value: 'showDialog'
+                    },
+                    {
+                        label: 'Insert Anyway',
+                        value: 'insert'
+                    },
+                    {
+                        label: 'Nothing',
+                        value: 'nothing'
+                    }
+                ]
+            },
+            {
+                type: "slider",
+                id: "size",
+                name: "Emoji Size",
+                note: "The size of the emoji in pixels. 40 is recommended.",
+                value: 40,
+                markers:[16,20,32,40,64],
+                stickToMarkers:true
+            },
+            {
+                type: "switch",
+                id: "allowUnavailable",
+                name: "Allow Unavailable Emoji",
+                note: "Allow using emoji that would normally even be unavailable to Nitro users. For example emoji which became unavailable because a server lost it's boost tier.",
+                value: true
+            }
+        ]
     };
-
     return !global.ZeresPluginLibrary ? class {
         constructor() { this._config = config; }
-        getName() { return config.info.name; }
-        getAuthor() { return config.info.authors.map(a => a.name).join(", "); }
-        getDescription() { return config.info.description; }
-        getVersion() { return config.info.version; }
         load() {
-            BdApi.showConfirmationModal("Library plugin is needed",
+            BdApi.showConfirmationModal("Library plugin is needed", 
                 [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], {
                 confirmText: "Download",
                 cancelText: "Cancel",
                 onConfirm: () => {
                     require("request").get("https://rauenzi.github.io/BDPluginLibrary/release/0PluginLibrary.plugin.js", async (error, response, body) => {
-                        if (error) return require("electron").shell.openExternal("https://betterdiscord.net/ghdl?url=https://raw.githubusercontent.com/rauenzi/BDPluginLibrary/master/release/0PluginLibrary.plugin.js");
+                        if (error) return require("electron").shell.openExternal("https://betterdiscord.app/Download?id=9");
                         await new Promise(r => require("fs").writeFile(require("path").join(BdApi.Plugins.folder, "0PluginLibrary.plugin.js"), body, r));
                     });
                 }
@@ -73,70 +135,150 @@ module.exports = (() => {
         }
         start() { }
         stop() { }
-    } : (([Plugin, Api]) => {
+    }
+    : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
             const {
                 Patcher,
-                DiscordModules,
-                DiscordAPI,
-                Settings,
-                PluginUtilities
+                PluginUtilities,
+                WebpackModules,
+                Toasts,
+                Logger,
+                Utilities,
+                DOMTools,
+                DiscordModules: {
+                    Permissions,
+                    DiscordPermissions,
+                    UserStore,
+                    SelectedChannelStore,
+                    ChannelStore
+                }
             } = Api;
+
+            const Emojis = WebpackModules.findByUniqueProperties(['getDisambiguatedEmojiContext','search']);
+            const EmojiParser = WebpackModules.findByUniqueProperties(['parse', 'parsePreprocessor', 'unparse']);
+            const EmojiPicker = WebpackModules.findByUniqueProperties(['useEmojiSelectHandler']);
+            const ExpressionPicker = WebpackModules.getModule(e => e.type?.displayName === "ExpressionPicker");
+
+            const disabledEmojiSelector = new DOMTools.Selector(WebpackModules.getByProps('emojiItemDisabled')?.emojiItemDisabled);
+            const removeGrayscaleClass = `${config.info.name}--remove-grayscale`;
             return class Freemoji extends Plugin {
-                defaultSettings = {
-                    "emojiSize": "40",
-                    "emojiRemoveGrayscale": true,
-                };
-                settings = PluginUtilities.loadSettings(this.getName(), this.defaultSettings);
-                originalNitroStatus = 0;
-                css = `
-                .emojiItemDisabled-1FvFuF {
+                removeGrayscaleCss = `
+                .${removeGrayscaleClass} ${disabledEmojiSelector} {
                     filter: grayscale(0%);
                 }
                 `;
+                currentUser = null;
 
-                getSettingsPanel() {
-                    return Settings.SettingPanel.build(_ => this.saveAndUpdate(), ...[
-                        new Settings.SettingGroup("Emojis").append(
-                            new Settings.Slider("Size", "The size of the emoji in pixels. 40 is recommended.", 16, 64, this.settings.emojiSize, size=>this.settings.emojiSize = size, {markers:[16,20,32,40,64], stickToMarkers:true}),
-                            new Settings.Switch("Remove Grayscale Filter", "Remove the grayscale filter on emoji that would normally not be usable.", this.settings.emojiRemoveGrayscale, value => this.settings.emojiRemoveGrayscale = value),
-                        )
-                    ])
+                addStyles() {
+                    PluginUtilities.addStyle(removeGrayscaleClass, this.removeGrayscaleCss);
                 }
-                
-                saveAndUpdate() {
-                    PluginUtilities.saveSettings(this.getName(), this.settings)
 
-                    //fix emotes with bad method
-                    Patcher.before(DiscordModules.MessageActions, "sendMessage", (_, [, msg]) => {
-                        msg.validNonShortcutEmojis.forEach(emoji => {
-                            if (emoji.url.startsWith("/assets/")) return;
-                            msg.content = msg.content.replace(`<${emoji.animated ? "a" : ""}${emoji.allNamesString.replace(/~\d/g, "")}${emoji.id}>`, emoji.url + `&size=${this.settings.emojiSize} `)
-                        })
-                    });
-                    //for editing message also
-                    Patcher.before(DiscordModules.MessageActions, "editMessage", (_,obj) => {
-                        let msg = obj[2].content;
-                        if (msg.search(/\d{18}/g) == -1) return;
-                        msg.match(/<a:.+?:\d{18}>|<:.+?:\d{18}>/g).forEach(idfkAnymore=>{
-                            obj[2].content = obj[2].content.replace(idfkAnymore, `https://cdn.discordapp.com/emojis/${idfkAnymore.match(/\d{18}/g)[0]}?size=${this.settings.emojiSize}`);
-                        });
+                replaceEmoji(text, emoji) {
+                    const emojiString = `<${emoji.animated ? "a" : ""}:${emoji.originalName || emoji.name}:${emoji.id}>`;
+                    const emojiURL = `${emoji.url}&size=${this.settings.size}`;
+                    return text.replace(emojiString, emojiURL);
+                }
+
+                patch() {
+                    // make emote pretend locked emoji are unlocked
+                    Patcher.after(Emojis, 'search', (_, args, ret) => {
+                        ret.unlocked = ret.unlocked.concat(ret.locked);
+                        ret.locked.length = [];
+                        return ret;
                     });
 
-                    if (this.settings.emojiRemoveGrayscale && !document.getElementById(`${config.info.name}--grayscale`)){
-                        PluginUtilities.addStyle(`${config.info.name}--grayscale`, this.css);
-                    } else {
-                        PluginUtilities.removeStyle(`${config.info.name}--grayscale`);
-                    }
+                    // replace emoji with links in messages
+                    Patcher.after(EmojiParser, 'parse', (_, args, ret) => {
+                        for(const emoji of ret.invalidEmojis) {
+                            ret.content = this.replaceEmoji(ret.content, emoji);
+                        }
+                        if (this.settings.allowUnavailable) {
+                            for(const emoji of ret.validNonShortcutEmojis) {
+                                if (!emoji.available) {
+                                    ret.content = this.replaceEmoji(ret.content, emoji);
+                                }
+                            }
+                        }
+                        return ret;
+                    });
+
+                    // override emoji picker to allow selecting emotes
+                    Patcher.after(EmojiPicker, 'useEmojiSelectHandler', (_, args, ret) => {
+                        const { onSelectEmoji, closePopout } = args[0];
+                        return (data, state) => {
+                            ret.apply(this, args);
+                            if(this.settings.allowUnavailable || data.emoji?.available) {
+                                if (data.isDisabled) {
+                                    const perms = this.hasEmbedPerms();
+                                    if (!perms && this.settings.missingEmbedPerms == 'nothing') return; 
+                                    if (!perms && this.settings.missingEmbedPerms == 'showDialog') {
+                                        BdApi.showConfirmationModal(
+                                            "Missing Image Embed Permissions", 
+                                            [`It looks like you are trying to send an Emoji using Freemoji but you dont have the permissions to send embeded images in this channel. You can choose to send it anyway but it will only show as a link.`], {
+                                            confirmText: "Send Anyway",
+                                            cancelText: "Cancel",
+                                            onConfirm: () => {
+                                                onSelectEmoji(data.emoji, state.isFinalSelection);
+                                                if(state.isFinalSelection) closePopout();
+                                            }
+                                        });
+                                        return;
+                                    }
+                                }
+                                onSelectEmoji(data.emoji, state.isFinalSelection);
+                                if(state.isFinalSelection) closePopout();
+                            }
+                            
+                        }
+                    });
+
+                    // add remove grayscale class to expression picker
+                    Patcher.after(ExpressionPicker, 'type', (_, args, ret) => {
+                        if (this.settings.removeGrayscale=='never') return;
+                        if (this.settings.removeGrayscale!='always' && !this.hasEmbedPerms()) return;
+                        Utilities.getNestedProp(ret, "props.children.props").className += ` ${removeGrayscaleClass}`
+                    });
+                }
+
+                hasEmbedPerms() {
+                    if (!this.currentUser) this.currentUser = UserStore.getCurrentUser();
+                    const channel = ChannelStore.getChannel(SelectedChannelStore.getChannelId());
+                    if (!channel.guild_id) return true;
+                    return Permissions.can(DiscordPermissions.EMBED_LINKS, this.currentUser.id, channel)
+                }
+
+                cleanup() {
+                    Patcher.unpatchAll();
+                    this.removeStyles();
+                }
+
+                removeStyles() {
+                    PluginUtilities.removeStyle(removeGrayscaleClass);
                 }
 
                 onStart() {
-                    this.saveAndUpdate();
+                    try{
+                        this.patch();
+                        this.addStyles();
+                    } catch (e) {
+                        Toasts.error(`${config.info.name}: An error occured during intialiation: ${e}`);
+                        Logger.error(`Error while patching: ${e}`);
+                        console.error(e);
+                    }
                 }
-
+                
                 onStop() {
-                    Patcher.unpatchAll();
-                    PluginUtilities.removeStyle(`${config.info.name}--grayscale`);
+                    this.cleanup();
+                }
+            
+                getSettingsPanel() {
+                    const panel = this.buildSettingsPanel();
+                    panel.addListener(() => {
+                        this.removeStyles();
+                        this.addStyles();
+                    });
+                    return panel.getElement();
                 }
             };
         };

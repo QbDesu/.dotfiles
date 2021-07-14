@@ -58,15 +58,10 @@
 			return template.content.firstElementChild;
 		}
 	} : (([Plugin, BDFDB]) => {
-		const userTypes = {
-			NONE: 0,
-			MANAGEMENT: 1,
-			ADMIN: 2,
-			OWNER: 3
-		};
 		
 		return class StaffTag extends Plugin {
 			onLoad () {
+
 				this.patchedModules = {
                     before:{
 						SettingsView: "render",

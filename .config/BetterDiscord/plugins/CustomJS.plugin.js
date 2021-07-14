@@ -29,37 +29,33 @@
 @else@*/
 
 module.exports = (() => {
+    const fs = require('fs');
+    const path = require('path')
+
     const config = {
         info: {
             name: "CustomJS",
-            authors: [
-                {
-                    name: "Qb",
-                    discord_id: "415849376598982656",
-                    github_username: "Qb_Desu",
-                    twitter_username: "Strencher3"
-                }
-            ],
             version: "1.0.0",
-            description: "Allows you to specify a custom JavaScript file similar to custom CSS.",
             github: "",
             github_raw: ""
         },
         defaultConfig: [
             {
-                type: 'textbox',
-                name: 'JavaScript Code',
-                id: 'code',
+                type: 'file',
+                name: 'File Path',
+                id: 'filePath',
+                value: path.join(BdApi.Plugins.folder,'custom.js')
+            },
+            {
+                type: 'switch',
+                name: 'Show Toast on Reload',
+                id: 'reloadToast',
                 value: true
             }
         ]
     };
     return !global.ZeresPluginLibrary ? class {
         constructor() { this._config = config; }
-        getName() { return config.info.name; }
-        getAuthor() { return config.info.authors.map(a => a.name).join(", "); }
-        getDescription() { return config.info.description; }
-        getVersion() { return config.info.version; }
         load() {
             BdApi.showConfirmationModal("Library plugin is needed", 
                 [`The library plugin needed for ${config.info.name} is missing. Please click Download Now to install it.`], {
@@ -77,48 +73,61 @@ module.exports = (() => {
         stop() { }
     } : (([Plugin, Api]) => {
         const plugin = (Plugin, Api) => {
-            const {DiscordModules: {React, DiscordConstants}, WebpackModules, PluginUtilities, DiscordModules, Patcher, Utilities, Toasts} = Api;
+            const {PluginUtilities, Toasts, Logger} = Api;
 
             return class CustomJS extends Plugin {
+                watcher = null;
+
                 constructor() {
                     super();
+                    // remove need for duplication of metadata fields
+                    this.getAuthor = null;
+                    this.getDescription = null;
                 }
                 css = ``;
 
-                onStart() {
+                async onStart() {
                     PluginUtilities.addStyle(config.info.name, this.css);
-                    this.reloadJs();
-                    this.rewatch();
+
+                    await this.reloadJs();
+                    await this.rewatch();
                 }
 
-                rewatch() {
-                    /*
-                    const fs = require("fs");
-                    
+                async rewatch() {
                     if(this.watcher) this.watcher.close();
                     
-                    if(this.settings.filepath) this.watcher = fs.watch(this.settings.filepath, () => {
-                        const current = fs.readFileSync(this.settings.filepath, "utf-8");
-                        if(!current) return;
-                        if(this.last != current) this.reloadJs();
-                    });
-                    */
+                    if (this.settings.filePath) {
+                        this.watcher = fs.watch(this.settings.filePath, () => {
+                            const current = fs.readFileSync(this.settings.filePath, "utf-8");
+                            if(!current) return;
+                            if(this.last != current) this.reloadJs();
+                        });
+                    }
                 }
                 
-                reloadJs() {
+                async reloadJs() {
+                    fs.closeSync(fs.openSync(this.settings.filePath, 'a' ));
                     try {
-                        const js = this.script = eval(this.settings.code);
+                        Logger.debug(`Loading CustomJS file from ${this.settings.filePath}`)
+                        eval(fs.readFileSync(this.settings.filePath, "utf-8"));
+                        if(this.settings.reloadToast) Toasts.success(`Reloaded CustomJS`);
                     } catch(err) {
                         Toasts.error("Error evaluating CustomJS: " + err);
                         console.error(err);
                     }
-                    
                 }
 
-                onStop() {}
+                onStop() {
+                    if(this.watcher) this.watcher.close();
+                }
 
-                getSettingsPanel(){
-                    return this.buildSettingsPanel().getElement();
+                getSettingsPanel() {
+                    const panel = this.buildSettingsPanel();
+                    panel.addListener(() => {
+                        this.reloadJs();
+                        this.rewatch();
+                    });
+                    return panel.getElement();
                 }
 
             }

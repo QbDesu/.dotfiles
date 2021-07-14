@@ -1,10 +1,10 @@
 /**
- * @name DisableAllButton
- * @version 99.0.0
+ * @name SpellcheckManager
+ * @version 1.0.0
  * @author Qb
  * @description Adds user status everywhere Discord doesn't.
- * @source https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere
- * @updateUrl https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js
+ * @source https://github.com/QbDesu/BetterDiscordAddons/tree/potato/Plugins/SpellcheckManager
+ * @updateUrl https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Plugins/SpellcheckManager/SpellcheckManager.plugin.js
  */
 /*@cc_on
 @if (@_jscript)
@@ -32,7 +32,8 @@
 const config = {
 	"main": "./src/index.tsx",
 	"scripts": {
-		"build": "bdbuilder --plugin DisableAllButton --watch --config ./bdbuilder.config.json"
+		"build": "bdbuilder --plugin SpellcheckManager --build --config ./bdbuilder.config.json",
+		"watch": "bdbuilder --plugin SpellcheckManager --watch --config ./bdbuilder.config.json"
 	},
 	"author": "Qb",
 	"license": "Unlicense",
@@ -40,15 +41,16 @@ const config = {
 		"@betterdiscordbuilder/bdbuilder": "^1.2.6-preview.4"
 	},
 	"info": {
-		"name": "DisableAllButton",
-		"version": "99.0.0",
+		"name": "SpellcheckManager",
+		"version": "1.0.0",
 		"authors": [{
 			"name": "Qb",
+			"discord_id": "133659541198864384",
 			"github_username": "QbDesu"
 		}],
 		"description": "Adds user status everywhere Discord doesn't.",
-		"github": "https://github.com/Strencher/BetterDiscordStuff/tree/master/StatusEverywhere",
-		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/StatusEverywhere/StatusEverywhere.plugin.js"
+		"github": "https://github.com/QbDesu/BetterDiscordAddons/tree/potato/Plugins/SpellcheckManager",
+		"github_raw": "https://raw.githubusercontent.com/QbDesu/BetterDiscordAddons/potato/Plugins/SpellcheckManager/SpellcheckManager.plugin.js"
 	},
 	"build": {
 		"zlibrary": true,
@@ -270,9 +272,53 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			}
 		};
-		/******/ // The require scope
 		/******/
-		var __webpack_require__ = {};
+		var __webpack_modules__ = ({
+			/***/
+			832:
+				/***/
+				((module) => {
+					module.exports = BdApi.React;
+					/***/
+				})
+			/******/
+		});
+		/************************************************************************/
+		/******/ // The module cache
+		/******/
+		var __webpack_module_cache__ = {};
+		/******/
+		/******/ // The require function
+		/******/
+		function __webpack_require__(moduleId) {
+			/******/ // Check if module is in cache
+			/******/
+			var cachedModule = __webpack_module_cache__[moduleId];
+			/******/
+			if (cachedModule !== undefined) {
+				/******/
+				return cachedModule.exports;
+				/******/
+			}
+			/******/ // Create a new module (and put it into the cache)
+			/******/
+			var module = __webpack_module_cache__[moduleId] = {
+				/******/ // no module.id needed
+				/******/ // no module.loaded needed
+				/******/
+				exports: {}
+				/******/
+			};
+			/******/
+			/******/ // Execute the module function
+			/******/
+			__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+			/******/
+			/******/ // Return the exports of the module
+			/******/
+			return module.exports;
+			/******/
+		}
 		/******/
 		/************************************************************************/
 		/******/
@@ -359,30 +405,104 @@ function buildPlugin([BasePlugin, PluginApi]) {
 		/******/
 		/************************************************************************/
 		var __webpack_exports__ = {};
-		// ESM COMPAT FLAG
-		__webpack_require__.r(__webpack_exports__);
-		// EXPORTS
-		__webpack_require__.d(__webpack_exports__, {
-			"default": () => ( /* binding */ DisableAllButton)
-		});
-		; // CONCATENATED MODULE: external "PluginApi"
-		const external_PluginApi_namespaceObject = PluginApi;; // CONCATENATED MODULE: external "BasePlugin"
-		const external_BasePlugin_namespaceObject = BasePlugin;
-		var external_BasePlugin_default = /*#__PURE__*/ __webpack_require__.n(external_BasePlugin_namespaceObject);; // CONCATENATED MODULE: ./src/index.tsx
-		class DisableAllButton extends(external_BasePlugin_default()) {
-			onStart() { //this.patchSettingsView()
+		// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+		(() => {
+			// ESM COMPAT FLAG
+			__webpack_require__.r(__webpack_exports__);
+			// EXPORTS
+			__webpack_require__.d(__webpack_exports__, {
+				"default": () => ( /* binding */ DisableAllButton)
+			});
+			; // CONCATENATED MODULE: external "BasePlugin"
+			const external_BasePlugin_namespaceObject = BasePlugin;
+			var external_BasePlugin_default = /*#__PURE__*/ __webpack_require__.n(external_BasePlugin_namespaceObject);
+			// EXTERNAL MODULE: external "BdApi.React"
+			var external_BdApi_React_ = __webpack_require__(832);
+			var external_BdApi_React_default = /*#__PURE__*/ __webpack_require__.n(external_BdApi_React_);; // CONCATENATED MODULE: external "PluginApi"
+			const external_PluginApi_namespaceObject = PluginApi;; // CONCATENATED MODULE: external ["Modules","@discord/forms"]
+			const forms_namespaceObject = Modules["@discord/forms"];; // CONCATENATED MODULE: external ["Modules","@discord/components"]
+			const components_namespaceObject = Modules["@discord/components"];; // CONCATENATED MODULE: ./src/Settings.tsx
+			function _extends() {
+				_extends = Object.assign || function(target) {
+					for (var i = 1; i < arguments.length; i++) {
+						var source = arguments[i];
+						for (var key in source) {
+							if (Object.prototype.hasOwnProperty.call(source, key)) {
+								target[key] = source[key];
+							}
+						}
+					}
+					return target;
+				};
+				return _extends.apply(this, arguments);
 			}
-			async patchSettingsView() {
-				const SettingsView = external_PluginApi_namespaceObject.WebpackModules.find(m => m?.default?.displayName == 'SettingsView').default.prototype;
-				external_PluginApi_namespaceObject.Patcher.after(SettingsView, "render", (_, args, returnValue) => {
-					external_PluginApi_namespaceObject.Logger.log(args, returnValue);
-					return returnValue;
+			const localStorage = external_PluginApi_namespaceObject.WebpackModules.getByProps("ObjectStorage").impl;
+			const SpellcheckStore = external_PluginApi_namespaceObject.WebpackModules.getByProps('setLearnedWords');
+			const Titles = external_PluginApi_namespaceObject.WebpackModules.getByProps("titleDefault");
+			function DeleteButton(props) {
+				return /*#__PURE__*/ external_BdApi_React_default().createElement("button", _extends({
+					class: "bd-button bd-button-danger"
+				}, props), /*#__PURE__*/ external_BdApi_React_default().createElement("svg", {
+					fill: "#FFFFFF",
+					viewBox: "0 0 24 24",
+					width: "20px",
+					height: "20px"
+				}, /*#__PURE__*/ external_BdApi_React_default().createElement("path", {
+					fill: "none",
+					d: "M0 0h24v24H0V0z"
+				}), /*#__PURE__*/ external_BdApi_React_default().createElement("path", {
+					d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"
+				}), /*#__PURE__*/ external_BdApi_React_default().createElement("path", {
+					fill: "none",
+					d: "M0 0h24v24H0z"
+				})));
+			}
+			function Settings() {
+				const [spellcheckStoreState, setSpellcheckStoreState] = (0, external_BdApi_React_.useState)(localStorage.get('SpellcheckStore') || {
+					enabled: true,
+					learnedWords: []
 				});
+				const learnedWords = spellcheckStoreState.learnedWords;
+				function removeWord(word) {
+					setSpellcheckStoreState(state => {
+						const newState = {
+							enabled: state.enabled,
+							learnedWords: learnedWords.filter(w => w != word)
+						};
+						localStorage.set('SpellcheckStore', newState);
+						SpellcheckStore.setLearnedWords(new Set(newState.learnedWords));
+						return newState;
+					});
+				}
+				return /*#__PURE__*/ external_BdApi_React_default().createElement((external_BdApi_React_default()).Fragment, null, /*#__PURE__*/ external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+					title: "Learned Words"
+				}, learnedWords.length ? learnedWords.map(word => /*#__PURE__*/ external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+					align: components_namespaceObject.Flex.Align.START
+				}, /*#__PURE__*/ external_BdApi_React_default().createElement(components_namespaceObject.Flex.Child, {
+					wrap: false
+				}, /*#__PURE__*/ external_BdApi_React_default().createElement("div", {
+					className: Titles?.title
+				}, word)), /*#__PURE__*/ external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+					grow: 0,
+					shrink: 0
+				}, /*#__PURE__*/ external_BdApi_React_default().createElement(DeleteButton, {
+					onClick: () => {
+						removeWord(word);
+					}
+				})))) : /*#__PURE__*/ external_BdApi_React_default().createElement("div", {
+					className: Titles?.title
+				}, "No entries")));
+			}; // CONCATENATED MODULE: ./src/index.tsx
+			/* provided dependency */
+			var React = __webpack_require__(832);
+			class DisableAllButton extends(external_BasePlugin_default()) {
+				onStart() {}
+				onStop() {}
+				getSettingsPanel() {
+					return /*#__PURE__*/ React.createElement(Settings, null);
+				}
 			}
-			onStop() {
-				external_PluginApi_namespaceObject.Patcher.unpatchAll();
-			}
-		}
+		})();
 		module.exports.LibraryPluginHack = __webpack_exports__;
 		/******/
 	})();
