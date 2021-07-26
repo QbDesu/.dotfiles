@@ -1,0 +1,1 @@
+/home/necro/Code/BetterDiscordAddons/Plugins/RemoveChatButtons/RemoveChatButtons.plugin.js

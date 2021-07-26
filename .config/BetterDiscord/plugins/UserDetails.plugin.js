@@ -1,6 +1,6 @@
 /**
  * @name UserDetails
- * @version 1.4.3
+ * @version 1.5.0
  * @author Strencher
  * @description Shows you a lot information about users in popouts.
  * @source https://github.com/Strencher/BetterDiscordStuff/UserDetails
@@ -32,7 +32,7 @@
 const config = {
 	"info": {
 		"name": "UserDetails",
-		"version": "1.4.3",
+		"version": "1.5.0",
 		"authors": [{
 			"name": "Strencher",
 			"discord_id": "415849376598982656",
@@ -44,19 +44,20 @@ const config = {
 		"github_raw": "https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"
 	},
 	"changelog": [{
-			"title": "Fixed - v1.4.3",
+			"title": "Fixed",
 			"type": "fixed",
 			"items": [
-				"I'm sorry that it took so long to fix the plugin. :c Finally got some time and motivation to fix all the bugs.",
-				"If there's still something not working, let me know!"
+				"Fixed dates cache not refreshing.",
+				"Fixed some other weird bugs."
 			]
 		},
 		{
-			"title": "Added - v1.4.3",
+			"title": "Added",
 			"type": "added",
 			"items": [
-				"I also added translations for German, Turkey & Dutch.",
-				"Become a translator on my server and your translation will be added within the next version!"
+				"**MutualServers** section in the user popout.",
+				"**ActivityIcons** setting to disable for bots.",
+				"**Translations** credits for the translators."
 			]
 		}
 	],
@@ -80,8 +81,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 	const module = {
 		exports: {}
 	};
-	/*! For license information please see index.js.LICENSE.txt */
 	(() => {
+		"use strict";
 		class StyleLoader {
 			static styles = "";
 			static element = null;
@@ -197,7 +198,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
 				},
 				get 'Users'() {
-					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser'))
+					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
 				},
 				get 'SettingsStore'() {
 					return ___createMemoize___(this, 'SettingsStore', () => BdApi.findModuleByProps('afkTimeout', 'status'))
@@ -281,244 +282,2245 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				}
 			}
 		};
-		"use strict";
 		var __webpack_modules__ = {
-			"./UserDetails/modules/components/settings/pages.json": module => {
-				eval('module.exports = JSON.parse(\'[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\\\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\\\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\\\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\\\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\\\"NO CONNECTIONS\\\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \\\'Playing: {...}\\\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\\\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\\\'t available.","id":"showGamepad","value":true}]},{"name":"Mutual Servers","icon":null,"items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \\\'no mutual servers\\\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]}]\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/settings/pages.json?');
+			597: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections,.UserDetails-connections-container){display:inline-flex;margin:5px}.UserDetails-connections-connectionsBody .UserDetails-connections-loading{fill:var(--interactive-muted);animation:UserDetails-connections-blink infinite 2s;width:30px;height:30px;margin:5px;margin-top:0;margin-left:0}.UserDetails-connections-connectionsBody .UserDetails-connections-connections{display:flex;flex-wrap:wrap;margin-bottom:8px}.UserDetails-connections-connectionsBody .UserDetails-connections-connections img{width:30px;height:30px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{width:35px;height:35px;margin-top:-5px}.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon{fill:#ed4245 !important}@keyframes UserDetails-connections-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					header: "UserDetails-connections-header",
+					connectionsBody: "UserDetails-connections-connectionsBody",
+					connections: "UserDetails-connections-connections",
+					container: "UserDetails-connections-container",
+					loading: "UserDetails-connections-loading",
+					blink: "UserDetails-connections-blink",
+					errorIcon: "UserDetails-connections-errorIcon"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			"./UserDetails/modules/data/translations/de.json": module => {
-				eval('module.exports = JSON.parse(\'{"CONNECTIONS":"Verknüpfungen","NO_CONNECTIONS":"Keine Verknüpfungen","LOADING_CONNECTIONS":"Lade Verknüpfungen...","LOADING_LAST_MESSAGE":"Lade letzte Nachricht...","LOADING_JOINED_AT":"Lade Beitrittsdatum...","MEMBER_WAS_NOT_FOUND":"Mitglied konnte nicht gefunden werden.","FAILED_TO_FETCH":"Fehler beim Laden","USERINFO_CMD_DESC":"Zeigt einige Informationen über einen bestimmten Nutzer.","NO_MUTUAL_GUILDS":"Keine gemeinsamen Server.","LOADING_MUTUAL_GUILDS":"Gemeinsame Server werden geladen."}\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/translations/de.json?');
+			242: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-dates-container{display:flex;max-width:-webkit-fill-available}.UserDetails-dates-container.UserDetails-dates-text{flex-direction:column;margin-top:10px}.UserDetails-dates-container.UserDetails-dates-icons{flex-direction:row}.UserDetails-dates-container.UserDetails-dates-icons.UserDetails-dates-userProfile{padding-left:13px}.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading{animation:UserDetails-dates-blink infinite 2s ease-in-out}.UserDetails-dates-container svg{fill:#ddd;margin:5px;width:20px;height:20px}.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:left;line-height:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile{padding-left:18px}.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText{text-align:left !important}.UserDetails-dates-container .UserDetails-dates-errorIcon{fill:#ed4245 !important}.UserDetails-dates-wrapper{display:block}@keyframes UserDetails-dates-blink{0%{opacity:.6}50%{opacity:.3}100%{opacity:.6}}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					container: "UserDetails-dates-container",
+					text: "UserDetails-dates-text",
+					icons: "UserDetails-dates-icons",
+					userProfile: "UserDetails-dates-userProfile",
+					loading: "UserDetails-dates-loading",
+					blink: "UserDetails-dates-blink",
+					scrollableText: "UserDetails-dates-scrollableText",
+					errorIcon: "UserDetails-dates-errorIcon",
+					wrapper: "UserDetails-dates-wrapper"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			"./UserDetails/modules/data/translations/en-US.json": module => {
-				eval('module.exports = JSON.parse(\'{"CONNECTIONS":"Connections","NO_CONNECTIONS":"No Connections","LOADING_CONNECTIONS":"Loading Connections...","LOADING_LAST_MESSAGE":"Loading Last Message","LOADING_JOINED_AT":"Loading Joined At","MEMBER_WAS_NOT_FOUND":"Member Was Not Found!","FAILED_TO_FETCH":"Failed To Fetch","USERINFO_CMD_DESC":"User Information"}\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/translations/en-US.json?');
+			416: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-mutualServers-header{font-weight:700;text-transform:uppercase;font-size:12px;margin-bottom:8px;color:var(--header-secondary)}.UserDetails-mutualServers-body{display:block;margin-bottom:8px}.UserDetails-mutualServers-guilds{display:flex;flex-wrap:wrap}.UserDetails-mutualServers-mutualGuild{margin:2px}.UserDetails-mutualServers-mutualGuild,.UserDetails-mutualServers-guildAcronym{width:30px;height:30px;border-radius:50%;overflow:hidden;transition:border-radius .3s}.UserDetails-mutualServers-mutualGuild:hover,.UserDetails-mutualServers-guildAcronym:hover{border-radius:20%}.UserDetails-mutualServers-mutualGuild img{width:30px;height:30px}.UserDetails-mutualServers-guildAcronym{display:flex;background:var(--background-floating);align-items:center;justify-content:center;white-space:nowrap;font-size:12px}.UserDetails-mutualServers-stack .UserDetails-mutualServers-mutualGuild{margin:0;margin-right:-10px;background:var(--background-floating)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					header: "UserDetails-mutualServers-header",
+					body: "UserDetails-mutualServers-body",
+					guilds: "UserDetails-mutualServers-guilds",
+					mutualGuild: "UserDetails-mutualServers-mutualGuild",
+					guildAcronym: "UserDetails-mutualServers-guildAcronym",
+					stack: "UserDetails-mutualServers-stack"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			"./UserDetails/modules/data/translations/es-ES.json": module => {
-				eval('module.exports = JSON.parse(\'{"CONNECTIONS":"Conexiones","NO_CONNECTIONS":"Sin conexiones","LOADING_CONNECTIONS":"Cargando conexiones...","LOADING_LAST_MESSAGE":"Cargando el último mensaje...","LOADING_JOINED_AT":"Cargando la fecha de ingreso...","MEMBER_WAS_NOT_FOUND":"¡El miembro no fue encontrado!","FAILED_TO_FETCH":"¡No se pudo obtener!","USERINFO_CMD_DESC":"Muestra información sobre un usuario en específico.","NO_MUTUAL_GUILDS":"Sin servidores en común","LOADING_MUTUAL_GUILDS":"Cargando los servidores en común..."}\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/translations/es-ES.json?');
+			755: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-activity-icon{display:flex;float:right}.UserDetails-activity-container{display:flex}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					icon: "UserDetails-activity-icon",
+					container: "UserDetails-activity-container"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			"./UserDetails/modules/data/translations/fr.json": module => {
-				eval('module.exports = JSON.parse(\'{"CONNECTIONS":"Connexions","NO_CONNECTIONS":"Aucune connexion","LOADING_CONNECTIONS":"Chargement des connexions...","LOADING_LAST_MESSAGE":"Chargement du dernier message...","LOADING_JOINED_AT":"Chargement de : A rejoint le...","MEMBER_WAS_NOT_FOUND":"Le membre n\\\'a pas été trouvé !","FAILED_TO_FETCH":"Une erreur est survenue sur l\\\'action \\\'Fetch\\\'...","USERINFO_CMD_DESC":"Information de l\\\'Utilisateur"}\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/translations/fr.json?');
+			173: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection{width:30px;height:30px;position:relative}.UserDetails-badge-connection.UserDetails-badge-verified{border-radius:50%;overflow:hidden}.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge{width:12px;height:12px;position:absolute;bottom:0;right:0px;background:var(--background-floating);border-radius:50%;overflow:hidden;padding:2px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					connection: "UserDetails-badge-connection",
+					verified: "UserDetails-badge-verified",
+					verifiedBadge: "UserDetails-badge-verifiedBadge"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			"./UserDetails/modules/data/translations/nl.json": module => {
-				eval('module.exports = JSON.parse(\'{"CONNECTIONS":"Verbindingen","NO_CONNECTIONS":"Geen verbindingen!","LOADING_CONNECTIONS":"Verbindingen aan het laden...","LOADING_LAST_MESSAGE":"Laatste bericht aan het laden...","LOADING_JOINED_AT":"Lid geworden op aan het laden...","MEMBER_WAS_NOT_FOUND":"Lid kon niet worden gevonden!","FAILED_TO_FETCH":"Gefaald om op te halen!","USERINFO_CMD_DESC":"Laat bepaalde informatie zien over een bepaald lid.","NO_MUTUAL_GUILDS":"Geen gemeenschappelijke servers","LOADING_MUTUAL_GUILDS":"Gemeenschappelijke servers aan het laden..."}\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/translations/nl.json?');
+			564: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-flowerstar-wrapper{position:relative;display:flex;align-items:center;justify-content:center}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-container{display:block}.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-tick{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					wrapper: "UserDetails-flowerstar-wrapper",
+					container: "UserDetails-flowerstar-container",
+					tick: "UserDetails-flowerstar-tick"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			"./UserDetails/modules/data/translations/sv-SE.json": module => {
-				eval('module.exports = JSON.parse(\'{"CONNECTIONS":"anslutningar","NO_CONNECTIONS":"inga anslutningar","LOADING_CONNECTIONS":"laddar anslutningar","LOADING_LAST_MESSAGE":"läser in det senaste meddelandet","LOADING_JOINED_AT":"lastning gick med vid","MEMBER_WAS_NOT_FOUND":"medlem hittades inte","FAILED_TO_FETCH":"misslyckades med att hämta","USERINFO_CMD_DESC":"visar lite information om en specifik användare","NO_MUTUAL_GUILDS":"inga ömsesidiga servrar","LOADING_MUTUAL_GUILDS":"laddar ömsesidiga servrar"}\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/translations/sv-SE.json?');
+			128: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-descriptionItem{margin-top:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-translation{width:27px;height:18px;margin-right:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-marginBottom8{margin-bottom:8px}.UserDetails-settings-settingsPanel .UserDetails-settings-formItem{margin-bottom:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons{flex-wrap:wrap}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer{display:inline-flex;cursor:pointer}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon{width:40px;height:40px}.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled{opacity:.4}.UserDetails-settings-settingsPanel .UserDetails-settings-category{color:#ddd}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent{padding:10px;padding:10px}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable{user-select:text;margin-bottom:6px;padding-bottom:6px;border-bottom:thin solid var(--background-modifier-accent)}.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b{margin-right:3px}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader{cursor:pointer;padding:10px;font-size:15px;background:var(--background-tertiary);font-weight:600;text-transform:uppercase;display:flex;align-items:center}.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret{margin-left:auto}.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon{color:var(--interactive-normal);fill:var(--interactive-normal)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					settingsPanel: "UserDetails-settings-settingsPanel",
+					descriptionItem: "UserDetails-settings-descriptionItem",
+					translation: "UserDetails-settings-translation",
+					marginBottom8: "UserDetails-settings-marginBottom8",
+					formItem: "UserDetails-settings-formItem",
+					icons: "UserDetails-settings-icons",
+					settingsBadgeContainer: "UserDetails-settings-settingsBadgeContainer",
+					settingsBadgeIcon: "UserDetails-settings-settingsBadgeIcon",
+					disabled: "UserDetails-settings-disabled",
+					category: "UserDetails-settings-category",
+					opened: "UserDetails-settings-opened",
+					categoryContent: "UserDetails-settings-categoryContent",
+					replacementVariable: "UserDetails-settings-replacementVariable",
+					categoryHeader: "UserDetails-settings-categoryHeader",
+					categoryCaret: "UserDetails-settings-categoryCaret",
+					pageIcon: "UserDetails-settings-pageIcon"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			"./UserDetails/modules/data/translations/tr.json": module => {
-				eval('module.exports = JSON.parse(\'{"CONNECTIONS":"Bağlantılar","NO_CONNECTIONS":"Bağlantı yok!","LOADING_CONNECTIONS":"Bağlantılar yükleniyor..","LOADING_LAST_MESSAGE":"Son mesaj yükleniyor..","LOADING_JOINED_AT":"Giriş tarihi yükleniyor..","MEMBER_WAS_NOT_FOUND":"Kullanıcı bulunamadı!","FAILED_TO_FETCH":"Alınamadı!","USERINFO_CMD_DESC":"Belirli bir kullanıcı hakkında bazı bilgiler verir.","NO_MUTUAL_GUILDS":"Ortak sunucu yok!","LOADING_MUTUAL_GUILDS":"Ortak sunucular yükleniyor!"}\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/translations/tr.json?');
+			562: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-style-loadingText{color:var(--text-normal);text-align:center}.UserDetails-style-scrollableText{color:var(--text-normal);white-space:nowrap;position:relative;font-size:14px;width:-webkit-fill-available;text-align:center;line-height:18px}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					loadingText: "UserDetails-style-loadingText",
+					scrollableText: "UserDetails-style-scrollableText"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			"./UserDetails/modules/data/translations/vi.json": module => {
-				eval('module.exports = JSON.parse(\'{"CONNECTIONS":"Kết nối","NO_CONNECTIONS":"Không có kết nối!","LOADING_CONNECTIONS":"Đang tải các kết nối...","LOADING_LAST_MESSAGE":"Đang tải tin nhắn cuối cùng...","LOADING_JOINED_AT":"Đang tải ngày tham gia...","MEMBER_WAS_NOT_FOUND":"Không tìm thấy thành viên!","FAILED_TO_FETCH":"Nạp dữ liệu thất bại!","USERINFO_CMD_DESC":"Hiển thị một số thông tin về một người dùng cụ thể.","NO_MUTUAL_GUILDS":"Không có server chung nào","LOADING_MUTUAL_GUILDS":"Đang tải server chung..."}\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/translations/vi.json?');
+			214: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.r(__webpack_exports__);
+				__webpack_require__.d(__webpack_exports__, {
+					default: () => Plugin
+				});
+				var modules_stores_namespaceObject = {};
+				__webpack_require__.r(modules_stores_namespaceObject);
+				__webpack_require__.d(modules_stores_namespaceObject, {
+					JoinedAt: () => joinedAt,
+					LastMessage: () => stores_lastMessage
+				});
+				const external_StyleLoader_namespaceObject = StyleLoader;
+				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
+				var external_BdApi_React_ = __webpack_require__(832);
+				var external_BdApi_React_default = __webpack_require__.n(external_BdApi_React_);
+				const components_namespaceObject = Modules["@discord/components"];
+				const connections_namespaceObject = Modules["@discord/connections"];
+				var connections_default = __webpack_require__.n(connections_namespaceObject);
+				var badge = __webpack_require__(173);
+				const utils_namespaceObject = Modules["@discord/utils"];
+				const external_PluginApi_namespaceObject = PluginApi;
+				const package_namespaceObject = JSON.parse('{"um":{"u2":"UserDetails"}}');
+				function _extends() {
+					_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return _extends.apply(this, arguments);
+				}
+				const FormItem = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormItem");
+				const FormText = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormText");
+				const FormDivider = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("FormDivider");
+				const Flex = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Flex");
+				const {
+					marginBottom8
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("marginBottom8");
+				class Utilities extends external_PluginApi_namespaceObject.Utilities {
+					static joinClassNames(...classNames) {
+						return classNames.filter((e => e)).join(" ");
+					}
+					static get useForceUpdate() {
+						return () => (0, external_BdApi_React_.useReducer)((n => n + 1), 0)[1];
+					}
+					static createUpdateWrapper(Component, form = true, valueProp = "value") {
+						return props => {
+							const [state, setState] = (0, external_BdApi_React_.useState)(props[valueProp]);
+							props[valueProp] = state;
+							if (form) return external_BdApi_React_default().createElement(Flex, {
+								className: marginBottom8,
+								direction: Flex.Direction.VERTICAL
+							}, external_BdApi_React_default().createElement(FormItem, {
+								title: props.name
+							}, external_BdApi_React_default().createElement(Component, _extends({}, props, {
+								onChange: value => {
+									value = value.value ?? value;
+									setState(value);
+									props.onChange(value);
+								}
+							})), external_BdApi_React_default().createElement(FormText, {
+								type: "description",
+								disabled: Boolean(props.note)
+							}, props.note)), external_BdApi_React_default().createElement(FormDivider, null));
+							else return external_BdApi_React_default().createElement(Component, _extends({}, props, {
+								onChange: value => {
+									value = value.value ?? value;
+									setState(value);
+									props.onChange(value);
+								}
+							}));
+						};
+					}
+				}
+				const modules_namespaceObject = Modules["@discord/modules"];
+				const flux_namespaceObject = Modules["@discord/flux"];
+				function _defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				const Settings = new class extends flux_namespaceObject.Store {
+					constructor() {
+						super(modules_namespaceObject.Dispatcher, {});
+						_defineProperty(this, "settings", external_PluginApi_namespaceObject.PluginUtilities.loadSettings(package_namespaceObject.um.u2, {}));
+						_defineProperty(this, "get", ((key, defaultValue) => this.settings[key] ?? defaultValue));
+						_defineProperty(this, "set", ((key, value) => {
+							this.settings[key] = value;
+							external_PluginApi_namespaceObject.PluginUtilities.saveSettings(package_namespaceObject.um.u2, this.settings);
+							this.emitChange();
+						}));
+					}
+				};
+				var flowerstar = __webpack_require__(564);
+				function flowerstar_extends() {
+					flowerstar_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return flowerstar_extends.apply(this, arguments);
+				}
+				const icons_flowerstar = props => external_BdApi_React_default().createElement("div", flowerstar_extends({}, props, {
+					className: (0, utils_namespaceObject.joinClassNames)(flowerstar.Z.wrapper, props.className)
+				}), external_BdApi_React_default().createElement("svg", {
+					width: "16",
+					height: "16",
+					viewBox: "0 0 16 15.2",
+					className: flowerstar.Z.container
+				}, external_BdApi_React_default().createElement("path", {
+					fill: "#4f545c",
+					"fill-rule": "evenodd",
+					d: "m16 7.6c0 .79-1.28 1.38-1.52 2.09s.44 2 0 2.59-1.84.35-2.46.8-.79 1.84-1.54 2.09-1.67-.8-2.47-.8-1.75 1-2.47.8-.92-1.64-1.54-2.09-2-.18-2.46-.8.23-1.84 0-2.59-1.54-1.3-1.54-2.09 1.28-1.38 1.52-2.09-.44-2 0-2.59 1.85-.35 2.48-.8.78-1.84 1.53-2.12 1.67.83 2.47.83 1.75-1 2.47-.8.91 1.64 1.53 2.09 2 .18 2.46.8-.23 1.84 0 2.59 1.54 1.3 1.54 2.09z"
+				})), external_BdApi_React_default().createElement("svg", {
+					className: flowerstar.Z.tick,
+					width: "16",
+					height: "16",
+					viewBox: "0 0 16 15.2"
+				}, external_BdApi_React_default().createElement("path", {
+					d: "M7.4,11.17,4,8.62,5,7.26l2,1.53L10.64,4l1.36,1Z",
+					fill: "#ffffff"
+				})));
+				function Badge({
+					item
+				}) {
+					const connection = connections_default().get(item.type);
+					const shouldVerified = Settings.get("showVerifiedConnections", true) && item.verified;
+					return external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						text: item.name,
+						className: (0, utils_namespaceObject.joinClassNames)(badge.Z.connection, {
+							[badge.Z.verified]: shouldVerified
+						})
+					}, external_BdApi_React_default().createElement("img", {
+						onContextMenu: () => {},
+						onClick: () => {
+							try {
+								open(connection.getPlatformUserUrl(item), "_blank");
+							} catch {}
+						},
+						src: connection.icon.color
+					}), shouldVerified && external_BdApi_React_default().createElement(icons_flowerstar, {
+						className: badge.Z.verifiedBadge
+					}));
+				}
+				class Logger {
+					static error(...message) {
+						this._log("error", ...message);
+					}
+					static warn(...message) {
+						this._log("warn", ...message);
+					}
+					static info(...message) {
+						this._log("info", ...message);
+					}
+					static log(...message) {
+						this._log("log", ...message);
+					}
+					static _log(level = "log", ...message) {
+						console[level](`%c[${package_namespaceObject.um.u2}]%c`, "color: #0870f3; font-weight: 700;", "", ...message);
+					}
+				}
+				function queue_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				class WaitQueue {
+					constructor({
+						autostart = true,
+						functions = [],
+						delay = 1e3
+					} = {}) {
+						queue_defineProperty(this, "next", (() => {
+							if (!this.functions.length || this.paused) return this.running = false;
+							this.running = true;
+							this._runCallback(this.functions.shift()).then((() => setTimeout(this.next, this.delay)));
+						}));
+						queue_defineProperty(this, "continue", (() => {
+							this.paused = false;
+							this.next();
+						}));
+						queue_defineProperty(this, "pause", (() => {
+							this.paused = true;
+						}));
+						this.autostart = autostart;
+						this.functions = functions;
+						this.delay = delay;
+						if (this.autostart && functions.length) this.next();
+					}
+					add(callback, caller, event) {
+						const func = async () => {
+							event.reply("done", await callback());
+						};
+						func.__caller = caller;
+						func.__error = error => {
+							event.reply("error", error);
+						};
+						this.functions.push(func);
+						event.on("cancel", (() => {
+							const index = this.functions.indexOf(func);
+							if (-1 == index) return;
+							this.functions.splice(index, 1);
+						}));
+						if (this.autostart && !this.running) this.next();
+					}
+					async _runCallback(callback) {
+						if ("function" !== typeof callback) return;
+						try {
+							await callback();
+						} catch (error) {
+							Logger.error(`Could not run callback for "${callback.__caller}":`, "\n", error);
+							callback.__error(error);
+						}
+					}
+				}
+				const {
+					APIModule
+				} = external_PluginApi_namespaceObject.DiscordModules;
+				let cache = window.__ud_cache ?? (window.__ud_cache = {}),
+					queue = new WaitQueue({
+						delay: 2500
+					});
+				class ApiModule {
+					constructor(plugin) {
+						this.plugin = plugin;
+						cache[this.api] = {};
+					}
+					extractDate(id) {
+						return new Date(id / 4194304 + 14200704e5);
+					}
+					get api() {
+						return "";
+					}
+					get cache() {
+						return cache[this.api];
+					}
+					error(...message) {
+						Logger.error(...message);
+					}
+					setCache(guildId, userId, data) {
+						if (!cache[this.api]) cache[this.api] = {
+							[guildId]: {}
+						};
+						if (!cache[this.api][guildId]) cache[this.api][guildId] = {};
+						return cache[this.api][guildId][userId] = data;
+					}
+					getByCache(guildId, userId) {
+						const chunk = cache[this.api]?.[guildId]?.[userId];
+						if (!chunk || Date.now() - chunk.fetch > 6e5) return null;
+						return chunk.data;
+					}
+					get(options, guildId, userId, event) {
+						if (!cache[this.api]) cache[this.api] = {
+							[guildId]: {}
+						};
+						if (!cache[this.api][guildId]) cache[this.api][guildId] = {};
+						let data;
+						const userFromCache = this.getByCache(guildId, userId);
+						if (userFromCache) data = userFromCache;
+						if (!data) {
+							queue.add((() => APIModule.get(options)), this.api, event);
+							event.on("done", (data => {
+								this.setCache(guildId, userId, {
+									data,
+									fetch: Date.now()
+								});
+							})).on("error", (error => {
+								if (429 === error.status) {
+									queue.pause();
+									setTimeout(queue.continue, 1e3 * (error.body?.retry_after ?? 5));
+								}
+							}));
+						} else event.reply("done", data);
+					}
+					parseZeroPadding(zeroable) {
+						return zeroable <= 9 ? "0" + zeroable : zeroable;
+					}
+					monthsAgo(date1, date2) {
+						let months = 12 * (date2.getFullYear() - date1.getFullYear());
+						months -= date1.getMonth();
+						months += date2.getMonth();
+						months = Math.abs(months);
+						return months <= 0 ? 0 : months;
+					}
+					daysAgo(date1, date2) {
+						return Math.floor((date1 - date2) / (1e3 * 60 * 60 * 24));
+					}
+					yearsAgo(date1, date2) {
+						return this.monthsAgo(date2, date1) / 12;
+					}
+					parseTime(format, date) {
+						if ("object" !== typeof date) date = new Date(date);
+						const today = new Date,
+							daysago = this.daysAgo(today, date),
+							hour12 = 0 === Settings.get("12hour", 1);
+						return format.replace(/\$timelabel/g, date.getHours() >= 12 ? "PM" : "AM").replace(/\$daysago/g, daysago).replace(/\$dayname/g, date.toLocaleDateString("default", {
+							weekday: "short",
+							hour12
+						})).replace(/\$day/g, date.toLocaleDateString("default", {
+							day: "2-digit",
+							hour12
+						})).replace(/\$monthname/g, date.toLocaleDateString("default", {
+							month: "short",
+							hour12
+						})).replace(/\$monthsago/g, this.monthsAgo(today, date)).replace(/\$month/g, date.toLocaleDateString("default", {
+							month: "2-digit",
+							hour12
+						})).replace(/\$weeksago/g, Math.floor(daysago / 7)).replace(/\$yearsago/g, Math.floor(this.yearsAgo(today, date))).replace(/\$year/g, date.getFullYear()).replace(/\$hour/g, this.parseZeroPadding(hour12 ? date.getHours() % 12 : date.getHours())).replace(/\$minute/g, this.parseZeroPadding(date.getMinutes())).replace(/\$second/g, this.parseZeroPadding(date.getSeconds()));
+					}
+				}
+				function circle_extends() {
+					circle_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return circle_extends.apply(this, arguments);
+				}
+				const circle = props => external_BdApi_React_default().createElement("svg", circle_extends({}, props, {
+					xmlns: "http://www.w3.org/2000/svg",
+					viewBox: "0 0 36 36"
+				}), external_BdApi_React_default().createElement("circle", {
+					cx: "18",
+					cy: "18",
+					r: "18"
+				}));
+				function error_extends() {
+					error_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return error_extends.apply(this, arguments);
+				}
+				const error = props => external_BdApi_React_default().createElement("svg", error_extends({
+					xmlns: "http://www.w3.org/2000/svg",
+					viewBox: "0 0 24 24",
+					fill: "black",
+					width: "18px",
+					height: "18px"
+				}, props), external_BdApi_React_default().createElement("path", {
+					d: "M0 0h24v24H0z",
+					fill: "none"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+				}));
+				var apis_connections = __webpack_require__(597);
+				const stores_namespaceObject = Modules["@discord/stores"];
+				const actions_namespaceObject = Modules["@discord/actions"];
+				const i18n_namespaceObject = Modules["@discord/i18n"];
+				var i18n_default = __webpack_require__.n(i18n_namespaceObject);
+				const Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
+				class Userconnections extends ApiModule {
+					get api() {
+						return this.constructor.name;
+					}
+					task(user) {
+						return () => {
+							if (!connections_default().filter((c => Settings.get("shownConnections", {})[c.type])).length || user.bot || !Settings.get("showConnectionsSection", true)) return null;
+							const connections = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.UserProfile], (() => stores_namespaceObject.UserProfile.getUserProfile(user.id)?.connectedAccounts));
+							const [message, setMessage] = (0, external_BdApi_React_.useState)("");
+							(0, external_BdApi_React_.useEffect)((() => {
+								if (Array.isArray(connections) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
+								actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
+									if (~error?.message?.indexOf("Already dispatching")) return;
+									external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
+									setMessage(i18n_namespaceObject.Messages.FAILED_TO_FETCH);
+								}));
+							}), [true]);
+							return external_BdApi_React_default().createElement("div", {
+								className: apis_connections.Z.connectionsBody
+							}, !connections?.length && Settings.get("showEmptyConnections", true) || connections?.length ? external_BdApi_React_default().createElement(Header, {
+								className: apis_connections.Z.container,
+								size: Header.Sizes.SIZE_12,
+								className: apis_connections.Z.header,
+								uppercase: true,
+								muted: true
+							}, connections?.length ? i18n_namespaceObject.Messages.CONNECTIONS : i18n_namespaceObject.Messages.NO_CONNECTIONS) : null, Array.isArray(connections) ? connections?.length ? external_BdApi_React_default().createElement("div", {
+								className: apis_connections.Z.connections
+							}, connections.filter((e => Settings.get("shownConnections")[e.type])).map((badge => external_BdApi_React_default().createElement(Badge, {
+								item: badge,
+								key: badge.type
+							})))) : null : message ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+								text: message
+							}, external_BdApi_React_default().createElement(error, {
+								className: apis_connections.Z.errorIcon
+							})) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+								text: i18n_namespaceObject.Messages.LOADING_CONNECTIONS
+							}, connections_default().filter((e => Settings.get("shownConnections")[e.type])).map((() => external_BdApi_React_default().createElement(circle, {
+								className: apis_connections.Z.loading
+							})))));
+						};
+					}
+				}
+				function cake_extends() {
+					cake_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return cake_extends.apply(this, arguments);
+				}
+				const cake = props => external_BdApi_React_default().createElement("svg", cake_extends({}, props, {
+					xmlns: "http://www.w3.org/2000/svg",
+					height: "24",
+					viewBox: "0 0 24 24",
+					width: "24"
+				}), external_BdApi_React_default().createElement("g", null, external_BdApi_React_default().createElement("rect", {
+					fill: "none",
+					height: "24",
+					width: "24"
+				}), external_BdApi_React_default().createElement("g", null, external_BdApi_React_default().createElement("polygon", {
+					points: "2,22 16,17 7,8"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M14.53,12.53l5.59-5.59c0.49-0.49,1.28-0.49,1.77,0l0.59,0.59l1.06-1.06l-0.59-0.59c-1.07-1.07-2.82-1.07-3.89,0 l-5.59,5.59L14.53,12.53z"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M10.06,6.88L9.47,7.47l1.06,1.06l0.59-0.59c1.07-1.07,1.07-2.82,0-3.89l-0.59-0.59L9.47,4.53l0.59,0.59 C10.54,5.6,10.54,6.4,10.06,6.88z"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M17.06,11.88l-1.59,1.59l1.06,1.06l1.59-1.59c0.49-0.49,1.28-0.49,1.77,0l1.61,1.61l1.06-1.06l-1.61-1.61 C19.87,10.81,18.13,10.81,17.06,11.88z"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M15.06,5.88l-3.59,3.59l1.06,1.06l3.59-3.59c1.07-1.07,1.07-2.82,0-3.89l-1.59-1.59l-1.06,1.06l1.59,1.59 C15.54,4.6,15.54,5.4,15.06,5.88z"
+				}))));
+				const external_BdApi_ReactDOM_namespaceObject = BdApi.ReactDOM;
+				var external_BdApi_ReactDOM_default = __webpack_require__.n(external_BdApi_ReactDOM_namespaceObject);
+				var dates = __webpack_require__(242);
+				function textscroller_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				const Animations = external_PluginApi_namespaceObject.WebpackModules.getByProps("Value");
+				class TextScroller extends external_BdApi_React_default().Component {
+					constructor(...args) {
+						super(...args);
+						textscroller_defineProperty(this, "_ref", (instance => {
+							let element = external_BdApi_ReactDOM_default().findDOMNode(instance);
+							if (element && element.parentElement) {
+								let maxWidth = element.parentElement.innerWidth;
+								if (maxWidth > 50) element.style.setProperty("max-width", `${maxWidth}px`);
+								setTimeout((() => {
+									if (document.contains(element.parentElement)) {
+										let newMaxWidth = element.parentElement.innerWidth;
+										if (newMaxWidth > maxWidth) element.style.setProperty("max-width", `${newMaxWidth}px`);
+									}
+								}), 3e3);
+								let Animation = new Animations.Value(0);
+								Animation.interpolate({
+									inputRange: [0, 1],
+									outputRange: [0, -1 * (element.firstElementChild.offsetWidth - element.offsetWidth)]
+								}).addListener((v => {
+									element.firstElementChild.style.setProperty("left", `${v.value}px`);
+								}));
+								this.scroll = p => {
+									let w = p + parseFloat(element.firstElementChild.style.getPropertyValue("left")) / (element.firstElementChild.offsetWidth - element.offsetWidth);
+									w = isNaN(w) || !isFinite(w) ? p : w;
+									w *= element.firstElementChild.offsetWidth / (2 * element.offsetWidth);
+									Animations.parallel([Animations.timing(Animation, {
+										toValue: p,
+										duration: 4e3 * Math.sqrt(w ** 2) / (parseInt(this.props.speed) || 1)
+									})]).start();
+								};
+							}
+						}));
+						textscroller_defineProperty(this, "_onClick", (e => {
+							if ("function" == typeof this.props.onClick) this.props.onClick(e, this);
+						}));
+						textscroller_defineProperty(this, "_onMouseEnter", (e => {
+							if (e.currentTarget.offsetWidth < e.currentTarget.firstElementChild.offsetWidth) {
+								this.scrolling = true;
+								e.currentTarget.firstElementChild.style.setProperty("display", "block");
+								this.scroll(1);
+							}
+						}));
+						textscroller_defineProperty(this, "_onMouseLeave", (e => {
+							if (this.scrolling) {
+								delete this.scrolling;
+								e.currentTarget.firstElementChild.style.setProperty("display", "inline");
+								this.scroll(0);
+							}
+						}));
+					}
+					render() {
+						const style = Object.assign({}, this.props.style, {
+							position: "relative",
+							display: "block",
+							overflow: "hidden"
+						});
+						return external_BdApi_React_default().createElement("div", {
+							className: Utilities.joinClassNames(this.props.className, dates.Z.scrollableText),
+							style,
+							ref: this._ref,
+							onClick: this._onClick,
+							onMouseEnter: this._onMouseEnter,
+							onMouseLeave: this._onMouseLeave
+						}, external_BdApi_React_default().createElement("div", {
+							style: {
+								left: "0",
+								position: "relative",
+								display: "inline",
+								whiteSpace: "nowrap"
+							}
+						}, this.props.children));
+					}
+				}
+				class CreatedAt extends ApiModule {
+					task(userId) {
+						const text = this.parseTime(Settings.get("created_format", "Created At: $hour:$minute:$second, $day.$month.$year $daysago days"), this.extractDate(userId));
+						return () => Settings.get("useIcons", true) ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+							text
+						}, external_BdApi_React_default().createElement(cake, null)) : external_BdApi_React_default().createElement(TextScroller, null, text);
+					}
+				}
+				function calendar_extends() {
+					calendar_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return calendar_extends.apply(this, arguments);
+				}
+				const calendar = props => external_BdApi_React_default().createElement("svg", calendar_extends({}, props, {
+					xmlns: "http://www.w3.org/2000/svg",
+					height: "24",
+					viewBox: "0 0 24 24",
+					width: "24"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M0 0h24v24H0z",
+					fill: "none"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"
+				}));
+				function cube_extends() {
+					cube_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return cube_extends.apply(this, arguments);
+				}
+				const cube = props => external_BdApi_React_default().createElement("svg", cube_extends({}, props, {
+					xmlns: "http://www.w3.org/2000/svg",
+					viewBox: "0 0 36 36"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M36 32c0 2.209-1.791 4-4 4H4c-2.209 0-4-1.791-4-4V4c0-2.209 1.791-4 4-4h28c2.209 0 4 1.791 4 4v28z"
+				}));
+				var style = __webpack_require__(562);
+				function reducer(state) {
+					if (state >= 3) return 1;
+					else return state + 1;
+				}
+				function LoadingText() {
+					const [state, dispatch] = (0, external_BdApi_React_.useReducer)(reducer, 1);
+					(0, external_BdApi_React_.useEffect)((() => {
+						const interval = setInterval((() => {
+							dispatch();
+						}), 500);
+						return () => {
+							clearInterval(interval);
+						};
+					}), []);
+					return external_BdApi_React_default().createElement("div", {
+						className: style.Z.loadingText
+					}, ".".repeat(state));
+				}
+				function joinedAt_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				const JoinedAtDates = new Map,
+					fetchingQueue = new Set;
+				const JoinedAt = new class extends flux_namespaceObject.Store {
+					resolveId(...args) {
+						return args.join("_");
+					}
+					get fetching() {
+						return fetchingQueue;
+					}
+					constructor() {
+						super(modules_namespaceObject.Dispatcher, {});
+						joinedAt_defineProperty(this, "logger", new utils_namespaceObject.Logger("JoinedAtStore"));
+					}
+					getState() {
+						return JoinedAtDates;
+					}
+					has(guildId, userId) {
+						return null !== this.getDate(guildId, userId) && JoinedAtDates.has(this.resolveId(guildId, userId));
+					}
+					isFetching(guildId, userId) {
+						return fetchingQueue.has(this.resolveId(guildId, userId));
+					}
+					getDate(guildId, userId) {
+						const data = JoinedAtDates.get(this.resolveId(guildId, userId));
+						if (!data || Date.now() - data.fetch > 6e5) return null;
+						return data;
+					}
+					registerCallback(guildId, userId, callback) {
+						const handleCallback = data => {
+							if (data.guildId !== guildId) return;
+							callback(data);
+							modules_namespaceObject.Dispatcher.unsubscribe("GUILD_MEMBERS_CHUNK", handleCallback);
+						};
+						modules_namespaceObject.Dispatcher.subscribe("GUILD_MEMBERS_CHUNK", handleCallback);
+					}
+					setFailed(id, reason) {
+						fetchingQueue.delete(id);
+						JoinedAtDates.set(id, {
+							data: reason,
+							fetch: Date.now(),
+							status: "failure"
+						});
+						this.emitChange();
+					}
+					async fetch(guildId, userId) {
+						const id = this.resolveId(guildId, userId);
+						if (fetchingQueue.has(id)) return;
+						fetchingQueue.add(id);
+						if (stores_namespaceObject.Members.getMember(guildId, userId)) {
+							fetchingQueue.delete(id);
+							JoinedAtDates.set(id, {
+								data: new Date(stores_namespaceObject.Members.getMember(guildId, userId).joinedAt),
+								fetch: Date.now(),
+								status: "success"
+							});
+							return this.emitChange();
+						}
+						const timeout = setTimeout((() => {
+							this.setFailed(id, "FAILED_TO_FETCH");
+							this.logger.error("Request timed out, didn't got a response after 1 minute.");
+						}), 6 * 1e4);
+						this.registerCallback(guildId, userId, (data => {
+							if (data.notFound.indexOf(userId) > -1) this.setFailed(id, "MEMBER_WAS_NOT_FOUND");
+							else {
+								const member = data.members.find((e => e?.user?.id === userId));
+								if (member) JoinedAtDates.set(id, {
+									data: new Date(member.joined_at),
+									fetch: Date.now(),
+									status: "success"
+								});
+								else {
+									this.setFailed(id, "MEMBER_WAS_NOT_FOUND");
+									this.logger.info(`Member ${userId} of guild ${guildId} was not found!`);
+								}
+							}
+							fetchingQueue.delete(id);
+							clearTimeout(timeout);
+							this.emitChange();
+						}));
+						actions_namespaceObject.GuildActions.requestMembersById(guildId, userId);
+					}
+				};
+				const joinedAt = JoinedAt;
+				class joinedDate_JoinedAt extends ApiModule {
+					get api() {
+						return this.constructor.name;
+					}
+					get format() {
+						return Settings.get("joined_format", "Joined At: $hour:$minute:$second, $day.$month.$year $daysago days");
+					}
+					task(userId) {
+						return external_BdApi_React_default().memo((() => {
+							const guildId = stores_namespaceObject.SelectedGuilds.getGuildId();
+							const joined = (0, flux_namespaceObject.useStateFromStores)([joinedAt], (() => joinedAt.getDate(guildId, userId)));
+							const [message, setMessage] = (0, external_BdApi_React_.useState)("");
+							(0, external_BdApi_React_.useEffect)((() => {
+								if (joinedAt.has(guildId, userId) || joinedAt.isFetching(guildId, userId)) return;
+								if (!guildId) return void setMessage(i18n_namespaceObject.Messages.FAILED_TO_FETCH);
+								joinedAt.fetch(guildId, userId);
+							}), []);
+							const useIcons = Settings.get("useIcons", true);
+							const isFailed = !joined || "failure" === joined.status;
+							return !isFailed ? useIcons ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+								text: this.parseTime(this.format, joined.data)
+							}, external_BdApi_React_default().createElement(calendar, null)) : external_BdApi_React_default().createElement(TextScroller, null, this.parseTime(this.format, joined.data)) : message || isFailed && i18n_namespaceObject.Messages[joined?.data] ? useIcons ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+								text: message || i18n_namespaceObject.Messages[joined.data]
+							}, external_BdApi_React_default().createElement(error, {
+								className: dates.Z.errorIcon
+							})) : external_BdApi_React_default().createElement(TextScroller, {
+								style: {
+									color: "red"
+								}
+							}, message || i18n_namespaceObject.Messages[joined.data]) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+								text: i18n_namespaceObject.Messages.LOADING_JOINED_AT
+							}, useIcons ? external_BdApi_React_default().createElement(cube, {
+								className: dates.Z.loading
+							}) : external_BdApi_React_default().createElement(LoadingText, null));
+						}));
+					}
+				}
+				function textbubble_extends() {
+					textbubble_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return textbubble_extends.apply(this, arguments);
+				}
+				const textbubble = props => external_BdApi_React_default().createElement("svg", textbubble_extends({}, props, {
+					xmlns: "http://www.w3.org/2000/svg",
+					height: "24",
+					viewBox: "0 0 24 24",
+					width: "24"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M0 0h24v24H0z",
+					fill: "none"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"
+				}));
+				const constants_namespaceObject = Modules["@discord/constants"];
+				const sanitize_namespaceObject = Modules["@discord/sanitize"];
+				const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
+				function lastMessage_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				function resolveId(...args) {
+					return args.join("_");
+				}
+				const lastMessage_fetchingQueue = new Set,
+					lastMessages = new Map;
+				function handleMessageCreate({
+					message,
+					channelId
+				}) {
+					lastMessages.set(resolveId(message.author.id, channelId), {
+						channelId,
+						messageId: message.id,
+						data: new Date(message.timestamp),
+						fetch: Date.now(),
+						status: "success"
+					});
+					LastMessage.emitChange();
+				}
+				function handleMessageDelete({
+					messageId,
+					channelId
+				}) {
+					for (const [userId, result] of lastMessages) {
+						if (result.messageId !== messageId || result.channelId !== channelId) continue;
+						lastMessages.delete(resolveId(userId, channelId));
+						LastMessage.emitChange();
+					}
+				}
+				class LastMessageStore extends flux_namespaceObject.Store {
+					constructor(...args) {
+						super(...args);
+						lastMessage_defineProperty(this, "paused", false);
+						lastMessage_defineProperty(this, "logger", new utils_namespaceObject.Logger("LastMessageStore"));
+						lastMessage_defineProperty(this, "MAX_RETRIES", 5);
+					}
+					get _users() {
+						return lastMessages;
+					}
+					get fetching() {
+						return lastMessage_fetchingQueue;
+					}
+					isFetching(userId, channelId) {
+						return lastMessage_fetchingQueue.has(resolveId(userId, channelId));
+					}
+					get(userId, channelId) {
+						const cached = lastMessages.get(resolveId(userId, channelId));
+						if (!cached || Date.now() - cached.fetch > 6e5) return null;
+						return cached;
+					}
+					has(userId, channelId) {
+						return null !== this.get(userId, channelId) && lastMessages.has(resolveId(userId, channelId));
+					}
+					fetch(userId, roomId, isGuild = false, attemp = 1) {
+						const id = resolveId(userId, roomId);
+						if (lastMessage_fetchingQueue.has(id) || this.paused) return Promise.resolve();
+						if (attemp > this.MAX_RETRIES) {
+							lastMessage_fetchingQueue.delete(id);
+							lastMessages.set(id, {
+								channelId: roomId,
+								data: "FAILED_TO_FETCH",
+								fetch: Date.now(),
+								messageId: null,
+								status: "failure"
+							});
+							this.logger.error(`Request failed after ${this.MAX_RETRIES} attempts.`);
+							return Promise.resolve();
+						}
+						lastMessage_fetchingQueue.add(id);
+						return new Promise(((resolve, reject) => {
+							external_PluginApi_DiscordModules_namespaceObject.APIModule.get({
+								url: isGuild ? constants_namespaceObject.Endpoints.SEARCH_GUILD(roomId) : constants_namespaceObject.Endpoints.SEARCH_CHANNEL(roomId),
+								query: (0, sanitize_namespaceObject.stringify)({
+									author_id: userId
+								})
+							}).then((data => {
+								lastMessage_fetchingQueue.delete(id);
+								let message = null;
+								if (data?.body?.messages?.length)
+									for (const result of data.body.messages[0])
+										if (result.hit && result.author.id === userId) {
+											message = result;
+											break;
+										}
+								if (message) lastMessages.set(id, {
+									data: new Date(message.timestamp),
+									fetch: Date.now(),
+									channelId: message.channel_id,
+									messageId: message.id,
+									status: "success"
+								});
+								else {
+									lastMessages.set(id, {
+										data: "FAILED_TO_FETCH",
+										fetch: Date.now(),
+										channelId: roomId,
+										messageId: null,
+										status: "failure"
+									});
+									this.logger.info(`No messages for ${userId} were found in ${roomId}.`);
+								}
+								this.emitChange();
+								resolve();
+							})).catch((error => {
+								if (429 === error.status) {
+									this.paused = true;
+									setTimeout((() => {
+										this.paused = false;
+										this.fetch(userId, roomId, isGuild, attemp).then(resolve).catch(reject);
+									}), error.body.retry_after + 1e3);
+								} else reject(error);
+								lastMessage_fetchingQueue.delete(id);
+							}));
+						}));
+					}
+				}
+				const LastMessage = new LastMessageStore(modules_namespaceObject.Dispatcher, {
+					MESSAGE_CREATE: handleMessageCreate,
+					MESSAGE_DELETE: handleMessageDelete
+				});
+				const stores_lastMessage = LastMessage;
+				class LastMessageApi extends ApiModule {
+					get api() {
+						return this.constructor.name;
+					}
+					get format() {
+						return Settings.get("lastmessage_format", "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days");
+					}
+					task(user) {
+						return () => {
+							const roomId = stores_namespaceObject.SelectedGuilds.getGuildId() || stores_namespaceObject.SelectedChannels.getChannelId();
+							const isGuild = Boolean(stores_namespaceObject.SelectedGuilds.getGuildId());
+							const lastMessage = (0, flux_namespaceObject.useStateFromStores)([stores_lastMessage], (() => stores_lastMessage.get(user.id, roomId)));
+							const [errorMessage, setErrorMessage] = (0, external_BdApi_React_.useState)("");
+							(0, external_BdApi_React_.useEffect)((() => {
+								if (stores_lastMessage.isFetching(user.id, roomId) || stores_lastMessage.has(user.id, roomId)) return;
+								if (!roomId) return setErrorMessage("Cannot resolve channel/guild id.");
+								stores_lastMessage.fetch(user.id, roomId, isGuild).catch((error => {
+									this.error(`Failed to fetch LastMessage from ${user.tag}:\n`, error);
+								}));
+							}), []);
+							const transitionToMessage = () => {
+								if (!lastMessage.channelId || !lastMessage.messageId) return;
+								utils_namespaceObject.Navigation.replaceWith(isGuild ? `/channels/${stores_namespaceObject.SelectedGuilds.getGuildId()}/${lastMessage.channelId}/${lastMessage.messageId}` : `/channels/@me/${lastMessage.channelId}/${lastMessage.messageId}`);
+							};
+							const failed = "failure" === lastMessage?.status;
+							const shouldUseIcon = Settings.get("useIcons", true);
+							return lastMessage?.data && !failed ? shouldUseIcon ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+								text: this.parseTime(this.format, lastMessage.data)
+							}, external_BdApi_React_default().createElement(textbubble, {
+								onClick: transitionToMessage
+							})) : external_BdApi_React_default().createElement(TextScroller, {
+								onClick: transitionToMessage
+							}, this.parseTime(this.format, lastMessage.data)) : errorMessage || failed && i18n_namespaceObject.Messages[lastMessage.data] ? shouldUseIcon ? external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+								text: errorMessage || i18n_namespaceObject.Messages[lastMessage.data]
+							}, external_BdApi_React_default().createElement(error, {
+								className: dates.Z.errorIcon
+							})) : external_BdApi_React_default().createElement(TextScroller, {
+								style: {
+									color: "red"
+								}
+							}, errorMessage || i18n_namespaceObject.Messages[lastMessage.data]) : external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+								text: i18n_namespaceObject.Messages.LOADING_LAST_MESSAGE
+							}, shouldUseIcon ? external_BdApi_React_default().createElement(cube, {
+								className: dates.Z.loading
+							}) : external_BdApi_React_default().createElement(LoadingText, null));
+						};
+					}
+				}
+				const defaultConnections = {
+					battlenet: {
+						icon: "/assets/8c289d499232cd8e9582b4a5639d9d1d.png"
+					},
+					facebook: {
+						icon: "/assets/8d8f815f3d81a33b1e70ec7c22e1b6fe.png",
+						link: "https://www.facebook.com/profile.php?id={{userId}}"
+					},
+					leagueoflegends: {
+						icon: "/assets/806953fe1cc616477175cbcdf90d5cd3.png"
+					},
+					reddit: {
+						icon: "/assets/3abe9ce5a00cc24bd8aae04bf5968f4c.png",
+						link: "https://www.reddit.com/user/{{user}}"
+					},
+					spotify: {
+						icon: "/assets/f0655521c19c08c4ea4e508044ec7d8c.png",
+						link: "https://open.spotify.com/user/{{user}}"
+					},
+					steam: {
+						icon: "/assets/f09c1c70a67ceaaeb455d163f3f9cbb8.png",
+						link: "https://steamcommunity.com/profiles/{{userId}}"
+					},
+					twitch: {
+						icon: "/assets/edbbf6107b2cd4334d582b26e1ac786d.png",
+						link: "https://twitch.tv/{{user}}"
+					},
+					twitter: {
+						icon: "/assets/4662875160dc4c56954003ebda995414.png",
+						link: "https://twitter.com/{{user}}"
+					},
+					xbox: {
+						icon: "/assets/0d44ba28e39303de3832db580a252456.png"
+					},
+					youtube: {
+						icon: "/assets/449cca50c1452b4ace3cbe9bc5ae0fd6.png",
+						link: "https://www.youtube.com/channel/{{userId}}"
+					},
+					github: {
+						icon: "/assets/5d69e29f0d71aaa04ed9725100199b4e.png",
+						link: "https://github.com/{{user}}"
+					}
+				};
+				const pages_namespaceObject = JSON.parse('[{"name":"General","icon":"Wrench","items":[{"type":"switch","name":"Use Icons","note":"Defines if icons should be used to show any date.","id":"useIcons","value":true},{"type":"radio","name":"Time Format","value":1,"id":"12hour","options":[{"value":1,"name":"24 hour"},{"value":0,"name":"12 hour"}]},{"type":"divider"},{"type":"category","name":"Variables","items":[{"type":"replacement","prefix":"$timelabel","description":"Replaces the current time label. eg AM or PM."},{"type":"replacement","prefix":"$day","description":"Replaces the current day."},{"type":"replacement","prefix":"$daysago","description":"Replaces with a number of how many days it\'s ago."},{"type":"replacement","prefix":"$dayname","description":"Replaces the shorted dayname."},{"type":"replacement","prefix":"$weeksago","description":"Replaces with a number of how many weeks it\'s ago."},{"type":"replacement","prefix":"$month","description":"Replaces the month."},{"type":"replacement","prefix":"$monthname","description":"Replaces the shorted monthname."},{"type":"replacement","prefix":"$monthsago","description":"Replaces with a number of how many months it\'s ago."},{"type":"replacement","prefix":"$year","description":"Replaces the year."},{"type":"replacement","prefix":"$yearsago","description":"Replaces with a number of how many years it\'s ago."},{"type":"replacement","prefix":"$hour","description":"Replaces the hour(s)"},{"type":"replacement","prefix":"$minute","description":"Replaces the minute(s)"},{"type":"replacement","prefix":"$second","description":"Replaces the second(s)"}]}]},{"name":"Created At","icon":"Cake","items":[{"type":"switch","name":"Show in UserPopout","id":"created_show_up","note":"Defines if the creation date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"created_show_profile","note":"Defines if the creation date should be shown in the UserProfile.","value":true},{"type":"text","name":"Created At","note":"Format of the Created at date. Read the variables section in the general settings to understand how it works.","id":"created_format","value":"Created At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Joined At","icon":"Calendar","items":[{"type":"switch","name":"Show in UserPopout","id":"joined_show_up","note":"Defines if the joined date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"joined_show_profile","note":"Defines if the joined date should be shown in the UserProfile.","value":true},{"type":"text","name":"Joined At","note":"Format of the joined at date. Read the variables section in the general settings to understand how it works.","id":"joined_format","value":"Joined At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Last Message At","icon":"TextBubble","items":[{"type":"switch","name":"Show in UserPopout","id":"lastmessage_show_up","note":"Defines if the last message date should be shown in the UserPopout.","value":true},{"type":"switch","name":"Show in UserProfile","id":"lastmessage_show_profile","note":"Defines if the last message date should be shown in the UserProfile.","value":true},{"type":"text","name":"Last Message","note":"Format of the LastMessage at date. Read the variables section in the general settings to understand how it works.","id":"lastmessage_format","value":"Last Message At: $hour:$minute:$second, $day.$month.$year $daysago days"}]},{"name":"Connections","icon":"Chain","items":[{"type":"switch","name":"Enable Section","note":"Enables this section in the user popout.","id":"showConnectionsSection","value":true},{"type":"switch","name":"Show Empty","note":"Show a \\"NO CONNECTIONS\\" placeholder if the user has no connections.","id":"showEmptyConnections","value":true},{"type":"switch","name":"Show Verified","note":"Shows a little verified badge below the icon if the connection is verified.","id":"showVerifiedConnections","value":true},{"type":"icons"}]},{"name":"Activity Icons","icon":"GamePad","items":[{"type":"switch","name":"Enable Activity Icons","note":null,"id":"activityIcons","value":true},{"type":"switch","name":"Disable Bots","note":"Disables the icon for bots, since the most always have something with \'Playing: {...}\' in their statuses.","id":"disableIconsForBots","value":true},{"type":"radio","name":"Activity Icon State","note":"Replaces the activity icon in the activity text of the member list.","id":"activityIconState","value":0,"disabled":false,"options":[{"name":"Replace with associated icon","value":0},{"name":"Don\'t do anything","value":1},{"name":"Hide it","value":2}]},{"type":"switch","name":"Show Gamepad","note":"This shows a gamepad icon if an icon for the activity isn\'t available.","id":"showGamepad","value":true}]},{"name":"Mutual Servers","icon":"Mutual","items":[{"type":"switch","name":"Enable Mutual Servers","note":"This enables/disables the mutual servers section in the user popout","id":"showMutualGuilds","value":true},{"type":"switch","name":"Disable for yourself","note":"Disables the mutual servers section for you. (it will just show all your guilds)","id":"hideMutualGuildsCurrentUser","value":true},{"type":"switch","name":"Show empty message","note":"This defines if an empty message \'no mutual servers\' should be shown if the user has no mutual servers with you","id":"showEmptyMutualGuilds","value":true},{"type":"switch","name":"Stack Icons","note":"Stacks the icons so it takes less space.","id":"stackMutualServers","value":false}]},{"name":"Translation Credits","icon":"Language","items":[{"type":"translation","name":"Turkish","id":"tr","note":"@IMaWeebツ#6931"},{"type":"translation","name":"English","id":"en-US","note":"@It\'s Rad, Not Red#0001"},{"type":"translation","name":"German","id":"de","note":"@l0c4lh057#9748, @SteffoSpieler#1868"},{"type":"translation","name":"Dutch","id":"nl","note":"@th0masterharambe#0001"},{"type":"translation","name":"Vietnamese","id":"vi","note":"@MH#5893"},{"type":"translation","name":"Spanish","id":"es-ES","note":"@DrPuc##2048"},{"type":"translation","name":"Swedish","id":"sv-SE","note":"@toatl#7460"},{"type":"translation","name":"Portuguese (Brazil)","id":"pt-BR","note":"@Dominic#1111"},{"type":"translation","name":"French","id":"fr","note":"@LemCent321#1663"}]}]');
+				var settings = __webpack_require__(128);
+				function errorboundary_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				class ErrorBoundary extends external_BdApi_React_default().Component {
+					constructor(...args) {
+						super(...args);
+						errorboundary_defineProperty(this, "state", {
+							hasError: false,
+							error: null,
+							info: null
+						});
+					}
+					componentDidCatch(error, info) {
+						this.setState({
+							error,
+							info,
+							hasError: true
+						});
+						Logger.error(`[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.\n`, error);
+					}
+					render() {
+						if (this.state.hasError) return this.props.mini ? external_BdApi_React_default().createElement(error, {
+							style: {
+								color: "#f04747"
+							}
+						}) : external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement("span", null, "An error has occured while rendering ", this.props.id, "."), external_BdApi_React_default().createElement("span", null, "Open console (", external_BdApi_React_default().createElement("code", null, "Ctrl + shift + i / Cmd + shift + i"), ') - Select the "Console" tab and screenshot the big red error.'));
+						else return this.props.children;
+					}
+				}
+				const forms_namespaceObject = Modules["@discord/forms"];
+				function chain_extends() {
+					chain_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return chain_extends.apply(this, arguments);
+				}
+				const chain = props => external_BdApi_React_default().createElement("svg", chain_extends({
+					viewBox: "0 0 512 512",
+					width: "24",
+					height: "24"
+				}, props), external_BdApi_React_default().createElement("path", {
+					d: "M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"
+				}));
+				function wrench_extends() {
+					wrench_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return wrench_extends.apply(this, arguments);
+				}
+				const wrench = props => external_BdApi_React_default().createElement("svg", wrench_extends({}, props, {
+					viewBox: "0 0 512 512",
+					height: "24",
+					width: "24"
+				}), external_BdApi_React_default().createElement("path", {
+					d: "M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-6.9 30.8-16.5 43.8-29.5 37.1-37.1 49.7-89.3 37.9-136.7-2.2-9-13.5-12.1-20.1-5.5l-74.4 74.4-67.9-11.3L334 98.9l74.4-74.4c6.6-6.6 3.4-17.9-5.7-20.2-47.4-11.7-99.6.9-136.6 37.9-28.5 28.5-41.9 66.1-41.2 103.6l82.1 82.1c8.1-1.9 16.5-2.9 24.7-2.9zm-103.9 82l-56.7-56.7L18.7 402.8c-25 25-25 65.5 0 90.5s65.5 25 90.5 0l123.6-123.6c-7.6-19.9-9.9-41.6-5-62.7zM64 472c-13.2 0-24-10.8-24-24 0-13.3 10.7-24 24-24s24 10.7 24 24c0 13.2-10.7 24-24 24z"
+				}));
+				var React = __webpack_require__(832);
+				function spotify_extends() {
+					spotify_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return spotify_extends.apply(this, arguments);
+				}
+				const spotify = props => React.createElement("svg", spotify_extends({}, props, {
+					width: "20",
+					height: "20",
+					viewBox: "0 0 65 65"
+				}), React.createElement("path", {
+					fill: "#1ED760",
+					d: "M32.5,0.5 C14.826888,0.5 0.5,14.826888 0.5,32.5 C0.5,50.173112 14.826888,64.5 32.5,64.5 C50.173112,64.5 64.5,50.173112 64.5,32.5 C64.5,14.826888 50.173112,0.5 32.5,0.5 Z M47.18,46.66 C46.6031412,47.595466 45.3795381,47.8902025 44.44,47.32 C36.93,42.73 27.44,41.69 16.33,44.23 C15.6145818,44.4464575 14.8381683,44.245926 14.3170501,43.7100969 C13.7959319,43.1742677 13.6170868,42.3925738 13.8533716,41.6834571 C14.0896564,40.9743403 14.7016337,40.4561564 15.44,40.34 C27.63,37.55 38.09,38.75 46.52,43.91 C47.4615306,44.487221 47.7569974,45.7183323 47.18,46.66 Z M51.1,37.95 C50.3770773,39.1205793 48.8441907,39.487042 47.67,38.77 C39.07,33.48 25.96,31.95 15.78,35.04 C14.9279216,35.2990176 14.0023844,35.0837812 13.3520294,34.4753684 C12.7016744,33.8669556 12.425306,32.9577988 12.6270294,32.0903684 C12.8287528,31.2229381 13.4779216,30.5290176 14.33,30.27 C25.95,26.74 40.4,28.45 50.28,34.52 C51.445766,35.2424019 51.8079122,36.7714637 51.09,37.94 L51.1,37.95 Z M51.44,28.88 C41.13,22.75 24.11,22.19 14.26,25.18 C13.2140022,25.5702637 12.0378133,25.3474036 11.207084,24.6015444 C10.3763547,23.8556852 10.0285164,22.7102178 10.3042349,21.6283692 C10.5799535,20.5465206 11.4336155,19.707266 12.52,19.45 C23.82,16.02 42.61,16.68 54.52,23.73 C55.8401426,24.6185116 56.2368626,26.3831995 55.4240137,27.7512295 C54.6111649,29.1192595 52.8715856,29.6146124 51.46,28.88 L51.44,28.88 Z"
+				}));
+				var twitch_React = __webpack_require__(832);
+				function twitch_extends() {
+					twitch_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return twitch_extends.apply(this, arguments);
+				}
+				const twitch = props => twitch_React.createElement("svg", twitch_extends({
+					width: "20",
+					height: "20",
+					viewBox: "0 0 128 128"
+				}, props), twitch_React.createElement("defs", null, twitch_React.createElement("path", {
+					id: "color-a",
+					d: "M8.5542826,0 L0,22 L0,111.8 L30.7954173,111.8 L30.7954173,128 L48.1052598,128 L64.408716,111.8 L89.3670935,111.8 L122.980392,78.4 L122.980392,0 L8.5542826,0 Z M111.406951,72.6 L92.0843362,91.8 L61.2889188,91.8 L44.9854626,108 L44.9854626,91.8 L19.020699,91.8 L19.020699,11.4 L111.406951,11.4 L111.406951,72.6 Z M92.2856134,33.4 L92.2856134,66.8 L80.8128109,66.8 L80.8128109,33.4 L92.2856134,33.4 Z M61.4901961,33.4 L61.4901961,66.8 L50.0173935,66.8 L50.0173935,33.4 L61.4901961,33.4 Z"
+				})), twitch_React.createElement("g", {
+					fill: "none",
+					"fill-rule": "evenodd",
+					transform: "translate(3)"
+				}, twitch_React.createElement("polygon", {
+					fill: "#FFF",
+					"fill-rule": "nonzero",
+					points: "110.431 72.512 91.272 91.717 60.736 91.717 44.57 107.922 44.57 91.717 18.824 91.717 18.824 11.294 110.431 11.294"
+				}), twitch_React.createElement("mask", {
+					id: "color-b",
+					fill: "#fff"
+				}, twitch_React.createElement("use", {
+					xlinkHref: "#color-a"
+				})), twitch_React.createElement("use", {
+					fill: "#563194",
+					"fill-rule": "nonzero",
+					xlinkHref: "#color-a"
+				})));
+				var valorant_React = __webpack_require__(832);
+				function valorant_extends() {
+					valorant_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return valorant_extends.apply(this, arguments);
+				}
+				const valorant = props => valorant_React.createElement("svg", valorant_extends({
+					width: "20",
+					height: "20",
+					viewBox: "0 0 216.000000 216.000000"
+				}, props), valorant_React.createElement("g", {
+					transform: "translate(0.000000,216.000000) scale(0.100000,-0.100000)",
+					fill: "#000000",
+					stroke: "none"
+				}, valorant_React.createElement("path", {
+					d: "M0 1080 l0 -1080 1080 0 1080 0 0 1080 0 1080 -1080 0 -1080 0 0-1080z"
+				})));
+				var youtube_React = __webpack_require__(832);
+				function youtube_extends() {
+					youtube_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return youtube_extends.apply(this, arguments);
+				}
+				const youtube = props => youtube_React.createElement("svg", youtube_extends({
+					height: "20",
+					width: "20",
+					viewBox: "0 0 576 512"
+				}, props), youtube_React.createElement("path", {
+					fill: "#FF1A1A",
+					d: "M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
+				}));
+				var gamepad_React = __webpack_require__(832);
+				function gamepad_extends() {
+					gamepad_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return gamepad_extends.apply(this, arguments);
+				}
+				const gamepad = props => gamepad_React.createElement("svg", gamepad_extends({
+					width: "20",
+					height: "20",
+					viewBox: "0 0 24 24"
+				}, props), gamepad_React.createElement("g", {
+					fill: "none",
+					"fill-rule": "evenodd"
+				}, gamepad_React.createElement("path", {
+					fill: "currentColor",
+					d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"
+				}), gamepad_React.createElement("rect", {
+					width: "24",
+					height: "24"
+				})));
+				var googleChrome_React = __webpack_require__(832);
+				function googleChrome_extends() {
+					googleChrome_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return googleChrome_extends.apply(this, arguments);
+				}
+				const googleChrome = props => googleChrome_React.createElement("svg", googleChrome_extends({
+					width: "20",
+					height: "20",
+					viewBox: "0 0 48 48"
+				}, props), googleChrome_React.createElement("path", {
+					fill: "#4caf50",
+					d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#ffc107",
+					d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#4caf50",
+					d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#ffc107",
+					d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#f44336",
+					d: "M41.84,15H24v13l-3-1L7.16,13.26H7.14C10.68,7.69,16.91,4,24,4C31.8,4,38.55,8.48,41.84,15z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#dd2c00",
+					d: "M7.158,13.264l8.843,14.862L21,27L7.158,13.264z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#558b2f",
+					d: "M23.157,44l8.934-16.059L28,25L23.157,44z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#f9a825",
+					d: "M41.865,15H24l-1.579,4.58L41.865,15z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#fff",
+					d: "M33,24c0,4.969-4.031,9-9,9s-9-4.031-9-9s4.031-9,9-9S33,19.031,33,24z"
+				}), googleChrome_React.createElement("path", {
+					fill: "#2196f3",
+					d: "M31,24c0,3.867-3.133,7-7,7s-7-3.133-7-7s3.133-7,7-7S31,20.133,31,24z"
+				}));
+				var headphones_React = __webpack_require__(832);
+				function headphones_extends() {
+					headphones_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return headphones_extends.apply(this, arguments);
+				}
+				const headphones = props => headphones_React.createElement("svg", headphones_extends({
+					width: "20",
+					height: "20",
+					viewBox: "0 0 24 24"
+				}, props), headphones_React.createElement("svg", {
+					width: "24",
+					height: "24",
+					viewBox: "0 0 24 24"
+				}, headphones_React.createElement("path", {
+					d: "M12 2.00305C6.486 2.00305 2 6.48805 2 12.0031V20.0031C2 21.1071 2.895 22.0031 4 22.0031H6C7.104 22.0031 8 21.1071 8 20.0031V17.0031C8 15.8991 7.104 15.0031 6 15.0031H4V12.0031C4 7.59105 7.589 4.00305 12 4.00305C16.411 4.00305 20 7.59105 20 12.0031V15.0031H18C16.896 15.0031 16 15.8991 16 17.0031V20.0031C16 21.1071 16.896 22.0031 18 22.0031H20C21.104 22.0031 22 21.1071 22 20.0031V12.0031C22 6.48805 17.514 2.00305 12 2.00305Z",
+					fill: "currentColor"
+				})));
+				var language_React = __webpack_require__(832);
+				function language_extends() {
+					language_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return language_extends.apply(this, arguments);
+				}
+				const language = props => language_React.createElement("svg", language_extends({
+					xmlns: "http://www.w3.org/2000/svg",
+					height: "24px",
+					viewBox: "0 0 24 24",
+					width: "24px",
+					fill: "currentColor"
+				}, props), language_React.createElement("path", {
+					d: "M21 4H11l-1-3H3c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h8l1 3h9c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM7 16c-2.76 0-5-2.24-5-5s2.24-5 5-5c1.35 0 2.48.5 3.35 1.3L9.03 8.57c-.38-.36-1.04-.78-2.03-.78-1.74 0-3.15 1.44-3.15 3.21S5.26 14.21 7 14.21c2.01 0 2.84-1.44 2.92-2.41H7v-1.71h4.68c.07.31.12.61.12 1.02C11.8 13.97 9.89 16 7 16zm6.17-5.42h3.7c-.43 1.25-1.11 2.43-2.05 3.47-.31-.35-.6-.72-.86-1.1l-.79-2.37zm8.33 9.92c0 .55-.45 1-1 1H14l2-2.5-1.04-3.1 3.1 3.1.92-.92-3.3-3.25.02-.02c1.13-1.25 1.93-2.69 2.4-4.22H20v-1.3h-4.53V8h-1.29v1.29h-1.44L11.46 5.5h9.04c.55 0 1 .45 1 1v14z"
+				}), language_React.createElement("path", {
+					d: "M0 0h24v24H0zm0 0h24v24H0z",
+					fill: "none"
+				}));
+				var mutual_React = __webpack_require__(832);
+				function mutual_extends() {
+					mutual_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return mutual_extends.apply(this, arguments);
+				}
+				const mutual = props => mutual_React.createElement("svg", mutual_extends({
+					xmlns: "http://www.w3.org/2000/svg",
+					height: "24px",
+					viewBox: "0 0 24 24",
+					width: "24px",
+					fill: "currentColor"
+				}, props), mutual_React.createElement("g", null, mutual_React.createElement("rect", {
+					fill: "none",
+					height: "24",
+					width: "24",
+					x: "0"
+				})), mutual_React.createElement("g", null, mutual_React.createElement("g", null, mutual_React.createElement("g", null, mutual_React.createElement("path", {
+					d: "M9.01,14H2v2h7.01v3L13,15l-3.99-4V14z M14.99,13v-3H22V8h-7.01V5L11,9L14.99,13z"
+				})))));
+				var icons_React = __webpack_require__(832);
+				const Icons = {
+					Cake: cake,
+					Calendar: calendar,
+					Error: error,
+					TextBubble: textbubble,
+					Chain: chain,
+					Wrench: wrench,
+					Flowerstar: icons_flowerstar,
+					Spotify: spotify,
+					Twitch: twitch,
+					Valorant: valorant,
+					YouTube: youtube,
+					GamePad: gamepad,
+					GoogleChrome: googleChrome,
+					Headphones: headphones,
+					Language: language,
+					Mutual: mutual
+				};
+				function noop() {
+					return null;
+				}
+				function Icon({
+					name,
+					...props
+				}) {
+					const IconComponent = Icons[name] ?? noop;
+					return icons_React.createElement(IconComponent, props);
+				}
+				function settings_extends() {
+					settings_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return settings_extends.apply(this, arguments);
+				}
+				const RadioGroup = Utilities.createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("RadioGroup"));
+				const SwitchItem = Utilities.createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"), false);
+				const TextInput = Utilities.createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("TextInput"));
+				const breadCrumbs = external_PluginApi_namespaceObject.WebpackModules.getByProps("breadcrumbActive");
+				const {
+					marginBottom8: settings_marginBottom8
+				} = external_PluginApi_namespaceObject.WebpackModules.getByProps("marginBottom8");
+				const Breadcrumbs = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Breadcrumbs");
+				const {
+					default: CardItem
+				} = external_PluginApi_namespaceObject.WebpackModules.find((m => m?.default?.toString().indexOf("hasNextSection") > -1)) ?? {
+					default: () => null
+				};
+				const Card = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Card");
+				const Caret = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Caret");
+				const Clickable = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Clickable");
+				const FlagsStore = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "function" === typeof m.keys && m.resolve && m.keys().some((e => e.includes("en-US")))));
+				const TextItem = ({
+					value,
+					onChange,
+					name,
+					note
+				}) => external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+					className: settings_marginBottom8,
+					direction: components_namespaceObject.Flex.Direction.VERTICAL
+				}, external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+					title: name,
+					className: settings.Z.formItem
+				}, external_BdApi_React_default().createElement(TextInput, {
+					value,
+					onChange
+				}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+					type: "description",
+					disabled: false
+				}, note)), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, null));
+				const IconSetting = () => {
+					const forceUpdate = Utilities.useForceUpdate();
+					const shownIcons = Settings.get("shownConnections", Object.fromEntries(connections_default().map((e => [e.type, true]))));
+					return external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						className: settings.Z.icons
+					}, connections_default().filter((e => e.enabled)).map((k => external_BdApi_React_default().createElement(components_namespaceObject.TooltipContainer, {
+						className: settings.Z.settingsBadgeContainer,
+						text: shownIcons[k.type] ? "Enabled" : "Disabled",
+						hideOnClick: false
+					}, external_BdApi_React_default().createElement("img", {
+						src: k.icon.color,
+						className: Utilities.joinClassNames(settings.Z.settingsBadgeIcon, shownIcons[k.type] ? "enabled" : settings.Z.disabled),
+						onClick: () => {
+							Settings.set("shownConnections", (shownIcons[k.type] = !shownIcons[k.type], shownIcons));
+							forceUpdate();
+						}
+					})))));
+				};
+				const Translation = ({
+					name,
+					note,
+					id
+				}) => {
+					const icon = (0, external_BdApi_React_.useMemo)((() => {
+						try {
+							return external_BdApi_React_default().createElement("img", {
+								src: FlagsStore("./" + id + ".png"),
+								className: (0, utils_namespaceObject.joinClassNames)(settings.Z.translation, settings.Z.marginBottom8)
+							});
+						} catch {
+							return null;
+						}
+					}), [id]);
+					return external_BdApi_React_default().createElement(external_BdApi_React_default().Fragment, null, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						direction: components_namespaceObject.Flex.Direction.HORIZONTAL,
+						justify: components_namespaceObject.Flex.Justify.BETWEEN,
+						align: components_namespaceObject.Flex.Align.CENTER,
+						className: settings.Z.descriptionItem
+					}, icon, external_BdApi_React_default().createElement(forms_namespaceObject.FormTitle, {
+						tag: forms_namespaceObject.FormTitle.Tags.H5
+					}, name), external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						justify: components_namespaceObject.Flex.Justify.END,
+						align: components_namespaceObject.Flex.Align.START,
+						className: settings.Z.marginBottom8
+					}, external_BdApi_React_default().createElement(forms_namespaceObject.FormText, null, note))), external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, null));
+				};
+				const Category = props => {
+					const [opened, setOpened] = (0, external_BdApi_React_.useState)(false);
+					return external_BdApi_React_default().createElement(Card, {
+						className: Utilities.joinClassNames(settings.Z.category, opened && settings.Z.opened)
+					}, external_BdApi_React_default().createElement(Clickable, {
+						onClick: () => setOpened(!opened)
+					}, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						className: settings.Z.categoryHeader,
+						direction: components_namespaceObject.Flex.Direction.HORIZONTAL
+					}, props.name, external_BdApi_React_default().createElement(Caret, {
+						className: settings.Z.categoryCaret,
+						direction: Caret.Directions[opened ? "DOWN" : "LEFT"]
+					}))), external_BdApi_React_default().createElement("div", {
+						className: settings.Z.categoryContent
+					}, opened && props.items.map(renderSetting)));
+				};
+				const renderSetting = setting => {
+					switch (setting.type) {
+						case "switch":
+							return external_BdApi_React_default().createElement(SwitchItem, settings_extends({}, setting, {
+								value: Settings.get(setting.id, setting.value),
+								onChange: value => {
+									Settings.set(setting.id, value);
+								}
+							}), setting.name);
+						case "replacement":
+							return external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+								direction: components_namespaceObject.Flex.Direction.HORIZONTAL,
+								className: settings.Z.replacementVariable
+							}, external_BdApi_React_default().createElement("b", null, setting.prefix), external_BdApi_React_default().createElement("span", null, setting.description));
+						case "radio":
+							const {
+								name, note
+							} = setting;
+							delete setting.name;
+							delete setting.note;
+							return external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+								title: name
+							}, note && external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+								type: "description"
+							}, note), external_BdApi_React_default().createElement(RadioGroup, settings_extends({}, setting, {
+								value: Settings.get(setting.id, setting.value),
+								onChange: value => {
+									Settings.set(setting.id, value);
+								}
+							})));
+						case "text":
+							return external_BdApi_React_default().createElement(TextItem, settings_extends({}, setting, {
+								value: Settings.get(setting.id, setting.value),
+								onChange: value => {
+									Settings.set(setting.id, value);
+								}
+							}));
+						case "icons":
+							return external_BdApi_React_default().createElement(IconSetting, null);
+						case "category":
+							return external_BdApi_React_default().createElement(Category, setting);
+						case "translation":
+							return external_BdApi_React_default().createElement(Translation, setting);
+						case "divider":
+							return external_BdApi_React_default().createElement(forms_namespaceObject.FormDivider, null);
+					}
+				};
+				const renderCustomcrumb = ({
+					label
+				}, isActive) => external_BdApi_React_default().createElement(forms_namespaceObject.FormTitle, {
+					tag: forms_namespaceObject.FormTitle.Tags.H2,
+					className: Utilities.joinClassNames(breadCrumbs.breadcrumb, isActive ? breadCrumbs.breadcrumbActive : breadCrumbs.breadcrumbInactive)
+				}, label);
+				const mainPages = [{
+					id: "main",
+					label: "General Settings"
+				}];
+				function SettingsPanel() {
+					const [activeItem, setActiveItem] = (0, external_BdApi_React_.useState)("main");
+					return external_BdApi_React_default().createElement(ErrorBoundary, {
+						id: "SettingsPanel"
+					}, external_BdApi_React_default().createElement("div", {
+						className: settings.Z.settingsPanel
+					}, external_BdApi_React_default().createElement(components_namespaceObject.Flex, {
+						align: components_namespaceObject.Flex.Align.CENTER,
+						basis: "auto",
+						className: breadCrumbs.breadcrumbs,
+						grow: 1,
+						shrink: 1
+					}, "main" === activeItem ? external_BdApi_React_default().createElement(forms_namespaceObject.FormTitle, {
+						className: breadCrumbs.breakcrumb,
+						tag: forms_namespaceObject.FormTitle.Tags.H2
+					}, "General") : external_BdApi_React_default().createElement(Breadcrumbs, {
+						activeId: activeItem,
+						breadcrumbs: mainPages.concat({
+							id: activeItem,
+							label: pages_namespaceObject[activeItem].name
+						}),
+						renderCustomBreadcrumb: renderCustomcrumb,
+						onBreadcrumbClick: e => setActiveItem(e.id)
+					})), "main" === activeItem ? pages_namespaceObject.map(((page, index) => external_BdApi_React_default().createElement(CardItem, {
+						buttonDisabled: false,
+						buttonText: "Configure",
+						details: [{
+							text: `${page.items.length} setting${page.items.length > 1 ? "s" : ""}.`
+						}],
+						hasNextSection: true,
+						icon: () => external_BdApi_React_default().createElement(Icon, {
+							className: settings.Z.pageIcon,
+							name: page.icon
+						}),
+						name: page.name,
+						onButtonClick: () => setActiveItem(index)
+					}))) : pages_namespaceObject[activeItem].items.map(renderSetting)));
+				}
+				const external_BasePlugin_namespaceObject = BasePlugin;
+				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
+				var components_activity = __webpack_require__(755);
+				var activity_React = __webpack_require__(832);
+				const byName = [
+					[/spotify/i, spotify],
+					[/youtube/i, () => activity_React.createElement("img", {
+						src: connections_default().get("youtube").icon.color,
+						width: "20",
+						height: "20"
+					})],
+					[/twitch/i, twitch],
+					[/google\schrome/i, googleChrome]
+				];
+				function ActivityIcon({
+					activity
+				}) {
+					const {
+						game,
+						showGamepad
+					} = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Games, Settings], (() => ({
+						showGamepad: Settings.get("showGamepad", true),
+						game: stores_namespaceObject.Games.getGame(activity.application_id)
+					})), null, _.isEqual);
+					const icon = (0, external_BdApi_React_.useMemo)((() => byName.find((([regex]) => regex.test(activity.name || activity.id)))), [game]);
+					if (icon) {
+						const Icon = icon[1];
+						return activity_React.createElement(Icon, null);
+					}
+					if (game && game.getIconURL()) return activity_React.createElement("img", {
+						src: game.getIconURL(),
+						width: "20",
+						height: "20"
+					});
+					return showGamepad ? activity_React.createElement(gamepad, null) : null;
+				}
+				function noopNull() {
+					return null;
+				}
+				function ActivitiesFilter(activity, index, target) {
+					if (4 === activity?.type) return false;
+					return target.indexOf(activity) === index;
+				}
+				function Activity({
+					user
+				}) {
+					const {
+						activity,
+						showActivityIcons,
+						disabled
+					} = (0, flux_namespaceObject.useStateFromStores)([stores_namespaceObject.Activities, Settings], (() => ({
+						activity: stores_namespaceObject.Activities.getActivities(user.id).filter(ActivitiesFilter)[0],
+						showActivityIcons: Settings.get("activityIcons", true),
+						disabled: user?.bot && Settings.get("disableIconsForBots", true)
+					})), null, _.isEqual);
+					if (!showActivityIcons || !activity || disabled) return null;
+					return activity_React.createElement(components_namespaceObject.TooltipContainer, {
+						text: activity.name,
+						className: components_activity.Z.container,
+						position: "left"
+					}, activity_React.createElement(ActivityIcon, {
+						className: components_activity.Z.icon,
+						activity
+					}));
+				}
+				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
+				const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
+				const Types = DiscordCommandTypes.ApplicationCommandType;
+				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
+				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
+				if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
+					icon: "https://github.com/BetterDiscord.png",
+					id: "betterdiscord",
+					name: "BetterDiscord",
+					type: 0
+				};
+				function registerCommand(caller, options) {
+					const cmd = Object.assign({}, options, {
+						__registerId: caller,
+						applicationId: "betterdiscord",
+						type: Types.BOT,
+						target: 1
+					});
+					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
+					return () => {
+						const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
+						if (index < 0) return false;
+						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+					};
+				}
+				function unregisterAllCommands(caller) {
+					let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+					while (index > -1) {
+						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
+						index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((cmd => cmd.__registerId === caller));
+					}
+				}
+				const Commands = {
+					registerCommand,
+					unregisterAllCommands
+				};
+				const commands = Commands;
+				const DefaultMessage = {
+					state: "SENT",
+					author: {
+						avatar: "betterdiscord",
+						id: "81388395867156480",
+						bot: true,
+						discriminator: "5000",
+						username: "BetterDiscord"
+					},
+					content: "Hello <:zere_zoom:477825238172958730>"
+				};
+				const MessageCreators = BdApi.findModuleByProps("createBotMessage");
+				const MessageActions = BdApi.findModuleByProps("receiveMessage");
+				const AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");
+				if (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";
+				function sendMessage(channelId, message) {
+					MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));
+				}
+				const Clyde = {
+					sendMessage,
+					DefaultMessage
+				};
+				const clyde = Clyde;
+				const nl_namespaceObject = JSON.parse('{"CONNECTIONS":"Verbindingen","NO_CONNECTIONS":"Geen verbindingen!","LOADING_CONNECTIONS":"Verbindingen aan het laden...","LOADING_LAST_MESSAGE":"Laatste bericht aan het laden...","LOADING_JOINED_AT":"Lid geworden op aan het laden...","MEMBER_WAS_NOT_FOUND":"Lid kon niet worden gevonden!","FAILED_TO_FETCH":"Gefaald om op te halen!","USERINFO_CMD_DESC":"Laat bepaalde informatie zien over een bepaald lid.","NO_MUTUAL_GUILDS":"Geen gemeenschappelijke servers","LOADING_MUTUAL_GUILDS":"Gemeenschappelijke servers aan het laden..."}');
+				var translations_nl_namespaceObject = __webpack_require__.t(nl_namespaceObject, 2);
+				const de_namespaceObject = JSON.parse('{"CONNECTIONS":"Verknüpfungen","NO_CONNECTIONS":"Keine Verknüpfungen","LOADING_CONNECTIONS":"Lade Verknüpfungen...","LOADING_LAST_MESSAGE":"Lade letzte Nachricht...","LOADING_JOINED_AT":"Lade Beitrittsdatum...","MEMBER_WAS_NOT_FOUND":"Mitglied konnte nicht gefunden werden.","FAILED_TO_FETCH":"Fehler beim Laden","USERINFO_CMD_DESC":"Zeigt einige Informationen über einen bestimmten Nutzer.","NO_MUTUAL_GUILDS":"Keine gemeinsamen Server.","LOADING_MUTUAL_GUILDS":"Gemeinsame Server werden geladen."}');
+				var translations_de_namespaceObject = __webpack_require__.t(de_namespaceObject, 2);
+				const en_US_namespaceObject = JSON.parse('{"CONNECTIONS":"Connections","NO_CONNECTIONS":"No Connections","LOADING_CONNECTIONS":"Loading Connections...","LOADING_LAST_MESSAGE":"Loading Last Message","LOADING_JOINED_AT":"Loading Joined At","MEMBER_WAS_NOT_FOUND":"Member Was Not Found!","FAILED_TO_FETCH":"Failed To Fetch","USERINFO_CMD_DESC":"User Information"}');
+				var translations_en_US_namespaceObject = __webpack_require__.t(en_US_namespaceObject, 2);
+				const tr_namespaceObject = JSON.parse('{"CONNECTIONS":"Bağlantılar","NO_CONNECTIONS":"Bağlantı yok!","LOADING_CONNECTIONS":"Bağlantılar yükleniyor..","LOADING_LAST_MESSAGE":"Son mesaj yükleniyor..","LOADING_JOINED_AT":"Giriş tarihi yükleniyor..","MEMBER_WAS_NOT_FOUND":"Kullanıcı bulunamadı!","FAILED_TO_FETCH":"Alınamadı!","USERINFO_CMD_DESC":"Belirli bir kullanıcı hakkında bazı bilgiler verir.","NO_MUTUAL_GUILDS":"Ortak sunucu yok!","LOADING_MUTUAL_GUILDS":"Ortak sunucular yükleniyor!"}');
+				var translations_tr_namespaceObject = __webpack_require__.t(tr_namespaceObject, 2);
+				const fr_namespaceObject = JSON.parse('{"CONNECTIONS":"Connexions","NO_CONNECTIONS":"Pas de connexion!","LOADING_CONNECTIONS":"Chargement des connexions...","LOADING_LAST_MESSAGE":"Chargement du dernier message...","LOADING_JOINED_AT":"Chargement de la date d\'entrée...","MEMBER_WAS_NOT_FOUND":"Membre non trouvé","FAILED_TO_FETCH":"Échec de la récupération","USERINFO_CMD_DESC":"Informations sur un utilisateur spécifique","NO_MUTUAL_GUILDS":"Pas de serveur en commun","LOADING_MUTUAL_GUILDS":"Chargement des serveurs en communs..."}');
+				const vi_namespaceObject = JSON.parse('{"CONNECTIONS":"Kết nối","NO_CONNECTIONS":"Không có kết nối!","LOADING_CONNECTIONS":"Đang tải các kết nối...","LOADING_LAST_MESSAGE":"Đang tải tin nhắn cuối cùng...","LOADING_JOINED_AT":"Đang tải ngày tham gia...","MEMBER_WAS_NOT_FOUND":"Không tìm thấy thành viên!","FAILED_TO_FETCH":"Nạp dữ liệu thất bại!","USERINFO_CMD_DESC":"Hiển thị một số thông tin về một người dùng cụ thể.","NO_MUTUAL_GUILDS":"Không có server chung nào","LOADING_MUTUAL_GUILDS":"Đang tải server chung..."}');
+				const es_ES_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexiones","NO_CONNECTIONS":"Sin conexiones","LOADING_CONNECTIONS":"Cargando conexiones...","LOADING_LAST_MESSAGE":"Cargando el último mensaje...","LOADING_JOINED_AT":"Cargando la fecha de ingreso...","MEMBER_WAS_NOT_FOUND":"¡El miembro no fue encontrado!","FAILED_TO_FETCH":"¡No se pudo obtener!","USERINFO_CMD_DESC":"Muestra información sobre un usuario en específico.","NO_MUTUAL_GUILDS":"Sin servidores en común","LOADING_MUTUAL_GUILDS":"Cargando los servidores en común..."}');
+				const sv_SE_namespaceObject = JSON.parse('{"CONNECTIONS":"anslutningar","NO_CONNECTIONS":"inga anslutningar","LOADING_CONNECTIONS":"laddar anslutningar","LOADING_LAST_MESSAGE":"läser in det senaste meddelandet","LOADING_JOINED_AT":"lastning gick med vid","MEMBER_WAS_NOT_FOUND":"medlem hittades inte","FAILED_TO_FETCH":"misslyckades med att hämta","USERINFO_CMD_DESC":"visar lite information om en specifik användare","NO_MUTUAL_GUILDS":"inga ömsesidiga servrar","LOADING_MUTUAL_GUILDS":"laddar ömsesidiga servrar"}');
+				const pt_BR_namespaceObject = JSON.parse('{"CONNECTIONS":"Conexões","NO_CONNECTIONS":"Sem conexões","LOADING_CONNECTIONS":"Carregando conexões","LOADING_LAST_MESSAGE":"Carregando última mensagem","LOADING_JOINED_AT":"Carregando entrou há","MEMBER_WAS_NOT_FOUND":"Membro não encontrado!","FAILED_TO_FETCH":"Falha na busca","USERINFO_CMD_DESC":"Mostra algumas informações de um usuário específico.","NO_MUTUAL_GUILDS":"Sem servidores em comum","LOADING_MUTUAL_GUILDS":"Carregando os servidores em comum"}');
+				const translations = {
+					"en-US": translations_en_US_namespaceObject,
+					"es-ES": es_ES_namespaceObject,
+					"sv-SE": sv_SE_namespaceObject,
+					"pt-BR": pt_BR_namespaceObject,
+					nl: translations_nl_namespaceObject,
+					de: translations_de_namespaceObject,
+					tr: translations_tr_namespaceObject,
+					fr: fr_namespaceObject,
+					vi: vi_namespaceObject
+				};
+				const loadedStrings = {};
+				stores_namespaceObject.SettingsStore.addChangeListener(injectStrings);
+				function injectStrings() {
+					Object.assign(i18n_default()._provider._context.messages, loadedStrings[i18n_default().getLocale()] ?? {});
+					if (loadedStrings["en-US"]) Object.assign(i18n_default()._provider._context.defaultMessages, loadedStrings["en-US"]);
+				}
+				function addStrings(locale, strings) {
+					if (!loadedStrings[locale]) loadedStrings[locale] = {};
+					Object.assign(loadedStrings[locale], strings);
+					injectStrings();
+				}
+				function removeStrings(locale, strings) {
+					if (!loadedStrings[locale]) return;
+					for (let str in strings) delete loadedStrings[locale][str];
+					injectStrings();
+				}
+				function addStringsObject(strings) {
+					for (let locale in strings) addStrings(locale, strings[locale]);
+				}
+				function removeStringsObject(strings) {
+					for (let locale in strings) removeStrings(locale, strings[locale]);
+				}
+				const LocaleManager = {
+					addStringsObject,
+					addStrings,
+					removeStringsObject,
+					removeStrings
+				};
+				const strings = LocaleManager;
+				function SuppressErrors(func, onError = (() => {})) {
+					const wrapped = function() {
+						try {
+							return func.apply(this, arguments);
+						} catch (error) {
+							onError(error);
+						}
+					};
+					Object.assign(wrapped, func);
+					wrapped.toString = () => func.toString();
+					return wrapped;
+				}
+				var mutualServers = __webpack_require__(416);
+				var mutualServers_React = __webpack_require__(832);
+				function mutualServers_extends() {
+					mutualServers_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return mutualServers_extends.apply(this, arguments);
+				}
+				const FriendsStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("getMutualGuilds");
+				const mutualServers_Header = external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("Header");
+				const WindowStore = external_PluginApi_namespaceObject.WebpackModules.getByProps("isFocused");
+				function MutualServer({
+					guild,
+					nick,
+					onClick
+				}) {
+					const [isMouseOver, setMouseOver] = (0, external_BdApi_React_.useState)(false);
+					const isWindowFocused = (0, flux_namespaceObject.useStateFromStores)([WindowStore], (() => WindowStore.isFocused()));
+					return mutualServers_React.createElement(components_namespaceObject.TooltipContainer, {
+						key: guild.id,
+						text: nick ? `${guild.name} (${nick})` : guild.name,
+						position: "top",
+						className: mutualServers.Z.mutualGuild
+					}, guild.icon ? mutualServers_React.createElement("img", {
+						onMouseOver: () => setMouseOver(true),
+						onMouseLeave: () => setMouseOver(false),
+						src: guild.getIconURL(isMouseOver && isWindowFocused),
+						onClick: () => onClick(guild.id)
+					}) : mutualServers_React.createElement("div", {
+						className: mutualServers.Z.guildAcronym,
+						onClick: () => onClick(guild.id)
+					}, guild.acronym));
+				}
+				class MutualServers extends ApiModule {
+					get currentUserId() {
+						return stores_namespaceObject.Users.getCurrentUser().id;
+					}
+					transitionToGuild(guildId) {
+						actions_namespaceObject.GuildActions.transitionToGuildSync(guildId);
+					}
+					task(user) {
+						return () => {
+							if (!Settings.get("showMutualGuilds", true) || Settings.get("hideMutualGuildsCurrentUser", true) && user.id === this.currentUserId) return null;
+							const mutualGuilds = (0, flux_namespaceObject.useStateFromStores)([FriendsStore], (() => FriendsStore.getMutualGuilds(user.id)));
+							const [message, setMessage] = (0, external_BdApi_React_.useState)("");
+							(0, external_BdApi_React_.useEffect)((() => {
+								if (Array.isArray(mutualGuilds) || stores_namespaceObject.UserProfile.isFetching(user.id)) return;
+								actions_namespaceObject.ProfileActions.fetchProfile(user.id).catch((error => {
+									if (~error?.message?.indexOf("Already dispatching")) return;
+									external_PluginApi_namespaceObject.Logger.error(`Failed to fetch profile for ${user.id}:\n`, error);
+									setMessage(i18n_namespaceObject.Messages.FAILED_TO_FETCH);
+								}));
+							}), []);
+							return Array.isArray(mutualGuilds) ? Settings.get("showEmptyMutualGuilds", true) && !mutualGuilds.length ? null : mutualServers_React.createElement("div", {
+								className: mutualServers.Z.body
+							}, mutualServers_React.createElement(mutualServers_Header, {
+								size: mutualServers_Header.Sizes.SIZE_12,
+								className: mutualServers.Z.header,
+								uppercase: true,
+								muted: true
+							}, i18n_namespaceObject.Messages.MUTUAL_GUILDS), mutualServers_React.createElement("div", {
+								className: (0, utils_namespaceObject.joinClassNames)(mutualServers.Z.guilds, Settings.get("stackMutualServers", true) && mutualServers.Z.stack)
+							}, mutualGuilds.map((props => mutualServers_React.createElement(MutualServer, mutualServers_extends({}, props, {
+								onClick: this.transitionToGuild
+							})))))) : [mutualServers_React.createElement(mutualServers_Header, {
+								size: mutualServers_Header.Sizes.SIZE_12,
+								className: mutualServers.Z.header,
+								uppercase: true,
+								muted: true
+							}, message ? i18n_namespaceObject.Messages.NO_MUTUAL_GUILDS : i18n_namespaceObject.Messages.LOADING_MUTUAL_GUILDS), message ? mutualServers_React.createElement(components_namespaceObject.TooltipContainer, {
+								text: message,
+								position: "top"
+							}, mutualServers_React.createElement(error, null)) : null].filter((e => e));
+						};
+					}
+				}
+				function UserDetails_defineProperty(obj, key, value) {
+					if (key in obj) Object.defineProperty(obj, key, {
+						value,
+						enumerable: true,
+						configurable: true,
+						writable: true
+					});
+					else obj[key] = value;
+					return obj;
+				}
+				const getClass = (props = [], items = props, exclude = [], selector = false) => {
+					const module = external_PluginApi_namespaceObject.WebpackModules.find((m => m && props.every((prop => void 0 !== m[prop])) && exclude.every((e => void 0 == m[e]))));
+					if (!module) return "";
+					return (selector ? "." : "") + items.map((item => module[item])).join(selector ? "." : " ");
+				};
+				class Plugin extends(external_BasePlugin_default()) {
+					constructor(...args) {
+						super(...args);
+						UserDetails_defineProperty(this, "promises", {
+							cancelled: false,
+							cancel() {
+								this.cancelled = true;
+							}
+						});
+					}
+					get Stores() {
+						return modules_stores_namespaceObject;
+					}
+					getSettingsPanel() {
+						return external_BdApi_React_default().createElement(SettingsPanel, null);
+					}
+					onStart() {
+						external_StyleLoader_default().inject();
+						strings.addStringsObject(translations);
+						this.createdApi = new CreatedAt(this);
+						this.joinedApi = new joinedDate_JoinedAt(this);
+						this.lastMessageApi = new LastMessageApi(this);
+						this.connectionsApi = new Userconnections(this);
+						this.mutualsApi = new MutualServers(this);
+						this.patchUserPopout();
+						this.patchUserProfile();
+						this.patchMemberListItem();
+						this.patchUserActivityStatus();
+						commands.registerCommand(this.getName(), {
+							id: "user-info",
+							name: "userinfo",
+							get description() {
+								return i18n_namespaceObject.Messages.USERINFO_CMD_DESC;
+							},
+							predicate: () => true,
+							execute: (props, {
+								channel,
+								guild
+							}) => {
+								const users = props.user.map((e => stores_namespaceObject.Users.getUser(e.userId))).filter((e => e));
+								if (!users.length) return clyde.sendMessage(channel.id, {
+									content: "Sorry, but i can't resolve that user."
+								});
+								clyde.sendMessage(channel.id, {
+									content: "That's what i've found so far:",
+									embeds: users.map((user => this.createEmbedForUser(user, guild, channel)))
+								});
+							},
+							options: [{
+								name: "user",
+								type: 6,
+								description: "The user"
+							}],
+							type: 3
+						});
+					}
+					createEmbedForUser(user, guild) {
+						const member = stores_namespaceObject.Members.getMember(guild.id, user.id);
+						const largeUrl = user.getAvatarURL().split("?size")[0] + "?size=2048";
+						const activities = stores_namespaceObject.Activities.getActivities(user.id);
+						return {
+							color: member?.colorString ? external_PluginApi_namespaceObject.ColorConverter.hex2int(member.colorString) : void 0,
+							author: {
+								name: user.tag,
+								icon_url: user.getAvatarURL(),
+								proxy_icon_url: user.getAvatarURL()
+							},
+							thumbnail: {
+								height: 128,
+								proxy_url: largeUrl,
+								url: largeUrl,
+								width: 128
+							},
+							footer: {
+								text: "ID: " + user.id
+							},
+							timestamp: (new Date).toISOString(),
+							type: "rich",
+							description: `<@!${user.id}>`,
+							fields: [{
+								name: "Creation Date",
+								inline: true,
+								value: this.createdApi.extractDate(user.id).toGMTString()
+							}, member && {
+								name: "Joined Date",
+								inline: true,
+								value: new Date(member.joinedAt).toGMTString()
+							}, member && {
+								name: "Roles [" + member.roles.length + "]",
+								value: member.roles.map((role => `<@&${role}>`)).join(" | ")
+							}, activities.length && {
+								name: "Activities",
+								value: activities.map((ac => `- **${ac.name}**: \`${ac.state}\``)).join("\n")
+							}].filter((e => e))
+						};
+					}
+					async patchUserPopout() {
+						const UserPopoutInfo = external_PluginApi_namespaceObject.WebpackModules.getByProps("UserPopoutInfo");
+						const UserPopoutBody = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserPopoutBody" === m.default.displayName));
+						external_PluginApi_namespaceObject.Patcher.after(UserPopoutInfo, "UserPopoutInfo", ((_, [{
+							user
+						}], returnValue) => {
+							if (this.promises.cancelled) return;
+							const tree = Utilities.findInReactTree(returnValue, SuppressErrors((e => e.className.indexOf("headerText") > -1)));
+							if (!Array.isArray(tree?.children) || !user) return;
+							const WrappedJoinedAt = this.joinedApi.task(user.id);
+							const WrappedCreatedAt = this.createdApi.task(user.id);
+							const WrappedLastMessage = this.lastMessageApi.task(user);
+							tree.children.push(external_BdApi_React_default().createElement(ErrorBoundary, {
+								key: "UserPopoutHeader",
+								id: "UserPopoutHeader",
+								mini: true
+							}, external_BdApi_React_default().createElement("div", {
+								className: Utilities.joinClassNames(dates.Z.container, Settings.get("useIcons", true) ? dates.Z.icons : dates.Z.text)
+							}, Settings.get("created_show_up", true) && external_BdApi_React_default().createElement(WrappedCreatedAt, {
+								key: "created-date"
+							}), Settings.get("joined_show_up", true) && external_BdApi_React_default().createElement(WrappedJoinedAt, {
+								key: "joined-date"
+							}), Settings.get("lastmessage_show_up", true) && external_BdApi_React_default().createElement(WrappedLastMessage, {
+								key: "lastmessage-date"
+							}))));
+						}));
+						external_PluginApi_namespaceObject.Patcher.after(UserPopoutBody, "default", ((_, [{
+							user
+						}], returnValue) => {
+							if (this.promises.cancelled) return;
+							if (!Array.isArray(returnValue?.props?.children) || returnValue.props.children.some((child => child?.type === ErrorBoundary))) return returnValue;
+							const Connections = this.connectionsApi.task(user);
+							const MutualServers = this.mutualsApi.task(user);
+							returnValue.props.children.unshift(external_BdApi_React_default().createElement(ErrorBoundary, {
+								id: "UserPopoutBody",
+								mini: true,
+								key: "connections"
+							}, external_BdApi_React_default().createElement(Connections, null)), external_BdApi_React_default().createElement(ErrorBoundary, {
+								id: "UserPopoutBody",
+								mini: true,
+								key: "mutual_servers"
+							}, external_BdApi_React_default().createElement(MutualServers, null)));
+						}));
+					}
+					async patchUserProfile() {
+						const UserProfileModalHeader = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "UserProfileModalHeader" === m.default.displayName));
+						external_PluginApi_namespaceObject.Patcher.after(UserProfileModalHeader, "default", ((_, [{
+							user
+						}], res) => {
+							if (this.promises.cancelled) return;
+							const tree = Utilities.findInReactTree(res, SuppressErrors((res => "DiscordTag" === res.type.displayName)));
+							if (!tree || tree.type?.__patched) return;
+							const original = tree.type;
+							tree.type = (...args) => {
+								const ret = original.apply(this, args);
+								try {
+									const WrappedJoinedAt = this.joinedApi.task(user.id);
+									const WrappedCreatedAt = this.createdApi.task(user.id);
+									const WrappedLastMessage = this.lastMessageApi.task(user);
+									return external_BdApi_React_default().createElement("div", {
+										className: dates.Z.wrapper
+									}, ret, external_BdApi_React_default().createElement(ErrorBoundary, {
+										id: "UserProfile",
+										mini: true
+									}, external_BdApi_React_default().createElement("div", {
+										className: Utilities.joinClassNames(dates.Z.container, dates.Z.userProfile, Settings.get("useIcons", true) ? dates.Z.icons : dates.Z.text)
+									}, Settings.get("created_show_profile", true) && external_BdApi_React_default().createElement(WrappedCreatedAt, null), Settings.get("joined_show_profile", true) && external_BdApi_React_default().createElement(WrappedJoinedAt, null), Settings.get("lastmessage_show_profile", true) && external_BdApi_React_default().createElement(WrappedLastMessage, null))));
+								} catch (error) {
+									Logger.error("Failed to inject into ProfileModal:", error);
+								}
+								return ret;
+							};
+							tree.type.__patched = true;
+							tree.name = "DiscordTag";
+						}));
+					}
+					async patchMemberListItem() {
+						const MemberListItem = await external_PluginApi_namespaceObject.ReactComponents.getComponentByName("MemberListItem", getClass(["member", "activity"], ["member"], [], true));
+						const ActivityStatus = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ActivityStatus" === m.default.displayName));
+						const ConnectedActivity = (0, flux_namespaceObject.connectStores)([Settings], (e => e))(Activity);
+						external_PluginApi_namespaceObject.Patcher.after(MemberListItem.component.prototype, "render", ((that, _, res) => {
+							if (this.promises.cancelled) return;
+							if (!Settings.get("activityIcon", true)) return;
+							res.props.children = external_BdApi_React_default().createElement(ConnectedActivity, {
+								user: that.props.user
+							});
+						}));
+						external_PluginApi_namespaceObject.Patcher.after(ActivityStatus, "default", ((_, [{
+							activities
+						}], res) => {
+							const element = res?.props?.children?.[2];
+							if (!element) return;
+							Object.assign(element.props, {
+								type: activities.filter(ActivitiesFilter)[0].type
+							});
+						}));
+						MemberListItem.forceUpdateAll();
+					}
+					async patchUserActivityStatus() {
+						const RichActivity = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "RichActivity" === m?.default?.displayName));
+						external_PluginApi_namespaceObject.Patcher.after(RichActivity, "default", ((_, [props]) => {
+							const shouldShow = (0, flux_namespaceObject.useStateFromStores)([Settings], (() => Settings.get("activityIconState", 0)));
+							switch (shouldShow) {
+								case 1:
+									return;
+								case 2:
+									return null;
+							}
+							switch (props.type) {
+								case constants_namespaceObject.ActivityTypes.PLAYING:
+									return external_BdApi_React_default().createElement(gamepad, props);
+								case constants_namespaceObject.ActivityTypes.LISTENING:
+									return external_BdApi_React_default().createElement(headphones, props);
+							}
+						}));
+					}
+					onStop() {
+						strings.removeStringsObject(translations);
+						external_PluginApi_namespaceObject.Patcher.unpatchAll();
+						external_StyleLoader_default().remove();
+						this.promises.cancel();
+						commands.unregisterAllCommands(this.getName());
+					}
+				}
 			},
-			"./UserDetails/package.json": module => {
-				eval('module.exports = JSON.parse(\'{"info":{"name":"UserDetails","version":"1.4.3","authors":[{"name":"Strencher","discord_id":"415849376598982656","github_username":"Strencher","twitter_username":"Strencher3"}],"description":"Shows you a lot information about users in popouts.","github":"https://github.com/Strencher/BetterDiscordStuff/UserDetails","github_raw":"https://raw.githubusercontent.com/Strencher/BetterDiscordStuff/master/UserDetails/UserDetails.plugin.js"},"changelog":[{"title":"Fixed - v1.4.3","type":"fixed","items":["I\\\'m sorry that it took so long to fix the plugin. :c Finally got some time and motivation to fix all the bugs.","If there\\\'s still something not working, let me know!"]},{"title":"Added - v1.4.3","type":"added","items":["I also added translations for German, Turkey & Dutch.","Become a translator on my server and your translation will be added within the next version!"]}],"build":{"zlibrary":true,"copy":true,"production":false,"scssHash":false,"alias":{"icons":"components/icons","stores":"./modules/stores"},"release":{"public":true,"source":true,"readme":true}}}\');\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/package.json?');
+			645: module => {
+				module.exports = function(cssWithMappingToString) {
+					var list = [];
+					list.toString = function toString() {
+						return this.map((function(item) {
+							var content = cssWithMappingToString(item);
+							if (item[2]) return "@media ".concat(item[2], " {").concat(content, "}");
+							return content;
+						})).join("");
+					};
+					list.i = function(modules, mediaQuery, dedupe) {
+						if ("string" === typeof modules) modules = [
+							[null, modules, ""]
+						];
+						var alreadyImportedModules = {};
+						if (dedupe)
+							for (var i = 0; i < this.length; i++) {
+								var id = this[i][0];
+								if (null != id) alreadyImportedModules[id] = true;
+							}
+						for (var _i = 0; _i < modules.length; _i++) {
+							var item = [].concat(modules[_i]);
+							if (dedupe && alreadyImportedModules[item[0]]) continue;
+							if (mediaQuery)
+								if (!item[2]) item[2] = mediaQuery;
+								else item[2] = "".concat(mediaQuery, " and ").concat(item[2]);
+							list.push(item);
+						}
+					};
+					return list;
+				};
 			},
-			"./UserDetails/modules/apis/connections.scss": (module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../bdbuilder/node_modules/css-loader/dist/runtime/api.js */ "./bdbuilder/node_modules/css-loader/dist/runtime/api.js");\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);\n// Imports\n\nvar ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-connections-header {\\n  font-weight: 700;\\n  text-transform: uppercase;\\n  font-size: 12px;\\n  margin-bottom: 8px;\\n  color: var(--header-secondary);\\n}\\n\\n.UserDetails-connections-connectionsBody div:not(.UserDetails-connections-connections, .UserDetails-connections-container) {\\n  display: inline-flex;\\n  margin: 5px;\\n}\\n.UserDetails-connections-connectionsBody .UserDetails-connections-loading {\\n  fill: var(--interactive-muted);\\n  animation: UserDetails-connections-blink infinite 2s;\\n  width: 30px;\\n  height: 30px;\\n  margin: 5px;\\n  margin-top: 0;\\n  margin-left: 0;\\n}\\n.UserDetails-connections-connectionsBody .UserDetails-connections-connections {\\n  display: flex;\\n  flex-wrap: wrap;\\n  margin-bottom: 8px;\\n}\\n.UserDetails-connections-connectionsBody .UserDetails-connections-connections img {\\n  width: 30px;\\n  height: 30px;\\n}\\n.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon {\\n  width: 35px;\\n  height: 35px;\\n  margin-top: -5px;\\n}\\n.UserDetails-connections-connectionsBody .UserDetails-connections-errorIcon {\\n  fill: #ed4245 !important;\\n}\\n\\n@keyframes UserDetails-connections-blink {\\n  0% {\\n    opacity: 0.6;\\n  }\\n  50% {\\n    opacity: 0.3;\\n  }\\n  100% {\\n    opacity: 0.6;\\n  }\\n}", ""]);\n// Exports\n___CSS_LOADER_EXPORT___.locals = {\n\t"header": "UserDetails-connections-header",\n\t"connectionsBody": "UserDetails-connections-connectionsBody",\n\t"connections": "UserDetails-connections-connections",\n\t"container": "UserDetails-connections-container",\n\t"loading": "UserDetails-connections-loading",\n\t"blink": "UserDetails-connections-blink",\n\t"errorIcon": "UserDetails-connections-errorIcon"\n};\nStyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString())\n;\n\t/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals));\n\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/apis/connections.scss?');
-			},
-			"./UserDetails/modules/apis/dates.scss": (module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../bdbuilder/node_modules/css-loader/dist/runtime/api.js */ "./bdbuilder/node_modules/css-loader/dist/runtime/api.js");\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);\n// Imports\n\nvar ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-dates-container {\\n  display: flex;\\n  max-width: -webkit-fill-available;\\n}\\n.UserDetails-dates-container.UserDetails-dates-text {\\n  flex-direction: column;\\n  margin-top: 10px;\\n}\\n.UserDetails-dates-container.UserDetails-dates-icons {\\n  flex-direction: row;\\n}\\n.UserDetails-dates-container.UserDetails-dates-icons.UserDetails-dates-userProfile {\\n  padding-left: 13px;\\n}\\n.UserDetails-dates-container.UserDetails-dates-icons .UserDetails-dates-loading {\\n  animation: UserDetails-dates-blink infinite 2s ease-in-out;\\n}\\n.UserDetails-dates-container svg {\\n  fill: #ddd;\\n  margin: 5px;\\n  width: 20px;\\n  height: 20px;\\n}\\n.UserDetails-dates-container.UserDetails-dates-text .UserDetails-dates-scrollableText {\\n  color: var(--text-normal);\\n  white-space: nowrap;\\n  position: relative;\\n  font-size: 14px;\\n  width: -webkit-fill-available;\\n  text-align: left;\\n  line-height: 18px;\\n}\\n.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile {\\n  padding-left: 18px;\\n}\\n.UserDetails-dates-container.UserDetails-dates-text.UserDetails-dates-userProfile .UserDetails-dates-scrollableText {\\n  text-align: left !important;\\n}\\n.UserDetails-dates-container .UserDetails-dates-errorIcon {\\n  fill: #ed4245 !important;\\n}\\n\\n.UserDetails-dates-wrapper {\\n  display: block;\\n}\\n\\n@keyframes UserDetails-dates-blink {\\n  0% {\\n    opacity: 0.6;\\n  }\\n  50% {\\n    opacity: 0.3;\\n  }\\n  100% {\\n    opacity: 0.6;\\n  }\\n}", ""]);\n// Exports\n___CSS_LOADER_EXPORT___.locals = {\n\t"container": "UserDetails-dates-container",\n\t"text": "UserDetails-dates-text",\n\t"icons": "UserDetails-dates-icons",\n\t"userProfile": "UserDetails-dates-userProfile",\n\t"loading": "UserDetails-dates-loading",\n\t"blink": "UserDetails-dates-blink",\n\t"scrollableText": "UserDetails-dates-scrollableText",\n\t"errorIcon": "UserDetails-dates-errorIcon",\n\t"wrapper": "UserDetails-dates-wrapper"\n};\nStyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString())\n;\n\t/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals));\n\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/apis/dates.scss?');
-			},
-			"./UserDetails/modules/apis/mutualServers.scss": (module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../bdbuilder/node_modules/css-loader/dist/runtime/api.js */ "./bdbuilder/node_modules/css-loader/dist/runtime/api.js");\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);\n// Imports\n\nvar ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-mutualServers-header {\\n  font-weight: 700;\\n  text-transform: uppercase;\\n  font-size: 12px;\\n  margin-bottom: 8px;\\n  color: var(--header-secondary);\\n}\\n\\n.UserDetails-mutualServers-body {\\n  display: block;\\n  margin-bottom: 8px;\\n}\\n\\n.UserDetails-mutualServers-guilds {\\n  display: flex;\\n  flex-wrap: wrap;\\n}\\n\\n.UserDetails-mutualServers-mutualGuild {\\n  margin: 2px;\\n}\\n\\n.UserDetails-mutualServers-mutualGuild, .UserDetails-mutualServers-guildAcronym {\\n  width: 30px;\\n  height: 30px;\\n  border-radius: 50%;\\n  overflow: hidden;\\n  transition: border-radius 0.3s;\\n}\\n.UserDetails-mutualServers-mutualGuild:hover, .UserDetails-mutualServers-guildAcronym:hover {\\n  border-radius: 20%;\\n}\\n\\n.UserDetails-mutualServers-mutualGuild img {\\n  width: 30px;\\n  height: 30px;\\n}\\n\\n.UserDetails-mutualServers-guildAcronym {\\n  display: flex;\\n  background: var(--background-floating);\\n  align-items: center;\\n  justify-content: center;\\n  white-space: nowrap;\\n  font-size: 12px;\\n}\\n\\n.UserDetails-mutualServers-stack .UserDetails-mutualServers-mutualGuild {\\n  margin: 0;\\n  margin-right: -10px;\\n  background: var(--background-floating);\\n}", ""]);\n// Exports\n___CSS_LOADER_EXPORT___.locals = {\n\t"header": "UserDetails-mutualServers-header",\n\t"body": "UserDetails-mutualServers-body",\n\t"guilds": "UserDetails-mutualServers-guilds",\n\t"mutualGuild": "UserDetails-mutualServers-mutualGuild",\n\t"guildAcronym": "UserDetails-mutualServers-guildAcronym",\n\t"stack": "UserDetails-mutualServers-stack"\n};\nStyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString())\n;\n\t/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals));\n\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/apis/mutualServers.scss?');
-			},
-			"./UserDetails/modules/components/activity.scss": (module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../bdbuilder/node_modules/css-loader/dist/runtime/api.js */ "./bdbuilder/node_modules/css-loader/dist/runtime/api.js");\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);\n// Imports\n\nvar ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-activity-icon {\\n  display: flex;\\n  float: right;\\n}\\n\\n.UserDetails-activity-container {\\n  display: flex;\\n}", ""]);\n// Exports\n___CSS_LOADER_EXPORT___.locals = {\n\t"icon": "UserDetails-activity-icon",\n\t"container": "UserDetails-activity-container"\n};\nStyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString())\n;\n\t/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals));\n\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/activity.scss?');
-			},
-			"./UserDetails/modules/components/badge.scss": (module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../bdbuilder/node_modules/css-loader/dist/runtime/api.js */ "./bdbuilder/node_modules/css-loader/dist/runtime/api.js");\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);\n// Imports\n\nvar ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-badge-connection {\\n  width: 30px;\\n  height: 30px;\\n  position: relative;\\n}\\n.UserDetails-badge-connection.UserDetails-badge-verified {\\n  border-radius: 50%;\\n  overflow: hidden;\\n}\\n.UserDetails-badge-connection.UserDetails-badge-verified .UserDetails-badge-verifiedBadge {\\n  width: 12px;\\n  height: 12px;\\n  position: absolute;\\n  bottom: 0;\\n  right: 0px;\\n  background: var(--background-floating);\\n  border-radius: 50%;\\n  overflow: hidden;\\n  padding: 2px;\\n}", ""]);\n// Exports\n___CSS_LOADER_EXPORT___.locals = {\n\t"connection": "UserDetails-badge-connection",\n\t"verified": "UserDetails-badge-verified",\n\t"verifiedBadge": "UserDetails-badge-verifiedBadge"\n};\nStyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString())\n;\n\t/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals));\n\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/badge.scss?');
-			},
-			"./UserDetails/modules/components/icons/flowerstar.scss": (module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../bdbuilder/node_modules/css-loader/dist/runtime/api.js */ "./bdbuilder/node_modules/css-loader/dist/runtime/api.js");\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);\n// Imports\n\nvar ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-flowerstar-wrapper {\\n  position: relative;\\n  display: flex;\\n  align-items: center;\\n  justify-content: center;\\n}\\n.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-container {\\n  display: block;\\n}\\n.UserDetails-flowerstar-wrapper .UserDetails-flowerstar-tick {\\n  position: absolute;\\n  top: 50%;\\n  left: 50%;\\n  transform: translate(-50%, -50%);\\n}", ""]);\n// Exports\n___CSS_LOADER_EXPORT___.locals = {\n\t"wrapper": "UserDetails-flowerstar-wrapper",\n\t"container": "UserDetails-flowerstar-container",\n\t"tick": "UserDetails-flowerstar-tick"\n};\nStyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString())\n;\n\t/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals));\n\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/flowerstar.scss?');
-			},
-			"./UserDetails/modules/components/settings/settings.scss": (module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../bdbuilder/node_modules/css-loader/dist/runtime/api.js */ "./bdbuilder/node_modules/css-loader/dist/runtime/api.js");\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);\n// Imports\n\nvar ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-settings-settingsPanel .UserDetails-settings-formItem {\\n  margin-bottom: 10px;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-icons {\\n  flex-wrap: wrap;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer {\\n  display: inline-flex;\\n  cursor: pointer;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon {\\n  width: 40px;\\n  height: 40px;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-icons .UserDetails-settings-settingsBadgeContainer .UserDetails-settings-settingsBadgeIcon.UserDetails-settings-disabled {\\n  opacity: 0.4;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-category {\\n  color: #ddd;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent {\\n  padding: 10px;\\n  padding: 10px;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable {\\n  user-select: text;\\n  margin-bottom: 6px;\\n  padding-bottom: 6px;\\n  border-bottom: thin solid var(--background-modifier-accent);\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-category.UserDetails-settings-opened .UserDetails-settings-categoryContent .UserDetails-settings-replacementVariable b {\\n  margin-right: 3px;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader {\\n  cursor: pointer;\\n  padding: 10px;\\n  font-size: 15px;\\n  background: var(--background-tertiary);\\n  font-weight: 600;\\n  text-transform: uppercase;\\n  display: flex;\\n  align-items: center;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-category .UserDetails-settings-categoryHeader .UserDetails-settings-categoryCaret {\\n  margin-left: auto;\\n}\\n.UserDetails-settings-settingsPanel .UserDetails-settings-pageIcon {\\n  color: var(--interactive-normal);\\n  fill: var(--interactive-normal);\\n}", ""]);\n// Exports\n___CSS_LOADER_EXPORT___.locals = {\n\t"settingsPanel": "UserDetails-settings-settingsPanel",\n\t"formItem": "UserDetails-settings-formItem",\n\t"icons": "UserDetails-settings-icons",\n\t"settingsBadgeContainer": "UserDetails-settings-settingsBadgeContainer",\n\t"settingsBadgeIcon": "UserDetails-settings-settingsBadgeIcon",\n\t"disabled": "UserDetails-settings-disabled",\n\t"category": "UserDetails-settings-category",\n\t"opened": "UserDetails-settings-opened",\n\t"categoryContent": "UserDetails-settings-categoryContent",\n\t"replacementVariable": "UserDetails-settings-replacementVariable",\n\t"categoryHeader": "UserDetails-settings-categoryHeader",\n\t"categoryCaret": "UserDetails-settings-categoryCaret",\n\t"pageIcon": "UserDetails-settings-pageIcon"\n};\nStyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString())\n;\n\t/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals));\n\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/settings/settings.scss?');
-			},
-			"./UserDetails/modules/components/style.scss": (module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../bdbuilder/node_modules/css-loader/dist/runtime/api.js */ "./bdbuilder/node_modules/css-loader/dist/runtime/api.js");\n/* harmony import */ var _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);\n// Imports\n\nvar ___CSS_LOADER_EXPORT___ = _bdbuilder_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, ".UserDetails-style-loadingText {\\n  color: var(--text-normal);\\n  text-align: center;\\n}\\n\\n.UserDetails-style-scrollableText {\\n  color: var(--text-normal);\\n  white-space: nowrap;\\n  position: relative;\\n  font-size: 14px;\\n  width: -webkit-fill-available;\\n  text-align: center;\\n  line-height: 18px;\\n}", ""]);\n// Exports\n___CSS_LOADER_EXPORT___.locals = {\n\t"loadingText": "UserDetails-style-loadingText",\n\t"scrollableText": "UserDetails-style-scrollableText"\n};\nStyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString())\n;\n\t/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals));\n\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/style.scss?');
-			},
-			"./UserDetails/index.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ Plugin)\n/* harmony export */ });\n/* harmony import */ var styles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! styles */ "styles");\n/* harmony import */ var styles__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(styles__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _modules_apis_connections__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/apis/connections */ "./UserDetails/modules/apis/connections.js");\n/* harmony import */ var _modules_apis_creationDate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/apis/creationDate */ "./UserDetails/modules/apis/creationDate.js");\n/* harmony import */ var _modules_apis_joinedDate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/apis/joinedDate */ "./UserDetails/modules/apis/joinedDate.tsx");\n/* harmony import */ var _modules_apis_lastMessage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/apis/lastMessage */ "./UserDetails/modules/apis/lastMessage.tsx");\n/* harmony import */ var _modules_Utilities__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/Utilities */ "./UserDetails/modules/Utilities.js");\n/* harmony import */ var _modules_Settings__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _modules_components_settings_index__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/components/settings/index */ "./UserDetails/modules/components/settings/index.jsx");\n/* harmony import */ var _modules_components_errorboundary__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/components/errorboundary */ "./UserDetails/modules/components/errorboundary.jsx");\n/* harmony import */ var _zlibrary_plugin__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @zlibrary/plugin */ "@zlibrary/plugin");\n/* harmony import */ var _zlibrary_plugin__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_zlibrary_plugin__WEBPACK_IMPORTED_MODULE_10__);\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @zlibrary */ "@zlibrary");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_zlibrary__WEBPACK_IMPORTED_MODULE_11__);\n/* harmony import */ var _modules_apis_dates_scss__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./modules/apis/dates.scss */ "./UserDetails/modules/apis/dates.scss");\n/* harmony import */ var _modules_components_activity__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./modules/components/activity */ "./UserDetails/modules/components/activity.jsx");\n/* harmony import */ var _discord_constants__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @discord/constants */ "@discord/constants");\n/* harmony import */ var _discord_constants__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_discord_constants__WEBPACK_IMPORTED_MODULE_14__);\n/* harmony import */ var _modules_components_icons_gamepad__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./modules/components/icons/gamepad */ "./UserDetails/modules/components/icons/gamepad.jsx");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @discord/flux */ "@discord/flux");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_16___default = /*#__PURE__*/__webpack_require__.n(_discord_flux__WEBPACK_IMPORTED_MODULE_16__);\n/* harmony import */ var _modules_components_icons_headphones__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./modules/components/icons/headphones */ "./UserDetails/modules/components/icons/headphones.jsx");\n/* harmony import */ var common_apis_commands__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! common/apis/commands */ "./bdbuilder/common/apis/commands.ts");\n/* harmony import */ var common_apis_clyde__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! common/apis/clyde */ "./bdbuilder/common/apis/clyde.ts");\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @discord/stores */ "@discord/stores");\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(_discord_stores__WEBPACK_IMPORTED_MODULE_20__);\n/* harmony import */ var _modules_data_translations_index_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./modules/data/translations/index.js */ "./UserDetails/modules/data/translations/index.js");\n/* harmony import */ var common_apis_strings__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! common/apis/strings */ "./bdbuilder/common/apis/strings.ts");\n/* harmony import */ var common_util_noerror__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! common/util/noerror */ "./bdbuilder/common/util/noerror.ts");\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @discord/i18n */ "@discord/i18n");\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_24___default = /*#__PURE__*/__webpack_require__.n(_discord_i18n__WEBPACK_IMPORTED_MODULE_24__);\n/* harmony import */ var _modules_logger__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./modules/logger */ "./UserDetails/modules/logger.js");\n/* harmony import */ var _modules_apis_mutualServers__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./modules/apis/mutualServers */ "./UserDetails/modules/apis/mutualServers.tsx");\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\n/// <reference path="../bdbuilder/typings/main.d.ts" />\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nconst getClass = (props = [], items = props, exclude = [], selector = false) => {\n  const module = _zlibrary__WEBPACK_IMPORTED_MODULE_11__.WebpackModules.find(m => m && props.every(prop => m[prop] !== undefined) && exclude.every(e => m[e] == undefined));\n  if (!module) return "";\n  return (selector ? "." : "") + items.map(item => module[item]).join(selector ? "." : " ");\n};\n\nclass Plugin extends (_zlibrary_plugin__WEBPACK_IMPORTED_MODULE_10___default()) {\n  constructor(...args) {\n    super(...args);\n\n    _defineProperty(this, "promises", {\n      cancelled: false,\n\n      cancel() {\n        this.cancelled = true;\n      }\n\n    });\n  }\n\n  getSettingsPanel() {\n    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_modules_components_settings_index__WEBPACK_IMPORTED_MODULE_8__.default, null);\n  }\n\n  onStart() {\n    // Bind stylesheet\n    styles__WEBPACK_IMPORTED_MODULE_0___default().inject(); // Load Strings\n\n    common_apis_strings__WEBPACK_IMPORTED_MODULE_22__.default.addStringsObject(_modules_data_translations_index_js__WEBPACK_IMPORTED_MODULE_21__.default); // Api\'s\n\n    this.createdApi = new _modules_apis_creationDate__WEBPACK_IMPORTED_MODULE_3__.default(this);\n    this.joinedApi = new _modules_apis_joinedDate__WEBPACK_IMPORTED_MODULE_4__.default(this);\n    this.lastMessageApi = new _modules_apis_lastMessage__WEBPACK_IMPORTED_MODULE_5__.default(this);\n    this.connectionsApi = new _modules_apis_connections__WEBPACK_IMPORTED_MODULE_2__.default(this);\n    this.mutualsApi = new _modules_apis_mutualServers__WEBPACK_IMPORTED_MODULE_26__.default(this); // Patches\n\n    this.patchUserPopout();\n    this.patchUserProfile();\n    this.patchMemberListItem();\n    this.patchUserActivityStatus(); // Commands\n\n    common_apis_commands__WEBPACK_IMPORTED_MODULE_18__.default.registerCommand(this.getName(), {\n      id: "user-info",\n      name: "userinfo",\n\n      get description() {\n        return _discord_i18n__WEBPACK_IMPORTED_MODULE_24__.Messages.USERINFO_CMD_DESC;\n      },\n\n      predicate: () => true,\n      execute: (props, {\n        channel,\n        guild\n      }) => {\n        const users = props.user.map(e => _discord_stores__WEBPACK_IMPORTED_MODULE_20__.Users.getUser(e.userId)).filter(e => e);\n        if (!users.length) return common_apis_clyde__WEBPACK_IMPORTED_MODULE_19__.default.sendMessage(channel.id, {\n          content: "Sorry, but i can\'t resolve that user."\n        });\n        common_apis_clyde__WEBPACK_IMPORTED_MODULE_19__.default.sendMessage(channel.id, {\n          content: "That\'s what i\'ve found so far:",\n          embeds: users.map(user => this.createEmbedForUser(user, guild, channel))\n        });\n      },\n      options: [{\n        name: "user",\n        type: 6,\n        description: "The user"\n      }],\n      type: 3\n    });\n  }\n\n  createEmbedForUser(user, guild) {\n    const member = _discord_stores__WEBPACK_IMPORTED_MODULE_20__.Members.getMember(guild.id, user.id);\n    const largeUrl = user.getAvatarURL().split("?size")[0] + "?size=2048";\n    const activities = _discord_stores__WEBPACK_IMPORTED_MODULE_20__.Activities.getActivities(user.id);\n    return {\n      color: member?.colorString ? _zlibrary__WEBPACK_IMPORTED_MODULE_11__.ColorConverter.hex2int(member.colorString) : void 0,\n      author: {\n        name: user.tag,\n        icon_url: user.getAvatarURL(),\n        proxy_icon_url: user.getAvatarURL()\n      },\n      thumbnail: {\n        height: 128,\n        proxy_url: largeUrl,\n        url: largeUrl,\n        width: 128\n      },\n      footer: {\n        text: "ID: " + user.id\n      },\n      timestamp: new Date().toISOString(),\n      type: "rich",\n      description: `<@!${user.id}>`,\n      fields: [{\n        name: "Creation Date",\n        inline: true,\n        value: this.createdApi.extractDate(user.id).toGMTString()\n      }, member && {\n        name: "Joined Date",\n        inline: true,\n        value: new Date(member.joinedAt).toGMTString()\n      }, member && {\n        name: "Roles [" + member.roles.length + "]",\n        value: member.roles.map(role => `<@&${role}>`).join(" | ")\n      }, activities.length && {\n        name: "Activities",\n        value: activities.map(ac => `- **${ac.name}**: \\`${ac.state}\\``).join("\\n")\n      }].filter(e => e)\n    };\n  }\n\n  async patchUserPopout() {\n    const UserPopoutInfo = _zlibrary__WEBPACK_IMPORTED_MODULE_11__.WebpackModules.getByProps("UserPopoutInfo");\n    const UserPopoutBody = _zlibrary__WEBPACK_IMPORTED_MODULE_11__.WebpackModules.getModule(m => m.default.displayName === "UserPopoutBody");\n    _zlibrary__WEBPACK_IMPORTED_MODULE_11__.Patcher.after(UserPopoutInfo, "UserPopoutInfo", (_, [{\n      user\n    }], returnValue) => {\n      if (this.promises.cancelled) return;\n      const tree = _modules_Utilities__WEBPACK_IMPORTED_MODULE_6__.default.findInReactTree(returnValue, (0,common_util_noerror__WEBPACK_IMPORTED_MODULE_23__.default)(e => e.className.indexOf("headerText") > -1));\n      if (!Array.isArray(tree?.children) || !user) return;\n      const WrappedJoinedAt = this.joinedApi.task(user.id);\n      const WrappedCreatedAt = this.createdApi.task(user.id);\n      const WrappedLastMessage = this.lastMessageApi.task(user);\n      tree.children.push( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_modules_components_errorboundary__WEBPACK_IMPORTED_MODULE_9__.default, {\n        key: "UserPopoutHeader",\n        id: "UserPopoutHeader",\n        mini: true\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {\n        className: _modules_Utilities__WEBPACK_IMPORTED_MODULE_6__.default.joinClassNames(_modules_apis_dates_scss__WEBPACK_IMPORTED_MODULE_12__.default.container, _modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("useIcons", true) ? _modules_apis_dates_scss__WEBPACK_IMPORTED_MODULE_12__.default.icons : _modules_apis_dates_scss__WEBPACK_IMPORTED_MODULE_12__.default.text)\n      }, _modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("created_show_up", true) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(WrappedCreatedAt, {\n        key: "created-date"\n      }), _modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("joined_show_up", true) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(WrappedJoinedAt, {\n        key: "joined-date"\n      }), _modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("lastmessage_show_up", true) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(WrappedLastMessage, {\n        key: "lastmessage-date"\n      }))));\n    });\n    _zlibrary__WEBPACK_IMPORTED_MODULE_11__.Patcher.after(UserPopoutBody, "default", (_, [{\n      user\n    }], returnValue) => {\n      if (this.promises.cancelled) return;\n      if (!Array.isArray(returnValue?.props?.children)) return returnValue;\n      const Connections = this.connectionsApi.task(user);\n      const MutualServers = this.mutualsApi.task(user);\n      returnValue.props.children.unshift( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_modules_components_errorboundary__WEBPACK_IMPORTED_MODULE_9__.default, {\n        id: "UserPopoutBody",\n        mini: true,\n        key: "connections"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(Connections, null)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_modules_components_errorboundary__WEBPACK_IMPORTED_MODULE_9__.default, {\n        id: "UserPopoutBody",\n        mini: true,\n        key: "mutual_servers"\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(MutualServers, null)));\n    });\n  }\n\n  async patchUserProfile() {\n    const UserProfileModalHeader = _zlibrary__WEBPACK_IMPORTED_MODULE_11__.WebpackModules.getModule(m => m.default.displayName === "UserProfileModalHeader");\n    _zlibrary__WEBPACK_IMPORTED_MODULE_11__.Patcher.after(UserProfileModalHeader, "default", (_, [{\n      user\n    }], res) => {\n      if (this.promises.cancelled) return;\n      const tree = _modules_Utilities__WEBPACK_IMPORTED_MODULE_6__.default.findInReactTree(res, (0,common_util_noerror__WEBPACK_IMPORTED_MODULE_23__.default)(res => res.type.displayName === "DiscordTag"));\n      if (!tree || tree.type?.__patched) return;\n      const original = tree.type;\n\n      tree.type = (...args) => {\n        const ret = original.apply(this, args);\n\n        try {\n          const WrappedJoinedAt = this.joinedApi.task(user.id);\n          const WrappedCreatedAt = this.createdApi.task(user.id);\n          const WrappedLastMessage = this.lastMessageApi.task(user);\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {\n            className: _modules_apis_dates_scss__WEBPACK_IMPORTED_MODULE_12__.default.wrapper\n          }, ret, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_modules_components_errorboundary__WEBPACK_IMPORTED_MODULE_9__.default, {\n            id: "UserProfile",\n            mini: true\n          }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {\n            className: _modules_Utilities__WEBPACK_IMPORTED_MODULE_6__.default.joinClassNames(_modules_apis_dates_scss__WEBPACK_IMPORTED_MODULE_12__.default.container, _modules_apis_dates_scss__WEBPACK_IMPORTED_MODULE_12__.default.userProfile, _modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("useIcons", true) ? _modules_apis_dates_scss__WEBPACK_IMPORTED_MODULE_12__.default.icons : _modules_apis_dates_scss__WEBPACK_IMPORTED_MODULE_12__.default.text)\n          }, _modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("created_show_profile", true) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(WrappedCreatedAt, null), _modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("joined_show_profile", true) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(WrappedJoinedAt, null), _modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("lastmessage_show_profile", true) && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(WrappedLastMessage, null))));\n        } catch (error) {\n          _modules_logger__WEBPACK_IMPORTED_MODULE_25__.default.error("Failed to inject into ProfileModal:", error);\n        }\n\n        return ret;\n      };\n\n      tree.type.__patched = true;\n      tree.name = "DiscordTag";\n    });\n  }\n\n  async patchMemberListItem() {\n    const MemberListItem = await _zlibrary__WEBPACK_IMPORTED_MODULE_11__.ReactComponents.getComponentByName("MemberListItem", getClass(["member", "activity"], ["member"], [], true));\n    const ActivityStatus = _zlibrary__WEBPACK_IMPORTED_MODULE_11__.WebpackModules.getModule(m => m.default.displayName === "ActivityStatus");\n    const ConnectedActivity = (0,_discord_flux__WEBPACK_IMPORTED_MODULE_16__.connectStores)([_modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default], e => e)(_modules_components_activity__WEBPACK_IMPORTED_MODULE_13__.default);\n    _zlibrary__WEBPACK_IMPORTED_MODULE_11__.Patcher.after(MemberListItem.component.prototype, "render", (that, _, res) => {\n      if (this.promises.cancelled) return;\n      if (!_modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("activityIcon", true)) return;\n      res.props.children = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(ConnectedActivity, {\n        user: that.props.user\n      });\n    });\n    _zlibrary__WEBPACK_IMPORTED_MODULE_11__.Patcher.after(ActivityStatus, "default", (_, [{\n      activities\n    }], res) => {\n      const element = res?.props?.children?.[2];\n      if (!element) return;\n      Object.assign(element.props, {\n        type: activities.filter(_modules_components_activity__WEBPACK_IMPORTED_MODULE_13__.ActivitiesFilter)[0].type\n      });\n    });\n    MemberListItem.forceUpdateAll();\n  }\n\n  async patchUserActivityStatus() {\n    const RichActivity = _zlibrary__WEBPACK_IMPORTED_MODULE_11__.WebpackModules.getModule(m => m?.default?.displayName === "RichActivity");\n    _zlibrary__WEBPACK_IMPORTED_MODULE_11__.Patcher.after(RichActivity, "default", (_, [props]) => {\n      const shouldShow = (0,_discord_flux__WEBPACK_IMPORTED_MODULE_16__.useStateFromStores)([_modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default], () => _modules_Settings__WEBPACK_IMPORTED_MODULE_7__.default.get("activityIconState", 0));\n\n      switch (shouldShow) {\n        case 1:\n          return;\n\n        case 2:\n          return null;\n      }\n\n      switch (props.type) {\n        case _discord_constants__WEBPACK_IMPORTED_MODULE_14__.ActivityTypes.PLAYING:\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_modules_components_icons_gamepad__WEBPACK_IMPORTED_MODULE_15__.default, props);\n\n        case _discord_constants__WEBPACK_IMPORTED_MODULE_14__.ActivityTypes.LISTENING:\n          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_modules_components_icons_headphones__WEBPACK_IMPORTED_MODULE_17__.default, props);\n      }\n    });\n  }\n\n  onStop() {\n    // Remove strings\n    common_apis_strings__WEBPACK_IMPORTED_MODULE_22__.default.removeStringsObject(_modules_data_translations_index_js__WEBPACK_IMPORTED_MODULE_21__.default); // Unpatch\n\n    _zlibrary__WEBPACK_IMPORTED_MODULE_11__.Patcher.unpatchAll(); // Remove styles\n\n    styles__WEBPACK_IMPORTED_MODULE_0___default().remove(); // Cancel promises\n\n    this.promises.cancel(); // Unregister commands\n\n    common_apis_commands__WEBPACK_IMPORTED_MODULE_18__.default.unregisterAllCommands(this.getName());\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/index.js?');
-			},
-			"./UserDetails/modules/Settings.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @zlibrary */ "@zlibrary");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_zlibrary__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _package_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../package.json */ "./UserDetails/package.json");\n/* harmony import */ var common_classes_updater__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! common/classes/updater */ "./bdbuilder/common/classes/updater.js");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Utilities */ "./UserDetails/modules/Utilities.js");\n/* harmony import */ var _discord_modules__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @discord/modules */ "@discord/modules");\n/* harmony import */ var _discord_modules__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_discord_modules__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @discord/flux */ "@discord/flux");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_discord_flux__WEBPACK_IMPORTED_MODULE_6__);\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\n\n\n\n\n\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new class extends _discord_flux__WEBPACK_IMPORTED_MODULE_6__.Store {\n  constructor() {\n    super(_discord_modules__WEBPACK_IMPORTED_MODULE_5__.Dispatcher, {});\n\n    _defineProperty(this, "settings", _zlibrary__WEBPACK_IMPORTED_MODULE_0__.PluginUtilities.loadSettings(_package_json__WEBPACK_IMPORTED_MODULE_1__.info.name, {}));\n\n    _defineProperty(this, "get", (key, defaultValue) => {\n      return this.settings[key] ?? defaultValue;\n    });\n\n    _defineProperty(this, "set", (key, value) => {\n      this.settings[key] = value;\n      _zlibrary__WEBPACK_IMPORTED_MODULE_0__.PluginUtilities.saveSettings(_package_json__WEBPACK_IMPORTED_MODULE_1__.info.name, this.settings);\n      this.emitChange();\n    });\n  }\n\n}());\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/Settings.js?');
-			},
-			"./UserDetails/modules/Utilities.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ Utilities)\n/* harmony export */ });\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @zlibrary */ "@zlibrary");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_zlibrary__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n\n\n\nconst FormItem = _zlibrary__WEBPACK_IMPORTED_MODULE_0__.WebpackModules.getByDisplayName("FormItem");\nconst FormText = _zlibrary__WEBPACK_IMPORTED_MODULE_0__.WebpackModules.getByDisplayName("FormText");\nconst FormDivider = _zlibrary__WEBPACK_IMPORTED_MODULE_0__.WebpackModules.getByDisplayName("FormDivider");\nconst Flex = _zlibrary__WEBPACK_IMPORTED_MODULE_0__.WebpackModules.getByDisplayName("Flex");\nconst {\n  marginBottom8\n} = _zlibrary__WEBPACK_IMPORTED_MODULE_0__.WebpackModules.getByProps("marginBottom8");\nclass Utilities extends _zlibrary__WEBPACK_IMPORTED_MODULE_0__.Utilities {\n  static joinClassNames(...classNames) {\n    return classNames.filter(e => e).join(" ");\n  }\n\n  static get useForceUpdate() {\n    return () => {\n      return (0,react__WEBPACK_IMPORTED_MODULE_1__.useReducer)(n => n + 1, 0)[1];\n    };\n  }\n\n  static createUpdateWrapper(Component, form = true, valueProp = "value") {\n    return props => {\n      const [state, setState] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(props[valueProp]);\n      props[valueProp] = state;\n\n      if (form) {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(Flex, {\n          className: marginBottom8,\n          direction: Flex.Direction.VERTICAL\n        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(FormItem, {\n          title: props.name\n        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(Component, _extends({}, props, {\n          onChange: value => {\n            value = value.value ?? value;\n            setState(value);\n            props.onChange(value);\n          }\n        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(FormText, {\n          type: "description",\n          disabled: Boolean(props.note)\n        }, props.note)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(FormDivider, null));\n      } else {\n        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(Component, _extends({}, props, {\n          onChange: value => {\n            value = value.value ?? value;\n            setState(value);\n            props.onChange(value);\n          }\n        }));\n      }\n    };\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/Utilities.js?');
-			},
-			"./UserDetails/modules/apis/api.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ ApiModule)\n/* harmony export */ });\n/* harmony import */ var _logger__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../logger */ "./UserDetails/modules/logger.js");\n/* harmony import */ var _queue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../queue */ "./UserDetails/modules/queue.js");\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @zlibrary */ "@zlibrary");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_zlibrary__WEBPACK_IMPORTED_MODULE_3__);\n\n\n\n\nconst {\n  APIModule\n} = _zlibrary__WEBPACK_IMPORTED_MODULE_3__.DiscordModules;\nlet cache = window.__ud_cache ?? (window.__ud_cache = {}),\n    queue = new _queue__WEBPACK_IMPORTED_MODULE_1__.default({\n  delay: 2500\n});\nclass ApiModule {\n  constructor(plugin) {\n    this.plugin = plugin;\n    cache[this.api] = {};\n  }\n\n  extractDate(id) {\n    return new Date(id / 4194304 + 1420070400000);\n  }\n\n  get api() {\n    return "";\n  }\n\n  get cache() {\n    return cache[this.api];\n  }\n\n  error(...message) {\n    _logger__WEBPACK_IMPORTED_MODULE_0__.default.error(...message);\n  }\n\n  setCache(guildId, userId, data) {\n    if (!cache[this.api]) cache[this.api] = {\n      [guildId]: {}\n    };\n    if (!cache[this.api][guildId]) cache[this.api][guildId] = {};\n    return cache[this.api][guildId][userId] = data;\n  }\n\n  getByCache(guildId, userId) {\n    const chunk = cache[this.api]?.[guildId]?.[userId];\n    if (!chunk || Date.now() - chunk.fetch > 600000) return null;\n    return chunk.data;\n  }\n\n  get(options, guildId, userId, event) {\n    if (!cache[this.api]) cache[this.api] = {\n      [guildId]: {}\n    };\n    if (!cache[this.api][guildId]) cache[this.api][guildId] = {};\n    let data;\n    const userFromCache = this.getByCache(guildId, userId);\n    if (userFromCache) data = userFromCache;\n\n    if (!data) {\n      queue.add(() => APIModule.get(options), this.api, event);\n      event.on("done", data => {\n        this.setCache(guildId, userId, {\n          data: data,\n          fetch: Date.now()\n        });\n      }).on("error", error => {\n        if (error.status === 429) {\n          queue.pause();\n          setTimeout(queue.continue, (error.body?.retry_after ?? 5) * 1000);\n        }\n      });\n    } else event.reply("done", data);\n  }\n\n  parseZeroPadding(zeroable) {\n    return zeroable <= 9 ? "0" + zeroable : zeroable;\n  }\n\n  monthsAgo(date1, date2) {\n    let months = (date2.getFullYear() - date1.getFullYear()) * 12;\n    months -= date1.getMonth();\n    months += date2.getMonth();\n    months = Math.abs(months);\n    return months <= 0 ? 0 : months;\n  }\n\n  daysAgo(date1, date2) {\n    return Math.floor((date1 - date2) / (1000 * 60 * 60 * 24));\n  }\n\n  yearsAgo(date1, date2) {\n    return this.monthsAgo(date2, date1) / 12;\n  }\n\n  parseTime(format, date) {\n    if (typeof date !== "object") date = new Date(date);\n    const today = new Date(),\n          daysago = this.daysAgo(today, date),\n          hour12 = _Settings__WEBPACK_IMPORTED_MODULE_2__.default.get("12hour", 1) === 0;\n    return format.replace(/\\$timelabel/g, date.getHours() >= 12 ? "PM" : "AM").replace(/\\$daysago/g, daysago).replace(/\\$dayname/g, date.toLocaleDateString("default", {\n      weekday: "short",\n      hour12\n    })).replace(/\\$day/g, date.toLocaleDateString("default", {\n      day: "2-digit",\n      hour12\n    })).replace(/\\$monthname/g, date.toLocaleDateString("default", {\n      month: "short",\n      hour12\n    })).replace(/\\$monthsago/g, this.monthsAgo(today, date)).replace(/\\$month/g, date.toLocaleDateString("default", {\n      month: "2-digit",\n      hour12\n    })).replace(/\\$weeksago/g, Math.floor(daysago / 7)).replace(/\\$yearsago/g, Math.floor(this.yearsAgo(today, date))).replace(/\\$year/g, date.getFullYear()).replace(/\\$hour/g, this.parseZeroPadding(hour12 ? date.getHours() % 12 : date.getHours())).replace(/\\$minute/g, this.parseZeroPadding(date.getMinutes())).replace(/\\$second/g, this.parseZeroPadding(date.getSeconds()));\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/apis/api.js?');
-			},
-			"./UserDetails/modules/apis/connections.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ Userconnections)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _components_badge__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/badge */ "./UserDetails/modules/components/badge.jsx");\n/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./api */ "./UserDetails/modules/apis/api.js");\n/* harmony import */ var _components_blankslates_circle__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/blankslates/circle */ "./UserDetails/modules/components/blankslates/circle.jsx");\n/* harmony import */ var _components_icons_error__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/icons/error */ "./UserDetails/modules/components/icons/error.jsx");\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @zlibrary */ "@zlibrary");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_zlibrary__WEBPACK_IMPORTED_MODULE_6__);\n/* harmony import */ var _connections_scss__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./connections.scss */ "./UserDetails/modules/apis/connections.scss");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @discord/components */ "@discord/components");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_discord_components__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @discord/flux */ "@discord/flux");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_discord_flux__WEBPACK_IMPORTED_MODULE_9__);\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @discord/stores */ "@discord/stores");\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_discord_stores__WEBPACK_IMPORTED_MODULE_10__);\n/* harmony import */ var _discord_actions__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @discord/actions */ "@discord/actions");\n/* harmony import */ var _discord_actions__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_discord_actions__WEBPACK_IMPORTED_MODULE_11__);\n/* harmony import */ var _discord_connections__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @discord/connections */ "@discord/connections");\n/* harmony import */ var _discord_connections__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_discord_connections__WEBPACK_IMPORTED_MODULE_12__);\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @discord/i18n */ "@discord/i18n");\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_discord_i18n__WEBPACK_IMPORTED_MODULE_13__);\n/// <reference path="../../../bdbuilder/typings/main.d.ts" />\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nconst Header = _zlibrary__WEBPACK_IMPORTED_MODULE_6__.WebpackModules.getByDisplayName("Header");\nclass Userconnections extends _api__WEBPACK_IMPORTED_MODULE_2__.default {\n  get api() {\n    return this.constructor.name;\n  }\n\n  task(user) {\n    return () => {\n      if (!_discord_connections__WEBPACK_IMPORTED_MODULE_12___default().filter(c => _Settings__WEBPACK_IMPORTED_MODULE_5__.default.get("shownConnections", {})[c.type]).length || user.bot || !_Settings__WEBPACK_IMPORTED_MODULE_5__.default.get("showConnectionsSection", true)) return null;\n      const connections = (0,_discord_flux__WEBPACK_IMPORTED_MODULE_9__.useStateFromStores)([_discord_stores__WEBPACK_IMPORTED_MODULE_10__.UserProfile], () => _discord_stores__WEBPACK_IMPORTED_MODULE_10__.UserProfile.getUserProfile(user.id)?.connectedAccounts);\n      const [message, setMessage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");\n      (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {\n        if (Array.isArray(connections) || _discord_stores__WEBPACK_IMPORTED_MODULE_10__.UserProfile.isFetching(user.id)) return;\n        _discord_actions__WEBPACK_IMPORTED_MODULE_11__.ProfileActions.fetchProfile(user.id).catch(error => {\n          if (~error?.message?.indexOf("Already dispatching")) return;\n          _zlibrary__WEBPACK_IMPORTED_MODULE_6__.Logger.error(`Failed to fetch profile for ${user.id}:\\n`, error);\n          setMessage(_discord_i18n__WEBPACK_IMPORTED_MODULE_13__.Messages.FAILED_TO_FETCH);\n        });\n      }, [true]);\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {\n        className: _connections_scss__WEBPACK_IMPORTED_MODULE_7__.default.connectionsBody\n      }, !connections?.length && _Settings__WEBPACK_IMPORTED_MODULE_5__.default.get("showEmptyConnections", true) || connections?.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Header, {\n        className: _connections_scss__WEBPACK_IMPORTED_MODULE_7__.default.container,\n        size: Header.Sizes.SIZE_12,\n        className: _connections_scss__WEBPACK_IMPORTED_MODULE_7__.default.header,\n        uppercase: true,\n        muted: true\n      }, connections?.length ? _discord_i18n__WEBPACK_IMPORTED_MODULE_13__.Messages.CONNECTIONS : _discord_i18n__WEBPACK_IMPORTED_MODULE_13__.Messages.NO_CONNECTIONS) : null, Array.isArray(connections) ? connections?.length ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {\n        className: _connections_scss__WEBPACK_IMPORTED_MODULE_7__.default.connections\n      }, connections.filter(e => _Settings__WEBPACK_IMPORTED_MODULE_5__.default.get("shownConnections")[e.type]).map(badge => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_badge__WEBPACK_IMPORTED_MODULE_1__.default, {\n        item: badge,\n        key: badge.type\n      }))) : null : message ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_8__.TooltipContainer, {\n        text: message\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_icons_error__WEBPACK_IMPORTED_MODULE_4__.default, {\n        className: _connections_scss__WEBPACK_IMPORTED_MODULE_7__.default.errorIcon\n      })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_8__.TooltipContainer, {\n        text: _discord_i18n__WEBPACK_IMPORTED_MODULE_13__.Messages.LOADING_CONNECTIONS\n      }, _discord_connections__WEBPACK_IMPORTED_MODULE_12___default().filter(e => _Settings__WEBPACK_IMPORTED_MODULE_5__.default.get("shownConnections")[e.type]).map(() => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_blankslates_circle__WEBPACK_IMPORTED_MODULE_3__.default, {\n        className: _connections_scss__WEBPACK_IMPORTED_MODULE_7__.default.loading\n      }))));\n    };\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/apis/connections.js?');
-			},
-			"./UserDetails/modules/apis/creationDate.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ CreatedAt)\n/* harmony export */ });\n/* harmony import */ var _components_icons_cake__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/icons/cake */ "./UserDetails/modules/components/icons/cake.jsx");\n/* harmony import */ var _components_textscroller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/textscroller */ "./UserDetails/modules/components/textscroller.jsx");\n/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./api */ "./UserDetails/modules/apis/api.js");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @discord/components */ "@discord/components");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_discord_components__WEBPACK_IMPORTED_MODULE_5__);\n\n\n\n\n\n\nclass CreatedAt extends _api__WEBPACK_IMPORTED_MODULE_2__.default {\n  task(userId) {\n    const text = this.parseTime(_Settings__WEBPACK_IMPORTED_MODULE_4__.default.get("created_format", "Created At: $hour:$minute:$second, $day.$month.$year $daysago days"), this.extractDate(userId));\n    return () => {\n      return _Settings__WEBPACK_IMPORTED_MODULE_4__.default.get("useIcons", true) ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_5__.TooltipContainer, {\n        text: text\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement(_components_icons_cake__WEBPACK_IMPORTED_MODULE_0__.default, null)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3___default().createElement(_components_textscroller__WEBPACK_IMPORTED_MODULE_1__.default, null, text);\n    };\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/apis/creationDate.js?');
-			},
-			"./UserDetails/modules/apis/joinedDate.tsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ JoinedAt)\n/* harmony export */ });\n/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api */ "./UserDetails/modules/apis/api.js");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _components_textscroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/textscroller */ "./UserDetails/modules/components/textscroller.jsx");\n/* harmony import */ var _components_icons_calendar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/icons/calendar */ "./UserDetails/modules/components/icons/calendar.jsx");\n/* harmony import */ var _components_blankslates_cube__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/blankslates/cube */ "./UserDetails/modules/components/blankslates/cube.jsx");\n/* harmony import */ var _components_icons_error__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/icons/error */ "./UserDetails/modules/components/icons/error.jsx");\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _dates_scss__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./dates.scss */ "./UserDetails/modules/apis/dates.scss");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @discord/components */ "@discord/components");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_discord_components__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @discord/stores */ "@discord/stores");\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_discord_stores__WEBPACK_IMPORTED_MODULE_9__);\n/* harmony import */ var _components_loadingtext__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/loadingtext */ "./UserDetails/modules/components/loadingtext.jsx");\n/* harmony import */ var _stores_joinedAt__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../stores/joinedAt */ "./UserDetails/modules/stores/joinedAt.ts");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @discord/flux */ "@discord/flux");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(_discord_flux__WEBPACK_IMPORTED_MODULE_12__);\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @discord/i18n */ "@discord/i18n");\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_discord_i18n__WEBPACK_IMPORTED_MODULE_13__);\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nclass JoinedAt extends _api__WEBPACK_IMPORTED_MODULE_0__.default {\n  get api() {\n    return this.constructor.name;\n  }\n\n  get format() {\n    return _Settings__WEBPACK_IMPORTED_MODULE_6__.default.get("joined_format", "Joined At: $hour:$minute:$second, $day.$month.$year $daysago days");\n  }\n\n  task(userId) {\n    return react__WEBPACK_IMPORTED_MODULE_1___default().memo(() => {\n      const guildId = _discord_stores__WEBPACK_IMPORTED_MODULE_9__.SelectedGuilds.getGuildId();\n      const joined = (0,_discord_flux__WEBPACK_IMPORTED_MODULE_12__.useStateFromStores)([_stores_joinedAt__WEBPACK_IMPORTED_MODULE_11__.default], () => _stores_joinedAt__WEBPACK_IMPORTED_MODULE_11__.default.getDate(guildId, userId));\n      const [message, setMessage] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");\n      (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {\n        if (_stores_joinedAt__WEBPACK_IMPORTED_MODULE_11__.default.has(guildId, userId) || _stores_joinedAt__WEBPACK_IMPORTED_MODULE_11__.default.isFetching(guildId, userId)) return void 0;\n        if (!guildId) return void setMessage(_discord_i18n__WEBPACK_IMPORTED_MODULE_13__.Messages.FAILED_TO_FETCH);\n        _stores_joinedAt__WEBPACK_IMPORTED_MODULE_11__.default.fetch(guildId, userId);\n      }, []);\n      const useIcons = _Settings__WEBPACK_IMPORTED_MODULE_6__.default.get("useIcons", true);\n      const isFailed = !joined || joined.status === "failure";\n      return !isFailed ? useIcons ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_8__.TooltipContainer, {\n        text: this.parseTime(this.format, joined.data)\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_icons_calendar__WEBPACK_IMPORTED_MODULE_3__.default, null)) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_textscroller__WEBPACK_IMPORTED_MODULE_2__.default, null, this.parseTime(this.format, joined.data)) : message || isFailed && _discord_i18n__WEBPACK_IMPORTED_MODULE_13__.Messages[joined?.data] ? useIcons ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_8__.TooltipContainer, {\n        text: message || _discord_i18n__WEBPACK_IMPORTED_MODULE_13__.Messages[joined.data]\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_icons_error__WEBPACK_IMPORTED_MODULE_5__.default, {\n        className: _dates_scss__WEBPACK_IMPORTED_MODULE_7__.default.errorIcon\n      })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_textscroller__WEBPACK_IMPORTED_MODULE_2__.default, {\n        style: {\n          color: "red"\n        }\n      }, message || _discord_i18n__WEBPACK_IMPORTED_MODULE_13__.Messages[joined.data]) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_8__.TooltipContainer, {\n        text: _discord_i18n__WEBPACK_IMPORTED_MODULE_13__.Messages.LOADING_JOINED_AT\n      }, useIcons ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_blankslates_cube__WEBPACK_IMPORTED_MODULE_4__.default, {\n        className: _dates_scss__WEBPACK_IMPORTED_MODULE_7__.default.loading\n      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_loadingtext__WEBPACK_IMPORTED_MODULE_10__.default, null));\n    });\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/apis/joinedDate.tsx?');
-			},
-			"./UserDetails/modules/apis/lastMessage.tsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ LastMessageApi)\n/* harmony export */ });\n/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api */ "./UserDetails/modules/apis/api.js");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _components_textscroller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/textscroller */ "./UserDetails/modules/components/textscroller.jsx");\n/* harmony import */ var _components_icons_textbubble__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/icons/textbubble */ "./UserDetails/modules/components/icons/textbubble.jsx");\n/* harmony import */ var _components_blankslates_cube__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/blankslates/cube */ "./UserDetails/modules/components/blankslates/cube.jsx");\n/* harmony import */ var _components_icons_error__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/icons/error */ "./UserDetails/modules/components/icons/error.jsx");\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _dates_scss__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./dates.scss */ "./UserDetails/modules/apis/dates.scss");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @discord/components */ "@discord/components");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_discord_components__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @discord/stores */ "@discord/stores");\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_discord_stores__WEBPACK_IMPORTED_MODULE_9__);\n/* harmony import */ var _components_loadingtext__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/loadingtext */ "./UserDetails/modules/components/loadingtext.jsx");\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @discord/utils */ "@discord/utils");\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_discord_utils__WEBPACK_IMPORTED_MODULE_11__);\n/* harmony import */ var _stores_lastMessage__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../stores/lastMessage */ "./UserDetails/modules/stores/lastMessage.ts");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @discord/flux */ "@discord/flux");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_13___default = /*#__PURE__*/__webpack_require__.n(_discord_flux__WEBPACK_IMPORTED_MODULE_13__);\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @discord/i18n */ "@discord/i18n");\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_14___default = /*#__PURE__*/__webpack_require__.n(_discord_i18n__WEBPACK_IMPORTED_MODULE_14__);\n/// <reference path="../../../bdbuilder/typings/main.d.ts" />\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nclass LastMessageApi extends _api__WEBPACK_IMPORTED_MODULE_0__.default {\n  get api() {\n    return this.constructor.name;\n  }\n\n  get format() {\n    return _Settings__WEBPACK_IMPORTED_MODULE_6__.default.get("lastmessage_format", "Last Message: $hour:$minute:$second, $day.$month.$year $daysago days");\n  }\n\n  task(user) {\n    return () => {\n      const roomId = _discord_stores__WEBPACK_IMPORTED_MODULE_9__.SelectedGuilds.getGuildId() || _discord_stores__WEBPACK_IMPORTED_MODULE_9__.SelectedChannels.getChannelId();\n      const isGuild = Boolean(_discord_stores__WEBPACK_IMPORTED_MODULE_9__.SelectedGuilds.getGuildId());\n      const lastMessage = (0,_discord_flux__WEBPACK_IMPORTED_MODULE_13__.useStateFromStores)([_stores_lastMessage__WEBPACK_IMPORTED_MODULE_12__.default], () => _stores_lastMessage__WEBPACK_IMPORTED_MODULE_12__.default.get(user.id, roomId));\n      const [errorMessage, setErrorMessage] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");\n      (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {\n        if (_stores_lastMessage__WEBPACK_IMPORTED_MODULE_12__.default.isFetching(user.id, roomId) || _stores_lastMessage__WEBPACK_IMPORTED_MODULE_12__.default.has(user.id, roomId)) return;\n        if (!roomId) return setErrorMessage("Cannot resolve channel/guild id.");\n        _stores_lastMessage__WEBPACK_IMPORTED_MODULE_12__.default.fetch(user.id, roomId, isGuild).catch(error => {\n          this.error(`Failed to fetch LastMessage from ${user.tag}:\\n`, error);\n        });\n      }, []);\n\n      const transitionToMessage = () => {\n        if (!lastMessage.channelId || !lastMessage.messageId) return;\n        _discord_utils__WEBPACK_IMPORTED_MODULE_11__.Navigation.replaceWith(isGuild ? `/channels/${_discord_stores__WEBPACK_IMPORTED_MODULE_9__.SelectedGuilds.getGuildId()}/${lastMessage.channelId}/${lastMessage.messageId}` : `/channels/@me/${lastMessage.channelId}/${lastMessage.messageId}`);\n      };\n\n      const failed = lastMessage?.status === "failure";\n      const shouldUseIcon = _Settings__WEBPACK_IMPORTED_MODULE_6__.default.get("useIcons", true);\n      return lastMessage?.data && !failed ? shouldUseIcon ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_8__.TooltipContainer, {\n        text: this.parseTime(this.format, lastMessage.data)\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_icons_textbubble__WEBPACK_IMPORTED_MODULE_3__.default, {\n        onClick: transitionToMessage\n      })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_textscroller__WEBPACK_IMPORTED_MODULE_2__.default, {\n        onClick: transitionToMessage\n      }, this.parseTime(this.format, lastMessage.data)) : errorMessage || failed && _discord_i18n__WEBPACK_IMPORTED_MODULE_14__.Messages[lastMessage.data] ? shouldUseIcon ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_8__.TooltipContainer, {\n        text: errorMessage || _discord_i18n__WEBPACK_IMPORTED_MODULE_14__.Messages[lastMessage.data]\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_icons_error__WEBPACK_IMPORTED_MODULE_5__.default, {\n        className: _dates_scss__WEBPACK_IMPORTED_MODULE_7__.default.errorIcon\n      })) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_textscroller__WEBPACK_IMPORTED_MODULE_2__.default, {\n        style: {\n          color: "red"\n        }\n      }, errorMessage || _discord_i18n__WEBPACK_IMPORTED_MODULE_14__.Messages[lastMessage.data]) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_8__.TooltipContainer, {\n        text: _discord_i18n__WEBPACK_IMPORTED_MODULE_14__.Messages.LOADING_LAST_MESSAGE\n      }, shouldUseIcon ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_blankslates_cube__WEBPACK_IMPORTED_MODULE_4__.default, {\n        className: _dates_scss__WEBPACK_IMPORTED_MODULE_7__.default.loading\n      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_components_loadingtext__WEBPACK_IMPORTED_MODULE_10__.default, null));\n    };\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/apis/lastMessage.tsx?');
-			},
-			"./UserDetails/modules/apis/mutualServers.tsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "MutualServer": () => (/* binding */ MutualServer),\n/* harmony export */   "default": () => (/* binding */ MutualServers)\n/* harmony export */ });\n/* harmony import */ var _discord_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @discord/actions */ "@discord/actions");\n/* harmony import */ var _discord_actions__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_discord_actions__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @discord/components */ "@discord/components");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_discord_components__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @discord/flux */ "@discord/flux");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_discord_flux__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @discord/i18n */ "@discord/i18n");\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_discord_i18n__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @discord/stores */ "@discord/stores");\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_discord_stores__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @discord/utils */ "@discord/utils");\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_discord_utils__WEBPACK_IMPORTED_MODULE_5__);\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @zlibrary */ "@zlibrary");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_zlibrary__WEBPACK_IMPORTED_MODULE_6__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);\n/* harmony import */ var _components_icons_error__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/icons/error */ "./UserDetails/modules/components/icons/error.jsx");\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _api__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./api */ "./UserDetails/modules/apis/api.js");\n/* harmony import */ var _mutualServers_scss__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./mutualServers.scss */ "./UserDetails/modules/apis/mutualServers.scss");\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n/// <reference path="../../../bdbuilder/typings/main.d.ts" />\n\n\n\n\n\n\n\n\n\n\n\n\nconst FriendsStore = _zlibrary__WEBPACK_IMPORTED_MODULE_6__.WebpackModules.getByProps("getMutualGuilds");\nconst Header = _zlibrary__WEBPACK_IMPORTED_MODULE_6__.WebpackModules.getByDisplayName("Header");\nconst WindowStore = _zlibrary__WEBPACK_IMPORTED_MODULE_6__.WebpackModules.getByProps("isFocused");\nfunction MutualServer({\n  guild,\n  nick,\n  onClick\n}) {\n  const [isMouseOver, setMouseOver] = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)(false);\n  const isWindowFocused = (0,_discord_flux__WEBPACK_IMPORTED_MODULE_2__.useStateFromStores)([WindowStore], () => WindowStore.isFocused());\n  return /*#__PURE__*/React.createElement(_discord_components__WEBPACK_IMPORTED_MODULE_1__.TooltipContainer, {\n    key: guild.id,\n    text: nick ? `${guild.name} (${nick})` : guild.name,\n    position: "top",\n    className: _mutualServers_scss__WEBPACK_IMPORTED_MODULE_11__.default.mutualGuild\n  }, guild.icon ? /*#__PURE__*/React.createElement("img", {\n    onMouseOver: () => setMouseOver(true),\n    onMouseLeave: () => setMouseOver(false),\n    src: guild.getIconURL(isMouseOver && isWindowFocused),\n    onClick: () => onClick(guild.id)\n  }) : /*#__PURE__*/React.createElement("div", {\n    className: _mutualServers_scss__WEBPACK_IMPORTED_MODULE_11__.default.guildAcronym,\n    onClick: () => onClick(guild.id)\n  }, guild.acronym));\n}\nclass MutualServers extends _api__WEBPACK_IMPORTED_MODULE_10__.default {\n  get currentUserId() {\n    return _discord_stores__WEBPACK_IMPORTED_MODULE_4__.Users.getCurrentUser().id;\n  }\n\n  transitionToGuild(guildId) {\n    _discord_actions__WEBPACK_IMPORTED_MODULE_0__.GuildActions.transitionToGuildSync(guildId);\n  }\n\n  task(user) {\n    return () => {\n      if (!_Settings__WEBPACK_IMPORTED_MODULE_9__.default.get("showMutualGuilds", true) || _Settings__WEBPACK_IMPORTED_MODULE_9__.default.get("hideMutualGuildsCurrentUser", true) && user.id === this.currentUserId) return null;\n      const mutualGuilds = (0,_discord_flux__WEBPACK_IMPORTED_MODULE_2__.useStateFromStores)([FriendsStore], () => FriendsStore.getMutualGuilds(user.id));\n      const [message, setMessage] = (0,react__WEBPACK_IMPORTED_MODULE_7__.useState)("");\n      (0,react__WEBPACK_IMPORTED_MODULE_7__.useEffect)(() => {\n        if (Array.isArray(mutualGuilds) || _discord_stores__WEBPACK_IMPORTED_MODULE_4__.UserProfile.isFetching(user.id)) return;\n        _discord_actions__WEBPACK_IMPORTED_MODULE_0__.ProfileActions.fetchProfile(user.id).catch(error => {\n          if (~error?.message?.indexOf("Already dispatching")) return;\n          _zlibrary__WEBPACK_IMPORTED_MODULE_6__.Logger.error(`Failed to fetch profile for ${user.id}:\\n`, error);\n          setMessage(_discord_i18n__WEBPACK_IMPORTED_MODULE_3__.Messages.FAILED_TO_FETCH);\n        });\n      }, []);\n      return Array.isArray(mutualGuilds) ? _Settings__WEBPACK_IMPORTED_MODULE_9__.default.get("showEmptyMutualGuilds", true) && !mutualGuilds.length ? null : /*#__PURE__*/React.createElement("div", {\n        className: _mutualServers_scss__WEBPACK_IMPORTED_MODULE_11__.default.body\n      }, /*#__PURE__*/React.createElement(Header, {\n        size: Header.Sizes.SIZE_12,\n        className: _mutualServers_scss__WEBPACK_IMPORTED_MODULE_11__.default.header,\n        uppercase: true,\n        muted: true\n      }, _discord_i18n__WEBPACK_IMPORTED_MODULE_3__.Messages.MUTUAL_GUILDS), /*#__PURE__*/React.createElement("div", {\n        className: (0,_discord_utils__WEBPACK_IMPORTED_MODULE_5__.joinClassNames)(_mutualServers_scss__WEBPACK_IMPORTED_MODULE_11__.default.guilds, _Settings__WEBPACK_IMPORTED_MODULE_9__.default.get("stackMutualServers", true) && _mutualServers_scss__WEBPACK_IMPORTED_MODULE_11__.default.stack)\n      }, mutualGuilds.map(props => /*#__PURE__*/React.createElement(MutualServer, _extends({}, props, {\n        onClick: this.transitionToGuild\n      }))))) : [/*#__PURE__*/React.createElement(Header, {\n        size: Header.Sizes.SIZE_12,\n        className: _mutualServers_scss__WEBPACK_IMPORTED_MODULE_11__.default.header,\n        uppercase: true,\n        muted: true\n      }, message ? _discord_i18n__WEBPACK_IMPORTED_MODULE_3__.Messages.NO_MUTUAL_GUILDS : _discord_i18n__WEBPACK_IMPORTED_MODULE_3__.Messages.LOADING_MUTUAL_GUILDS), message ? /*#__PURE__*/React.createElement(_discord_components__WEBPACK_IMPORTED_MODULE_1__.TooltipContainer, {\n        text: message,\n        position: "top"\n      }, /*#__PURE__*/React.createElement(_components_icons_error__WEBPACK_IMPORTED_MODULE_8__.default, null)) : null].filter(e => e);\n    };\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/apis/mutualServers.tsx?');
-			},
-			"./UserDetails/modules/components/activity.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "byName": () => (/* binding */ byName),\n/* harmony export */   "ActivityIcon": () => (/* binding */ ActivityIcon),\n/* harmony export */   "noopNull": () => (/* binding */ noopNull),\n/* harmony export */   "ActivitiesFilter": () => (/* binding */ ActivitiesFilter),\n/* harmony export */   "default": () => (/* binding */ Activity)\n/* harmony export */ });\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @discord/flux */ "@discord/flux");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_discord_flux__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @discord/stores */ "@discord/stores");\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_discord_stores__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _icons_spotify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./icons/spotify */ "./UserDetails/modules/components/icons/spotify.jsx");\n/* harmony import */ var _icons_twitch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./icons/twitch */ "./UserDetails/modules/components/icons/twitch.jsx");\n/* harmony import */ var _icons_youtube__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./icons/youtube */ "./UserDetails/modules/components/icons/youtube.jsx");\n/* harmony import */ var _icons_gamepad__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./icons/gamepad */ "./UserDetails/modules/components/icons/gamepad.jsx");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);\n/* harmony import */ var _activity_scss__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./activity.scss */ "./UserDetails/modules/components/activity.scss");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @discord/components */ "@discord/components");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_discord_components__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _icons_googleChrome__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./icons/googleChrome */ "./UserDetails/modules/components/icons/googleChrome.jsx");\n/* harmony import */ var _discord_connections__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @discord/connections */ "@discord/connections");\n/* harmony import */ var _discord_connections__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_discord_connections__WEBPACK_IMPORTED_MODULE_11__);\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\n\n\n\n\n\n\n\n\n\n\n\n\nconst byName = [[/spotify/i, _icons_spotify__WEBPACK_IMPORTED_MODULE_2__.default], [/youtube/i, () => /*#__PURE__*/React.createElement("img", {\n  src: _discord_connections__WEBPACK_IMPORTED_MODULE_11___default().get("youtube").icon.color,\n  width: "20",\n  height: "20"\n})], [/twitch/i, _icons_twitch__WEBPACK_IMPORTED_MODULE_3__.default], [/google\\schrome/i, _icons_googleChrome__WEBPACK_IMPORTED_MODULE_10__.default] // for green\n];\nfunction ActivityIcon({\n  activity\n}) {\n  const {\n    game,\n    showGamepad\n  } = (0,_discord_flux__WEBPACK_IMPORTED_MODULE_0__.useStateFromStores)([_discord_stores__WEBPACK_IMPORTED_MODULE_1__.Games, _Settings__WEBPACK_IMPORTED_MODULE_9__.default], () => ({\n    showGamepad: _Settings__WEBPACK_IMPORTED_MODULE_9__.default.get("showGamepad", true),\n    game: _discord_stores__WEBPACK_IMPORTED_MODULE_1__.Games.getGame(activity.application_id)\n  }), null, _.isEqual);\n  const icon = (0,react__WEBPACK_IMPORTED_MODULE_6__.useMemo)(() => byName.find(([regex]) => regex.test(activity.name || activity.id)), [game]);\n\n  if (icon) {\n    const Icon = icon[1];\n    return /*#__PURE__*/React.createElement(Icon, null);\n  }\n\n  if (game && game.getIconURL()) {\n    return /*#__PURE__*/React.createElement("img", {\n      src: game.getIconURL(),\n      width: "20",\n      height: "20"\n    });\n  }\n\n  return showGamepad ? /*#__PURE__*/React.createElement(_icons_gamepad__WEBPACK_IMPORTED_MODULE_5__.default, null) : null;\n}\nfunction noopNull() {\n  return null;\n}\nfunction ActivitiesFilter(activity, index, target) {\n  if (activity?.type === 4) return false;\n  return target.indexOf(activity) === index;\n}\nfunction Activity({\n  user\n}) {\n  const {\n    activity,\n    showActivityIcons,\n    disabled\n  } = (0,_discord_flux__WEBPACK_IMPORTED_MODULE_0__.useStateFromStores)([_discord_stores__WEBPACK_IMPORTED_MODULE_1__.Activities, _Settings__WEBPACK_IMPORTED_MODULE_9__.default], () => ({\n    activity: _discord_stores__WEBPACK_IMPORTED_MODULE_1__.Activities.getActivities(user.id).filter(ActivitiesFilter)[0],\n    showActivityIcons: _Settings__WEBPACK_IMPORTED_MODULE_9__.default.get("activityIcons", true),\n    disabled: user?.bot && _Settings__WEBPACK_IMPORTED_MODULE_9__.default.get("disableIconsForBots", true)\n  }), null, _.isEqual);\n  if (!showActivityIcons || !activity || disabled) return null;\n  return /*#__PURE__*/React.createElement(_discord_components__WEBPACK_IMPORTED_MODULE_8__.TooltipContainer, {\n    text: activity.name,\n    className: _activity_scss__WEBPACK_IMPORTED_MODULE_7__.default.container,\n    position: "left"\n  }, /*#__PURE__*/React.createElement(ActivityIcon, {\n    className: _activity_scss__WEBPACK_IMPORTED_MODULE_7__.default.icon,\n    activity: activity\n  }));\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/activity.jsx?');
-			},
-			"./UserDetails/modules/components/badge.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ Badge)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @discord/components */ "@discord/components");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_discord_components__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _discord_connections__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @discord/connections */ "@discord/connections");\n/* harmony import */ var _discord_connections__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_discord_connections__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _badge_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./badge.scss */ "./UserDetails/modules/components/badge.scss");\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @discord/utils */ "@discord/utils");\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_discord_utils__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _icons_flowerstar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./icons/flowerstar */ "./UserDetails/modules/components/icons/flowerstar.jsx");\n\n\n\n\n\n\n // import {default as ContextMenu, closeContextMenu, MenuGroup, MenuItem, openContextMenu} from "@discord/contextmenu";\n// import {Messages} from "@discord/i18n";\n// import {copy} from "@discord/native";\n\nfunction Badge({\n  item\n}) {\n  const connection = _discord_connections__WEBPACK_IMPORTED_MODULE_2___default().get(item.type);\n  const shouldVerified = _Settings__WEBPACK_IMPORTED_MODULE_5__.default.get("showVerifiedConnections", true) && item.verified;\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_1__.TooltipContainer, {\n    text: item.name,\n    className: (0,_discord_utils__WEBPACK_IMPORTED_MODULE_4__.joinClassNames)(_badge_scss__WEBPACK_IMPORTED_MODULE_3__.default.connection, {\n      [_badge_scss__WEBPACK_IMPORTED_MODULE_3__.default.verified]: shouldVerified\n    })\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {\n    onContextMenu: () => {//TODO: FIX ThIS\n      // const menu = () => (\n      //     <ContextMenu navId="connections-context" onClose={closeContextMenu}>\n      //         <MenuGroup>\n      //             <MenuItem id="copy-user-id" label={Messages.COPY_ID} action={() => copy(item.id)} />\n      //         </MenuGroup>\n      //     </ContextMenu>\n      // );\n      // console.log(menu);\n      // openContextMenu(e, menu);\n    },\n    onClick: () => {\n      try {\n        open(connection.getPlatformUserUrl(item), "_blank");\n      } catch {}\n    },\n    src: connection.icon.color\n  }), shouldVerified && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_icons_flowerstar__WEBPACK_IMPORTED_MODULE_6__.default, {\n    className: _badge_scss__WEBPACK_IMPORTED_MODULE_3__.default.verifiedBadge\n  }));\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/badge.jsx?');
-			},
-			"./UserDetails/modules/components/blankslates/circle.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", _extends({}, props, {\n  xmlns: "http://www.w3.org/2000/svg",\n  viewBox: "0 0 36 36"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("circle", {\n  cx: "18",\n  cy: "18",\n  r: "18"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/blankslates/circle.jsx?');
-			},
-			"./UserDetails/modules/components/blankslates/cube.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", _extends({}, props, {\n  xmlns: "http://www.w3.org/2000/svg",\n  viewBox: "0 0 36 36"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M36 32c0 2.209-1.791 4-4 4H4c-2.209 0-4-1.791-4-4V4c0-2.209 1.791-4 4-4h28c2.209 0 4 1.791 4 4v28z"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/blankslates/cube.jsx?');
-			},
-			"./UserDetails/modules/components/errorboundary.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ ErrorBoundary)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _logger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../logger */ "./UserDetails/modules/logger.js");\n/* harmony import */ var _icons_error__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./icons/error */ "./UserDetails/modules/components/icons/error.jsx");\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\n\n\n\nclass ErrorBoundary extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {\n  constructor(...args) {\n    super(...args);\n\n    _defineProperty(this, "state", {\n      hasError: false,\n      error: null,\n      info: null\n    });\n  }\n\n  componentDidCatch(error, info) {\n    this.setState({\n      error,\n      info,\n      hasError: true\n    });\n    _logger__WEBPACK_IMPORTED_MODULE_1__.default.error(`[ErrorBoundary:${this.props.id}] HI OVER HERE!! SHOW THIS SCREENSHOT TO THE DEVELOPER.\\n`, error);\n  }\n\n  render() {\n    if (this.state.hasError) {\n      return this.props.mini ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_icons_error__WEBPACK_IMPORTED_MODULE_2__.default, {\n        style: {\n          color: "#f04747"\n        }\n      }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, "An error has occured while rendering ", this.props.id, "."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, "Open console (", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("code", null, "Ctrl + shift + i / Cmd + shift + i"), ") - Select the \\"Console\\" tab and screenshot the big red error."));\n    } else return this.props.children;\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/errorboundary.jsx?');
-			},
-			"./UserDetails/modules/components/icons/cake.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", _extends({}, props, {\n  xmlns: "http://www.w3.org/2000/svg",\n  height: "24",\n  viewBox: "0 0 24 24",\n  width: "24"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("rect", {\n  fill: "none",\n  height: "24",\n  width: "24"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("polygon", {\n  points: "2,22 16,17 7,8"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M14.53,12.53l5.59-5.59c0.49-0.49,1.28-0.49,1.77,0l0.59,0.59l1.06-1.06l-0.59-0.59c-1.07-1.07-2.82-1.07-3.89,0 l-5.59,5.59L14.53,12.53z"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M10.06,6.88L9.47,7.47l1.06,1.06l0.59-0.59c1.07-1.07,1.07-2.82,0-3.89l-0.59-0.59L9.47,4.53l0.59,0.59 C10.54,5.6,10.54,6.4,10.06,6.88z"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M17.06,11.88l-1.59,1.59l1.06,1.06l1.59-1.59c0.49-0.49,1.28-0.49,1.77,0l1.61,1.61l1.06-1.06l-1.61-1.61 C19.87,10.81,18.13,10.81,17.06,11.88z"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M15.06,5.88l-3.59,3.59l1.06,1.06l3.59-3.59c1.07-1.07,1.07-2.82,0-3.89l-1.59-1.59l-1.06,1.06l1.59,1.59 C15.54,4.6,15.54,5.4,15.06,5.88z"\n})))));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/cake.jsx?');
-			},
-			"./UserDetails/modules/components/icons/calendar.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", _extends({}, props, {\n  xmlns: "http://www.w3.org/2000/svg",\n  height: "24",\n  viewBox: "0 0 24 24",\n  width: "24"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M0 0h24v24H0z",\n  fill: "none"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/calendar.jsx?');
-			},
-			"./UserDetails/modules/components/icons/chain.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", _extends({\n  viewBox: "0 0 512 512",\n  width: "24",\n  height: "24"\n}, props), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/chain.jsx?');
-			},
-			"./UserDetails/modules/components/icons/error.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", _extends({\n  xmlns: "http://www.w3.org/2000/svg",\n  viewBox: "0 0 24 24",\n  fill: "black",\n  width: "18px",\n  height: "18px"\n}, props), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M0 0h24v24H0z",\n  fill: "none"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/error.jsx?');
-			},
-			"./UserDetails/modules/components/icons/flowerstar.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @discord/utils */ "@discord/utils");\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_discord_utils__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _flowerstar_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./flowerstar.scss */ "./UserDetails/modules/components/icons/flowerstar.scss");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", _extends({}, props, {\n  className: (0,_discord_utils__WEBPACK_IMPORTED_MODULE_0__.joinClassNames)(_flowerstar_scss__WEBPACK_IMPORTED_MODULE_2__.default.wrapper, props.className)\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("svg", {\n  width: "16",\n  height: "16",\n  viewBox: "0 0 16 15.2",\n  className: _flowerstar_scss__WEBPACK_IMPORTED_MODULE_2__.default.container\n}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("path", {\n  fill: "#4f545c",\n  "fill-rule": "evenodd",\n  d: "m16 7.6c0 .79-1.28 1.38-1.52 2.09s.44 2 0 2.59-1.84.35-2.46.8-.79 1.84-1.54 2.09-1.67-.8-2.47-.8-1.75 1-2.47.8-.92-1.64-1.54-2.09-2-.18-2.46-.8.23-1.84 0-2.59-1.54-1.3-1.54-2.09 1.28-1.38 1.52-2.09-.44-2 0-2.59 1.85-.35 2.48-.8.78-1.84 1.53-2.12 1.67.83 2.47.83 1.75-1 2.47-.8.91 1.64 1.53 2.09 2 .18 2.46.8-.23 1.84 0 2.59 1.54 1.3 1.54 2.09z"\n})), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("svg", {\n  className: _flowerstar_scss__WEBPACK_IMPORTED_MODULE_2__.default.tick,\n  width: "16",\n  height: "16",\n  viewBox: "0 0 16 15.2"\n}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("path", {\n  d: "M7.4,11.17,4,8.62,5,7.26l2,1.53L10.64,4l1.36,1Z",\n  fill: "#ffffff"\n}))));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/flowerstar.jsx?');
-			},
-			"./UserDetails/modules/components/icons/gamepad.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/React.createElement("svg", _extends({\n  width: "20",\n  height: "20",\n  viewBox: "0 0 24 24"\n}, props), /*#__PURE__*/React.createElement("g", {\n  fill: "none",\n  "fill-rule": "evenodd"\n}, /*#__PURE__*/React.createElement("path", {\n  fill: "currentColor",\n  d: "M5.79335761,5 L18.2066424,5 C19.7805584,5 21.0868816,6.21634264 21.1990185,7.78625885 L21.8575059,17.0050826 C21.9307825,18.0309548 21.1585512,18.9219909 20.132679,18.9952675 C20.088523,18.9984215 20.0442685,19 20,19 C18.8245863,19 17.8000084,18.2000338 17.5149287,17.059715 L17,15 L7,15 L6.48507125,17.059715 C6.19999155,18.2000338 5.1754137,19 4,19 C2.97151413,19 2.13776159,18.1662475 2.13776159,17.1377616 C2.13776159,17.0934931 2.1393401,17.0492386 2.1424941,17.0050826 L2.80098151,7.78625885 C2.91311838,6.21634264 4.21944161,5 5.79335761,5 Z M14.5,10 C15.3284271,10 16,9.32842712 16,8.5 C16,7.67157288 15.3284271,7 14.5,7 C13.6715729,7 13,7.67157288 13,8.5 C13,9.32842712 13.6715729,10 14.5,10 Z M18.5,13 C19.3284271,13 20,12.3284271 20,11.5 C20,10.6715729 19.3284271,10 18.5,10 C17.6715729,10 17,10.6715729 17,11.5 C17,12.3284271 17.6715729,13 18.5,13 Z M6,9 L4,9 L4,11 L6,11 L6,13 L8,13 L8,11 L10,11 L10,9 L8,9 L8,7 L6,7 L6,9 Z"\n}), /*#__PURE__*/React.createElement("rect", {\n  width: "24",\n  height: "24"\n}))));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/gamepad.jsx?');
-			},
-			"./UserDetails/modules/components/icons/googleChrome.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/React.createElement("svg", _extends({\n  width: "20",\n  height: "20",\n  viewBox: "0 0 48 48"\n}, props), /*#__PURE__*/React.createElement("path", {\n  fill: "#4caf50",\n  d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#ffc107",\n  d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#4caf50",\n  d: "M44,24c0,11.044-8.956,20-20,20S4,35.044,4,24S12.956,4,24,4S44,12.956,44,24z"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#ffc107",\n  d: "M24,4v20l8,4l-8.843,16c0.317,0,0.526,0,0.843,0c11.053,0,20-8.947,20-20S35.053,4,24,4z"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#f44336",\n  d: "M41.84,15H24v13l-3-1L7.16,13.26H7.14C10.68,7.69,16.91,4,24,4C31.8,4,38.55,8.48,41.84,15z"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#dd2c00",\n  d: "M7.158,13.264l8.843,14.862L21,27L7.158,13.264z"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#558b2f",\n  d: "M23.157,44l8.934-16.059L28,25L23.157,44z"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#f9a825",\n  d: "M41.865,15H24l-1.579,4.58L41.865,15z"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#fff",\n  d: "M33,24c0,4.969-4.031,9-9,9s-9-4.031-9-9s4.031-9,9-9S33,19.031,33,24z"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#2196f3",\n  d: "M31,24c0,3.867-3.133,7-7,7s-7-3.133-7-7s3.133-7,7-7S31,20.133,31,24z"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/googleChrome.jsx?');
-			},
-			"./UserDetails/modules/components/icons/headphones.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/React.createElement("svg", _extends({\n  width: "20",\n  height: "20",\n  viewBox: "0 0 24 24"\n}, props), /*#__PURE__*/React.createElement("svg", {\n  width: "24",\n  height: "24",\n  viewBox: "0 0 24 24"\n}, /*#__PURE__*/React.createElement("path", {\n  d: "M12 2.00305C6.486 2.00305 2 6.48805 2 12.0031V20.0031C2 21.1071 2.895 22.0031 4 22.0031H6C7.104 22.0031 8 21.1071 8 20.0031V17.0031C8 15.8991 7.104 15.0031 6 15.0031H4V12.0031C4 7.59105 7.589 4.00305 12 4.00305C16.411 4.00305 20 7.59105 20 12.0031V15.0031H18C16.896 15.0031 16 15.8991 16 17.0031V20.0031C16 21.1071 16.896 22.0031 18 22.0031H20C21.104 22.0031 22 21.1071 22 20.0031V12.0031C22 6.48805 17.514 2.00305 12 2.00305Z",\n  fill: "currentColor"\n}))));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/headphones.jsx?');
-			},
-			"./UserDetails/modules/components/icons/index.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "Icons": () => (/* binding */ Icons),\n/* harmony export */   "noop": () => (/* binding */ noop),\n/* harmony export */   "default": () => (/* binding */ Icon)\n/* harmony export */ });\n/* harmony import */ var _cake__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./cake */ "./UserDetails/modules/components/icons/cake.jsx");\n/* harmony import */ var _calendar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./calendar */ "./UserDetails/modules/components/icons/calendar.jsx");\n/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./error */ "./UserDetails/modules/components/icons/error.jsx");\n/* harmony import */ var _textbubble__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./textbubble */ "./UserDetails/modules/components/icons/textbubble.jsx");\n/* harmony import */ var _chain__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./chain */ "./UserDetails/modules/components/icons/chain.jsx");\n/* harmony import */ var _wrench__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./wrench */ "./UserDetails/modules/components/icons/wrench.jsx");\n/* harmony import */ var _flowerstar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./flowerstar */ "./UserDetails/modules/components/icons/flowerstar.jsx");\n/* harmony import */ var _spotify__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./spotify */ "./UserDetails/modules/components/icons/spotify.jsx");\n/* harmony import */ var _twitch__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./twitch */ "./UserDetails/modules/components/icons/twitch.jsx");\n/* harmony import */ var _valorant__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./valorant */ "./UserDetails/modules/components/icons/valorant.jsx");\n/* harmony import */ var _youtube__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./youtube */ "./UserDetails/modules/components/icons/youtube.jsx");\n/* harmony import */ var _gamepad__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./gamepad */ "./UserDetails/modules/components/icons/gamepad.jsx");\n/* harmony import */ var _googleChrome__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./googleChrome */ "./UserDetails/modules/components/icons/googleChrome.jsx");\n/* harmony import */ var _headphones__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./headphones */ "./UserDetails/modules/components/icons/headphones.jsx");\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nconst Icons = {\n  Cake: _cake__WEBPACK_IMPORTED_MODULE_0__.default,\n  Calendar: _calendar__WEBPACK_IMPORTED_MODULE_1__.default,\n  Error: _error__WEBPACK_IMPORTED_MODULE_2__.default,\n  TextBubble: _textbubble__WEBPACK_IMPORTED_MODULE_3__.default,\n  Chain: _chain__WEBPACK_IMPORTED_MODULE_4__.default,\n  Wrench: _wrench__WEBPACK_IMPORTED_MODULE_5__.default,\n  Flowerstar: _flowerstar__WEBPACK_IMPORTED_MODULE_6__.default,\n  Spotify: _spotify__WEBPACK_IMPORTED_MODULE_7__.default,\n  Twitch: _twitch__WEBPACK_IMPORTED_MODULE_8__.default,\n  Valorant: _valorant__WEBPACK_IMPORTED_MODULE_9__.default,\n  YouTube: _youtube__WEBPACK_IMPORTED_MODULE_10__.default,\n  GamePad: _gamepad__WEBPACK_IMPORTED_MODULE_11__.default,\n  GoogleChrome: _googleChrome__WEBPACK_IMPORTED_MODULE_12__.default,\n  Headphones: _headphones__WEBPACK_IMPORTED_MODULE_13__.default\n};\nfunction noop() {\n  return null;\n}\nfunction Icon({\n  name,\n  ...props\n}) {\n  const IconComponent = Icons[name] ?? noop;\n  return /*#__PURE__*/React.createElement(IconComponent, props);\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/index.jsx?');
-			},
-			"./UserDetails/modules/components/icons/spotify.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/React.createElement("svg", _extends({}, props, {\n  width: "20",\n  height: "20",\n  viewBox: "0 0 65 65"\n}), /*#__PURE__*/React.createElement("path", {\n  fill: "#1ED760",\n  d: "M32.5,0.5 C14.826888,0.5 0.5,14.826888 0.5,32.5 C0.5,50.173112 14.826888,64.5 32.5,64.5 C50.173112,64.5 64.5,50.173112 64.5,32.5 C64.5,14.826888 50.173112,0.5 32.5,0.5 Z M47.18,46.66 C46.6031412,47.595466 45.3795381,47.8902025 44.44,47.32 C36.93,42.73 27.44,41.69 16.33,44.23 C15.6145818,44.4464575 14.8381683,44.245926 14.3170501,43.7100969 C13.7959319,43.1742677 13.6170868,42.3925738 13.8533716,41.6834571 C14.0896564,40.9743403 14.7016337,40.4561564 15.44,40.34 C27.63,37.55 38.09,38.75 46.52,43.91 C47.4615306,44.487221 47.7569974,45.7183323 47.18,46.66 Z M51.1,37.95 C50.3770773,39.1205793 48.8441907,39.487042 47.67,38.77 C39.07,33.48 25.96,31.95 15.78,35.04 C14.9279216,35.2990176 14.0023844,35.0837812 13.3520294,34.4753684 C12.7016744,33.8669556 12.425306,32.9577988 12.6270294,32.0903684 C12.8287528,31.2229381 13.4779216,30.5290176 14.33,30.27 C25.95,26.74 40.4,28.45 50.28,34.52 C51.445766,35.2424019 51.8079122,36.7714637 51.09,37.94 L51.1,37.95 Z M51.44,28.88 C41.13,22.75 24.11,22.19 14.26,25.18 C13.2140022,25.5702637 12.0378133,25.3474036 11.207084,24.6015444 C10.3763547,23.8556852 10.0285164,22.7102178 10.3042349,21.6283692 C10.5799535,20.5465206 11.4336155,19.707266 12.52,19.45 C23.82,16.02 42.61,16.68 54.52,23.73 C55.8401426,24.6185116 56.2368626,26.3831995 55.4240137,27.7512295 C54.6111649,29.1192595 52.8715856,29.6146124 51.46,28.88 L51.44,28.88 Z"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/spotify.jsx?');
-			},
-			"./UserDetails/modules/components/icons/textbubble.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", _extends({}, props, {\n  xmlns: "http://www.w3.org/2000/svg",\n  height: "24",\n  viewBox: "0 0 24 24",\n  width: "24"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M0 0h24v24H0z",\n  fill: "none"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/textbubble.jsx?');
-			},
-			"./UserDetails/modules/components/icons/twitch.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/React.createElement("svg", _extends({\n  width: "20",\n  height: "20",\n  viewBox: "0 0 128 128"\n}, props), /*#__PURE__*/React.createElement("defs", null, /*#__PURE__*/React.createElement("path", {\n  id: "color-a",\n  d: "M8.5542826,0 L0,22 L0,111.8 L30.7954173,111.8 L30.7954173,128 L48.1052598,128 L64.408716,111.8 L89.3670935,111.8 L122.980392,78.4 L122.980392,0 L8.5542826,0 Z M111.406951,72.6 L92.0843362,91.8 L61.2889188,91.8 L44.9854626,108 L44.9854626,91.8 L19.020699,91.8 L19.020699,11.4 L111.406951,11.4 L111.406951,72.6 Z M92.2856134,33.4 L92.2856134,66.8 L80.8128109,66.8 L80.8128109,33.4 L92.2856134,33.4 Z M61.4901961,33.4 L61.4901961,66.8 L50.0173935,66.8 L50.0173935,33.4 L61.4901961,33.4 Z"\n})), /*#__PURE__*/React.createElement("g", {\n  fill: "none",\n  "fill-rule": "evenodd",\n  transform: "translate(3)"\n}, /*#__PURE__*/React.createElement("polygon", {\n  fill: "#FFF",\n  "fill-rule": "nonzero",\n  points: "110.431 72.512 91.272 91.717 60.736 91.717 44.57 107.922 44.57 91.717 18.824 91.717 18.824 11.294 110.431 11.294"\n}), /*#__PURE__*/React.createElement("mask", {\n  id: "color-b",\n  fill: "#fff"\n}, /*#__PURE__*/React.createElement("use", {\n  xlinkHref: "#color-a"\n})), /*#__PURE__*/React.createElement("use", {\n  fill: "#563194",\n  "fill-rule": "nonzero",\n  xlinkHref: "#color-a"\n}))));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/twitch.jsx?');
-			},
-			"./UserDetails/modules/components/icons/valorant.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/React.createElement("svg", _extends({\n  width: "20",\n  height: "20",\n  viewBox: "0 0 216.000000 216.000000"\n}, props), /*#__PURE__*/React.createElement("g", {\n  transform: "translate(0.000000,216.000000) scale(0.100000,-0.100000)",\n  fill: "#000000",\n  stroke: "none"\n}, /*#__PURE__*/React.createElement("path", {\n  d: "M0 1080 l0 -1080 1080 0 1080 0 0 1080 0 1080 -1080 0 -1080 0 0-1080z"\n}))));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/valorant.jsx?');
-			},
-			"./UserDetails/modules/components/icons/wrench.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", _extends({}, props, {\n  viewBox: "0 0 512 512",\n  height: "24",\n  width: "24"\n}), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", {\n  d: "M501.1 395.7L384 278.6c-23.1-23.1-57.6-27.6-85.4-13.9L192 158.1V96L64 0 0 64l96 128h62.1l106.6 106.6c-13.6 27.8-9.2 62.3 13.9 85.4l117.1 117.1c14.6 14.6 38.2 14.6 52.7 0l52.7-52.7c14.5-14.6 14.5-38.2 0-52.7zM331.7 225c28.3 0 54.9 11 74.9 31l19.4 19.4c15.8-6.9 30.8-16.5 43.8-29.5 37.1-37.1 49.7-89.3 37.9-136.7-2.2-9-13.5-12.1-20.1-5.5l-74.4 74.4-67.9-11.3L334 98.9l74.4-74.4c6.6-6.6 3.4-17.9-5.7-20.2-47.4-11.7-99.6.9-136.6 37.9-28.5 28.5-41.9 66.1-41.2 103.6l82.1 82.1c8.1-1.9 16.5-2.9 24.7-2.9zm-103.9 82l-56.7-56.7L18.7 402.8c-25 25-25 65.5 0 90.5s65.5 25 90.5 0l123.6-123.6c-7.6-19.9-9.9-41.6-5-62.7zM64 472c-13.2 0-24-10.8-24-24 0-13.3 10.7-24 24-24s24 10.7 24 24c0 13.2-10.7 24-24 24z"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/wrench.jsx?');
-			},
-			"./UserDetails/modules/components/icons/youtube.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* provided dependency */ var React = __webpack_require__(/*! react */ "react");\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (props => /*#__PURE__*/React.createElement("svg", _extends({\n  height: "20",\n  width: "20",\n  viewBox: "0 0 576 512"\n}, props), /*#__PURE__*/React.createElement("path", {\n  fill: "#FF1A1A",\n  d: "M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"\n})));\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/icons/youtube.jsx?');
-			},
-			"./UserDetails/modules/components/loadingtext.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "reducer": () => (/* binding */ reducer),\n/* harmony export */   "default": () => (/* binding */ LoadingText)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style.scss */ "./UserDetails/modules/components/style.scss");\n\n\nfunction reducer(state) {\n  if (state >= 3) return 1;else return state + 1;\n}\nfunction LoadingText() {\n  const [state, dispatch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useReducer)(reducer, 1);\n  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {\n    const interval = setInterval(() => {\n      dispatch();\n    }, 500);\n    return () => {\n      clearInterval(interval);\n    };\n  }, []);\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {\n    className: _style_scss__WEBPACK_IMPORTED_MODULE_1__.default.loadingText\n  }, ".".repeat(state));\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/loadingtext.jsx?');
-			},
-			"./UserDetails/modules/components/settings/index.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ SettingsPanel)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _data_defaultConnections__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../data/defaultConnections */ "./UserDetails/modules/data/defaultConnections.js");\n/* harmony import */ var _pages_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pages.json */ "./UserDetails/modules/components/settings/pages.json");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @zlibrary */ "@zlibrary");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_zlibrary__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Utilities */ "./UserDetails/modules/Utilities.js");\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../Settings */ "./UserDetails/modules/Settings.js");\n/* harmony import */ var _settings_scss__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./settings.scss */ "./UserDetails/modules/components/settings/settings.scss");\n/* harmony import */ var _errorboundary__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../errorboundary */ "./UserDetails/modules/components/errorboundary.jsx");\n/* harmony import */ var _discord_forms__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @discord/forms */ "@discord/forms");\n/* harmony import */ var _discord_forms__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_discord_forms__WEBPACK_IMPORTED_MODULE_8__);\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @discord/components */ "@discord/components");\n/* harmony import */ var _discord_components__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_discord_components__WEBPACK_IMPORTED_MODULE_9__);\n/* harmony import */ var _icons_index__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../icons/index */ "./UserDetails/modules/components/icons/index.jsx");\n/* harmony import */ var _discord_connections__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @discord/connections */ "@discord/connections");\n/* harmony import */ var _discord_connections__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_discord_connections__WEBPACK_IMPORTED_MODULE_11__);\nfunction _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }\n\n/// <reference path="../../../../../typings/discord.d.ts" />\n\n\n\n\n\n\n\n\n\n\n\n\nconst RadioGroup = _Utilities__WEBPACK_IMPORTED_MODULE_4__.default.createUpdateWrapper(_zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByDisplayName("RadioGroup"));\nconst SwitchItem = _Utilities__WEBPACK_IMPORTED_MODULE_4__.default.createUpdateWrapper(_zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByDisplayName("SwitchItem"), false);\nconst TextInput = _Utilities__WEBPACK_IMPORTED_MODULE_4__.default.createUpdateWrapper(_zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByDisplayName("TextInput"));\nconst breadCrumbs = _zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByProps("breadcrumbActive");\nconst {\n  marginBottom8\n} = _zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByProps("marginBottom8");\nconst Breadcrumbs = _zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByDisplayName("Breadcrumbs");\nconst Flex = _zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByDisplayName("Flex");\nconst {\n  default: CardItem\n} = _zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.find(m => m?.default?.toString().indexOf("hasNextSection") > -1) ?? {\n  default: () => null\n};\nconst Card = _zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByDisplayName("Card");\nconst Caret = _zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByDisplayName("Caret");\nconst Clickable = _zlibrary__WEBPACK_IMPORTED_MODULE_3__.WebpackModules.getByDisplayName("Clickable");\n\nconst TextItem = ({\n  value,\n  onChange,\n  name,\n  note\n}) => {\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Flex, {\n    className: marginBottom8,\n    direction: Flex.Direction.VERTICAL\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormItem, {\n    title: name,\n    className: _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.formItem\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(TextInput, {\n    value: value,\n    onChange: onChange\n  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormText, {\n    type: "description",\n    disabled: false\n  }, note)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormDivider, null));\n};\n\nconst IconSetting = () => {\n  const forceUpdate = _Utilities__WEBPACK_IMPORTED_MODULE_4__.default.useForceUpdate();\n  const shownIcons = _Settings__WEBPACK_IMPORTED_MODULE_5__.default.get("shownConnections", Object.fromEntries(_discord_connections__WEBPACK_IMPORTED_MODULE_11___default().map(e => [e.type, true])));\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Flex, {\n    className: _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.icons\n  }, _discord_connections__WEBPACK_IMPORTED_MODULE_11___default().filter(e => e.enabled).map(k => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_components__WEBPACK_IMPORTED_MODULE_9__.TooltipContainer, {\n    className: _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.settingsBadgeContainer,\n    text: shownIcons[k.type] ? "Enabled" : "Disabled",\n    hideOnClick: false\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {\n    src: k.icon.color,\n    className: _Utilities__WEBPACK_IMPORTED_MODULE_4__.default.joinClassNames(_settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.settingsBadgeIcon, shownIcons[k.type] ? "enabled" : _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.disabled),\n    onClick: () => {\n      _Settings__WEBPACK_IMPORTED_MODULE_5__.default.set("shownConnections", (shownIcons[k.type] = !shownIcons[k.type], shownIcons));\n      forceUpdate();\n    }\n  }))));\n};\n\nconst Category = props => {\n  const [opened, setOpened] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Card, {\n    className: _Utilities__WEBPACK_IMPORTED_MODULE_4__.default.joinClassNames(_settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.category, opened && _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.opened)\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Clickable, {\n    onClick: () => setOpened(!opened)\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Flex, {\n    className: _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.categoryHeader,\n    direction: Flex.Direction.HORIZONTAL\n  }, props.name, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Caret, {\n    className: _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.categoryCaret,\n    direction: Caret.Directions[opened ? "DOWN" : "LEFT"]\n  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {\n    className: _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.categoryContent\n  }, opened && props.items.map(renderSetting)));\n};\n\nconst renderSetting = setting => {\n  switch (setting.type) {\n    case "switch":\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(SwitchItem, _extends({}, setting, {\n        value: _Settings__WEBPACK_IMPORTED_MODULE_5__.default.get(setting.id, setting.value),\n        onChange: value => {\n          _Settings__WEBPACK_IMPORTED_MODULE_5__.default.set(setting.id, value);\n        }\n      }), setting.name);\n\n    case "replacement":\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Flex, {\n        direction: Flex.Direction.HORIZONTAL,\n        className: _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.replacementVariable\n      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, setting.prefix), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, setting.description));\n\n    case "radio":\n      const {\n        name,\n        note\n      } = setting;\n      delete setting.name;\n      delete setting.note;\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormItem, {\n        title: name\n      }, note && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormText, {\n        type: "description"\n      }, note), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(RadioGroup, _extends({}, setting, {\n        value: _Settings__WEBPACK_IMPORTED_MODULE_5__.default.get(setting.id, setting.value),\n        onChange: value => {\n          _Settings__WEBPACK_IMPORTED_MODULE_5__.default.set(setting.id, value);\n        }\n      })));\n\n    case "text":\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(TextItem, _extends({}, setting, {\n        value: _Settings__WEBPACK_IMPORTED_MODULE_5__.default.get(setting.id, setting.value),\n        onChange: value => {\n          _Settings__WEBPACK_IMPORTED_MODULE_5__.default.set(setting.id, value);\n        }\n      }));\n\n    case "icons":\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(IconSetting, null);\n\n    case "category":\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Category, setting);\n\n    case "divider":\n      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormDivider, null);\n  }\n};\n\nconst renderCustomcrumb = ({\n  label\n}, isActive) => {\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormTitle, {\n    tag: _discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormTitle.Tags.H2,\n    className: _Utilities__WEBPACK_IMPORTED_MODULE_4__.default.joinClassNames(breadCrumbs.breadcrumb, isActive ? breadCrumbs.breadcrumbActive : breadCrumbs.breadcrumbInactive)\n  }, label);\n};\n\nconst mainPages = [{\n  id: "main",\n  label: "General Settings"\n}];\nfunction SettingsPanel() {\n  const [activeItem, setActiveItem] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("main");\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_errorboundary__WEBPACK_IMPORTED_MODULE_7__.default, {\n    id: "SettingsPanel"\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {\n    className: _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.settingsPanel\n  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Flex, {\n    align: Flex.Align.CENTER,\n    basis: "auto",\n    className: breadCrumbs.breadcrumbs,\n    grow: 1,\n    shrink: 1\n  }, activeItem === "main" ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormTitle, {\n    className: breadCrumbs.breakcrumb,\n    tag: _discord_forms__WEBPACK_IMPORTED_MODULE_8__.FormTitle.Tags.H2\n  }, "General") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Breadcrumbs, {\n    activeId: activeItem,\n    breadcrumbs: mainPages.concat({\n      id: activeItem,\n      label: _pages_json__WEBPACK_IMPORTED_MODULE_2__[activeItem].name\n    }),\n    renderCustomBreadcrumb: renderCustomcrumb,\n    onBreadcrumbClick: e => setActiveItem(e.id)\n  })), activeItem === "main" ? _pages_json__WEBPACK_IMPORTED_MODULE_2__.map((page, index) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(CardItem, {\n    buttonDisabled: false,\n    buttonText: "Configure",\n    details: [{\n      text: `${page.items.length} setting${page.items.length > 1 ? "s" : ""}.`\n    }],\n    hasNextSection: true,\n    icon: () => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_icons_index__WEBPACK_IMPORTED_MODULE_10__.default, {\n      className: _settings_scss__WEBPACK_IMPORTED_MODULE_6__.default.pageIcon,\n      name: page.icon\n    }),\n    name: page.name,\n    onButtonClick: () => setActiveItem(index)\n  })) : _pages_json__WEBPACK_IMPORTED_MODULE_2__[activeItem].items.map(renderSetting)));\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/settings/index.jsx?');
-			},
-			"./UserDetails/modules/components/textscroller.jsx": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ TextScroller)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");\n/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @zlibrary */ "@zlibrary");\n/* harmony import */ var _zlibrary__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_zlibrary__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _Utilities__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Utilities */ "./UserDetails/modules/Utilities.js");\n/* harmony import */ var _apis_dates_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../apis/dates.scss */ "./UserDetails/modules/apis/dates.scss");\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\n\n\n\n\n\nconst Animations = _zlibrary__WEBPACK_IMPORTED_MODULE_2__.WebpackModules.getByProps("Value");\nclass TextScroller extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {\n  constructor(...args) {\n    super(...args);\n\n    _defineProperty(this, "_ref", instance => {\n      let element = react_dom__WEBPACK_IMPORTED_MODULE_1___default().findDOMNode(instance);\n\n      if (element && element.parentElement) {\n        let maxWidth = element.parentElement.innerWidth;\n        if (maxWidth > 50) element.style.setProperty("max-width", `${maxWidth}px`);\n        setTimeout(() => {\n          if (document.contains(element.parentElement)) {\n            let newMaxWidth = element.parentElement.innerWidth;\n            if (newMaxWidth > maxWidth) element.style.setProperty("max-width", `${newMaxWidth}px`);\n          }\n        }, 3000);\n        let Animation = new Animations.Value(0);\n        Animation.interpolate({\n          inputRange: [0, 1],\n          outputRange: [0, (element.firstElementChild.offsetWidth - element.offsetWidth) * -1]\n        }).addListener(v => {\n          element.firstElementChild.style.setProperty("left", `${v.value}px`);\n        });\n\n        this.scroll = p => {\n          let w = p + parseFloat(element.firstElementChild.style.getPropertyValue("left")) / (element.firstElementChild.offsetWidth - element.offsetWidth);\n          w = isNaN(w) || !isFinite(w) ? p : w;\n          w *= element.firstElementChild.offsetWidth / (element.offsetWidth * 2);\n          Animations.parallel([Animations.timing(Animation, {\n            toValue: p,\n            duration: Math.sqrt(w ** 2) * 4000 / (parseInt(this.props.speed) || 1)\n          })]).start();\n        };\n      }\n    });\n\n    _defineProperty(this, "_onClick", e => {\n      if (typeof this.props.onClick == "function") this.props.onClick(e, this);\n    });\n\n    _defineProperty(this, "_onMouseEnter", e => {\n      if (e.currentTarget.offsetWidth < e.currentTarget.firstElementChild.offsetWidth) {\n        this.scrolling = true;\n        e.currentTarget.firstElementChild.style.setProperty("display", "block");\n        this.scroll(1);\n      }\n    });\n\n    _defineProperty(this, "_onMouseLeave", e => {\n      if (this.scrolling) {\n        delete this.scrolling;\n        e.currentTarget.firstElementChild.style.setProperty("display", "inline");\n        this.scroll(0);\n      }\n    });\n  }\n\n  render() {\n    const style = Object.assign({}, this.props.style, {\n      position: "relative",\n      display: "block",\n      overflow: "hidden"\n    });\n    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {\n      className: _Utilities__WEBPACK_IMPORTED_MODULE_3__.default.joinClassNames(this.props.className, _apis_dates_scss__WEBPACK_IMPORTED_MODULE_4__.default.scrollableText),\n      style: style,\n      ref: this._ref,\n      onClick: this._onClick,\n      onMouseEnter: this._onMouseEnter,\n      onMouseLeave: this._onMouseLeave\n    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {\n      style: {\n        left: "0",\n        position: "relative",\n        display: "inline",\n        whiteSpace: "nowrap"\n      }\n    }, this.props.children));\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/components/textscroller.jsx?');
-			},
-			"./UserDetails/modules/data/defaultConnections.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({\n  battlenet: {\n    icon: "/assets/8c289d499232cd8e9582b4a5639d9d1d.png"\n  },\n  facebook: {\n    icon: "/assets/8d8f815f3d81a33b1e70ec7c22e1b6fe.png",\n    link: "https://www.facebook.com/profile.php?id={{userId}}"\n  },\n  leagueoflegends: {\n    icon: "/assets/806953fe1cc616477175cbcdf90d5cd3.png"\n  },\n  reddit: {\n    icon: "/assets/3abe9ce5a00cc24bd8aae04bf5968f4c.png",\n    link: "https://www.reddit.com/user/{{user}}"\n  },\n  spotify: {\n    icon: "/assets/f0655521c19c08c4ea4e508044ec7d8c.png",\n    link: "https://open.spotify.com/user/{{user}}"\n  },\n  steam: {\n    icon: "/assets/f09c1c70a67ceaaeb455d163f3f9cbb8.png",\n    link: "https://steamcommunity.com/profiles/{{userId}}"\n  },\n  twitch: {\n    icon: "/assets/edbbf6107b2cd4334d582b26e1ac786d.png",\n    link: "https://twitch.tv/{{user}}"\n  },\n  twitter: {\n    icon: "/assets/4662875160dc4c56954003ebda995414.png",\n    link: "https://twitter.com/{{user}}"\n  },\n  xbox: {\n    icon: "/assets/0d44ba28e39303de3832db580a252456.png"\n  },\n  youtube: {\n    icon: "/assets/449cca50c1452b4ace3cbe9bc5ae0fd6.png",\n    link: "https://www.youtube.com/channel/{{userId}}"\n  },\n  github: {\n    icon: "/assets/5d69e29f0d71aaa04ed9725100199b4e.png",\n    link: "https://github.com/{{user}}"\n  }\n});\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/defaultConnections.js?');
-			},
-			"./UserDetails/modules/data/translations/index.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('var _en_US_json__WEBPACK_IMPORTED_MODULE_2___namespace_cache;\nvar _nl_json__WEBPACK_IMPORTED_MODULE_0___namespace_cache;\nvar _de_json__WEBPACK_IMPORTED_MODULE_1___namespace_cache;\nvar _tr_json__WEBPACK_IMPORTED_MODULE_3___namespace_cache;\n__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _nl_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./nl.json */ "./UserDetails/modules/data/translations/nl.json");\n/* harmony import */ var _de_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./de.json */ "./UserDetails/modules/data/translations/de.json");\n/* harmony import */ var _en_US_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./en-US.json */ "./UserDetails/modules/data/translations/en-US.json");\n/* harmony import */ var _tr_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tr.json */ "./UserDetails/modules/data/translations/tr.json");\n/* harmony import */ var _fr_json__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./fr.json */ "./UserDetails/modules/data/translations/fr.json");\n/* harmony import */ var _vi_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./vi.json */ "./UserDetails/modules/data/translations/vi.json");\n/* harmony import */ var _es_ES_json__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./es-ES.json */ "./UserDetails/modules/data/translations/es-ES.json");\n/* harmony import */ var _sv_SE_json__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./sv-SE.json */ "./UserDetails/modules/data/translations/sv-SE.json");\n\n\n\n\n\n\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({\n  "en-US": /*#__PURE__*/ (_en_US_json__WEBPACK_IMPORTED_MODULE_2___namespace_cache || (_en_US_json__WEBPACK_IMPORTED_MODULE_2___namespace_cache = __webpack_require__.t(_en_US_json__WEBPACK_IMPORTED_MODULE_2__, 2))),\n  "es-ES": _es_ES_json__WEBPACK_IMPORTED_MODULE_6__,\n  "sv-SE": _sv_SE_json__WEBPACK_IMPORTED_MODULE_7__,\n  nl: /*#__PURE__*/ (_nl_json__WEBPACK_IMPORTED_MODULE_0___namespace_cache || (_nl_json__WEBPACK_IMPORTED_MODULE_0___namespace_cache = __webpack_require__.t(_nl_json__WEBPACK_IMPORTED_MODULE_0__, 2))),\n  de: /*#__PURE__*/ (_de_json__WEBPACK_IMPORTED_MODULE_1___namespace_cache || (_de_json__WEBPACK_IMPORTED_MODULE_1___namespace_cache = __webpack_require__.t(_de_json__WEBPACK_IMPORTED_MODULE_1__, 2))),\n  tr: /*#__PURE__*/ (_tr_json__WEBPACK_IMPORTED_MODULE_3___namespace_cache || (_tr_json__WEBPACK_IMPORTED_MODULE_3___namespace_cache = __webpack_require__.t(_tr_json__WEBPACK_IMPORTED_MODULE_3__, 2))),\n  fr: _fr_json__WEBPACK_IMPORTED_MODULE_4__,\n  vi: _vi_json__WEBPACK_IMPORTED_MODULE_5__\n});\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/data/translations/index.js?');
-			},
-			"./UserDetails/modules/logger.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ Logger)\n/* harmony export */ });\n/* harmony import */ var _package_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../package.json */ "./UserDetails/package.json");\n\nclass Logger {\n  static error(...message) {\n    this._log("error", ...message);\n  }\n\n  static warn(...message) {\n    this._log("warn", ...message);\n  }\n\n  static info(...message) {\n    this._log("info", ...message);\n  }\n\n  static log(...message) {\n    this._log("log", ...message);\n  }\n\n  static _log(level = "log", ...message) {\n    console[level](`%c[${_package_json__WEBPACK_IMPORTED_MODULE_0__.info.name}]%c`, "color: #0870f3; font-weight: 700;", "", ...message);\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/logger.js?');
-			},
-			"./UserDetails/modules/queue.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ WaitQueue)\n/* harmony export */ });\n/* harmony import */ var _logger__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./logger */ "./UserDetails/modules/logger.js");\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\n\nclass WaitQueue {\n  constructor({\n    autostart = true,\n    functions = [],\n    delay = 1000\n  } = {}) {\n    _defineProperty(this, "next", () => {\n      if (!this.functions.length || this.paused) return this.running = false;\n      this.running = true;\n\n      this._runCallback(this.functions.shift()).then(() => setTimeout(this.next, this.delay));\n    });\n\n    _defineProperty(this, "continue", () => {\n      this.paused = false;\n      this.next();\n    });\n\n    _defineProperty(this, "pause", () => {\n      this.paused = true;\n    });\n\n    this.autostart = autostart;\n    this.functions = functions;\n    this.delay = delay;\n    if (this.autostart && functions.length) this.next();\n  }\n\n  add(callback, caller, event) {\n    const func = async () => {\n      event.reply("done", await callback());\n    };\n\n    func.__caller = caller;\n\n    func.__error = error => {\n      event.reply("error", error);\n    };\n\n    this.functions.push(func);\n    event.on("cancel", () => {\n      const index = this.functions.indexOf(func);\n      if (index == -1) return;\n      this.functions.splice(index, 1);\n    });\n    if (this.autostart && !this.running) this.next();\n  }\n\n  async _runCallback(callback) {\n    if (typeof callback !== "function") return;\n\n    try {\n      await callback();\n    } catch (error) {\n      _logger__WEBPACK_IMPORTED_MODULE_0__.default.error(`Could not run callback for "${callback.__caller}":`, "\\n", error);\n\n      callback.__error(error);\n    }\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/queue.js?');
-			},
-			"./UserDetails/modules/stores/joinedAt.ts": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _discord_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @discord/actions */ "@discord/actions");\n/* harmony import */ var _discord_actions__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_discord_actions__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @discord/flux */ "@discord/flux");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_discord_flux__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _discord_modules__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @discord/modules */ "@discord/modules");\n/* harmony import */ var _discord_modules__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_discord_modules__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @discord/stores */ "@discord/stores");\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_discord_stores__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @discord/utils */ "@discord/utils");\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_discord_utils__WEBPACK_IMPORTED_MODULE_4__);\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\n\n\n\n\n\nconst JoinedAtDates = new Map(),\n      fetchingQueue = new Set();\nconst JoinedAt = new class extends _discord_flux__WEBPACK_IMPORTED_MODULE_1__.Store {\n  resolveId(...args) {\n    return args.join("_");\n  }\n\n  constructor() {\n    super(_discord_modules__WEBPACK_IMPORTED_MODULE_2__.Dispatcher, {});\n\n    _defineProperty(this, "logger", new _discord_utils__WEBPACK_IMPORTED_MODULE_4__.Logger("JoinedAtStore"));\n  }\n\n  getState() {\n    return JoinedAtDates;\n  }\n\n  has(guildId, userId) {\n    return JoinedAtDates.has(this.resolveId(guildId, userId));\n  }\n\n  isFetching(guildId, userId) {\n    return fetchingQueue.has(this.resolveId(guildId, userId));\n  }\n\n  getDate(guildId, userId) {\n    const data = JoinedAtDates.get(this.resolveId(guildId, userId));\n    if (!data || Date.now() - data.fetch > 600000) return;\n    return data;\n  }\n\n  registerCallback(guildId, userId, callback) {\n    const handleCallback = data => {\n      if (data.guildId !== guildId) return;\n      callback(data);\n      _discord_modules__WEBPACK_IMPORTED_MODULE_2__.Dispatcher.unsubscribe("GUILD_MEMBERS_CHUNK", handleCallback);\n    }; // @ts-ignore\n\n\n    _discord_modules__WEBPACK_IMPORTED_MODULE_2__.Dispatcher.subscribe("GUILD_MEMBERS_CHUNK", handleCallback);\n  }\n\n  setFailed(id, reason) {\n    JoinedAtDates.set(id, {\n      data: reason,\n      fetch: Date.now(),\n      status: "failure"\n    });\n    this.emitChange();\n  }\n\n  async fetch(guildId, userId) {\n    const id = this.resolveId(guildId, userId);\n    if (fetchingQueue.has(id)) return;\n    fetchingQueue.add(id);\n\n    if (_discord_stores__WEBPACK_IMPORTED_MODULE_3__.Members.getMember(guildId, userId)) {\n      JoinedAtDates.set(id, {\n        data: new Date(_discord_stores__WEBPACK_IMPORTED_MODULE_3__.Members.getMember(guildId, userId).joinedAt),\n        fetch: Date.now(),\n        status: "success"\n      });\n      return this.emitChange();\n    }\n\n    const timeout = setTimeout(() => {\n      this.setFailed(id, "FAILED_TO_FETCH");\n      this.logger.error("Request timed out, didn\'t got a response after 1 minute.");\n    }, 6 * 10000);\n    this.registerCallback(guildId, userId, data => {\n      if (data.notFound.indexOf(userId) > -1) {\n        this.setFailed(id, "MEMBER_WAS_NOT_FOUND");\n      } else {\n        const member = data.members.find(e => e?.user?.id === userId);\n\n        if (member) {\n          // double check because discord :poop:\n          JoinedAtDates.set(id, {\n            data: new Date(member.joined_at),\n            fetch: Date.now(),\n            status: "success"\n          });\n        } else {\n          this.setFailed(id, "MEMBER_WAS_NOT_FOUND");\n          this.logger.info(`Member ${userId} of guild ${guildId} was not found!`);\n        }\n      }\n\n      fetchingQueue.delete(id);\n      clearTimeout(timeout);\n      this.emitChange();\n    });\n    _discord_actions__WEBPACK_IMPORTED_MODULE_0__.GuildActions.requestMembersById(guildId, userId);\n  }\n\n}();\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (JoinedAt);\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/stores/joinedAt.ts?');
-			},
-			"./UserDetails/modules/stores/lastMessage.ts": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _discord_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @discord/constants */ "@discord/constants");\n/* harmony import */ var _discord_constants__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_discord_constants__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @discord/flux */ "@discord/flux");\n/* harmony import */ var _discord_flux__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_discord_flux__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _discord_modules__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @discord/modules */ "@discord/modules");\n/* harmony import */ var _discord_modules__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_discord_modules__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _discord_sanitize__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @discord/sanitize */ "@discord/sanitize");\n/* harmony import */ var _discord_sanitize__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_discord_sanitize__WEBPACK_IMPORTED_MODULE_3__);\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @discord/utils */ "@discord/utils");\n/* harmony import */ var _discord_utils__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_discord_utils__WEBPACK_IMPORTED_MODULE_4__);\n/* harmony import */ var _zlibrary_discord__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @zlibrary/discord */ "@zlibrary/discord");\n/* harmony import */ var _zlibrary_discord__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_zlibrary_discord__WEBPACK_IMPORTED_MODULE_5__);\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\n/// <reference path="../../../bdbuilder/typings/main.d.ts" />\n\n\n\n\n\n\n\nfunction resolveId(...args) {\n  return args.join("_");\n}\n\nconst fetchingQueue = new Set(),\n      lastMessages = new Map();\n\nfunction handleMessageCreate({\n  message,\n  channelId\n}) {\n  lastMessages.set(resolveId(message.author.id, channelId), {\n    channelId: channelId,\n    messageId: message.id,\n    data: new Date(message.timestamp),\n    fetch: Date.now(),\n    status: "success"\n  });\n  LastMessage.emitChange();\n}\n\nfunction handleMessageDelete({\n  messageId,\n  channelId\n}) {\n  for (const [userId, result] of lastMessages) {\n    if (result.messageId !== messageId || result.channelId !== channelId) continue;\n    lastMessages.delete(resolveId(userId, channelId));\n    LastMessage.emitChange();\n  }\n}\n\nclass LastMessageStore extends _discord_flux__WEBPACK_IMPORTED_MODULE_1__.Store {\n  constructor(...args) {\n    super(...args);\n\n    _defineProperty(this, "paused", false);\n\n    _defineProperty(this, "logger", new _discord_utils__WEBPACK_IMPORTED_MODULE_4__.Logger("LastMessageStore"));\n\n    _defineProperty(this, "MAX_RETRIES", 5);\n  }\n\n  get _users() {\n    return lastMessages;\n  }\n\n  isFetching(userId, channelId) {\n    return fetchingQueue.has(resolveId(userId, channelId));\n  }\n\n  get(userId, channelId) {\n    const cached = lastMessages.get(resolveId(userId, channelId));\n    if (!cached || Date.now() - cached.fetch > 600000) return null;\n    return cached;\n  }\n\n  has(userId, channelId) {\n    return lastMessages.has(resolveId(userId, channelId));\n  }\n\n  fetch(userId, roomId, isGuild = false, attemp = 1) {\n    const id = resolveId(userId, roomId);\n    if (fetchingQueue.has(id) || this.paused) return Promise.resolve();\n\n    if (attemp > this.MAX_RETRIES) {\n      fetchingQueue.delete(id);\n      lastMessages.set(id, {\n        channelId: roomId,\n        data: "FAILED_TO_FETCH",\n        fetch: Date.now(),\n        messageId: null,\n        status: "failure"\n      });\n      this.logger.error(`Request failed after ${this.MAX_RETRIES} attempts.`);\n      return Promise.resolve();\n    }\n\n    fetchingQueue.add(id);\n    return new Promise((resolve, reject) => {\n      _zlibrary_discord__WEBPACK_IMPORTED_MODULE_5__.APIModule.get({\n        url: isGuild ? _discord_constants__WEBPACK_IMPORTED_MODULE_0__.Endpoints.SEARCH_GUILD(roomId) : _discord_constants__WEBPACK_IMPORTED_MODULE_0__.Endpoints.SEARCH_CHANNEL(roomId),\n        query: (0,_discord_sanitize__WEBPACK_IMPORTED_MODULE_3__.stringify)({\n          author_id: userId\n        })\n      }).then(data => {\n        fetchingQueue.delete(id);\n        let message = null;\n        if (data?.body?.messages?.length) for (const result of data.body.messages[0]) {\n          if (result.hit && result.author.id === userId) {\n            message = result;\n            break;\n          }\n        }\n\n        if (message) {\n          lastMessages.set(id, {\n            data: new Date(message.timestamp),\n            fetch: Date.now(),\n            channelId: message.channel_id,\n            messageId: message.id,\n            status: "success"\n          });\n        } else {\n          lastMessages.set(id, {\n            data: "FAILED_TO_FETCH",\n            fetch: Date.now(),\n            channelId: roomId,\n            messageId: null,\n            status: "failure"\n          });\n          this.logger.info(`No messages for ${userId} were found in ${roomId}.`);\n        }\n\n        this.emitChange();\n        resolve();\n      }).catch(error => {\n        if (error.status === 429) {\n          this.paused = true;\n          setTimeout(() => {\n            this.paused = false;\n            this.fetch(userId, roomId, isGuild, attemp).then(resolve).catch(reject);\n          }, error.body.retry_after + 1000);\n        } else {\n          reject(error);\n        }\n\n        fetchingQueue.delete(id);\n      });\n    });\n  }\n\n}\n\nconst LastMessage = new LastMessageStore(_discord_modules__WEBPACK_IMPORTED_MODULE_2__.Dispatcher, {\n  MESSAGE_CREATE: handleMessageCreate,\n  MESSAGE_DELETE: handleMessageDelete\n});\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LastMessage);\n\n//# sourceURL=webpack://LibraryPluginHack/./UserDetails/modules/stores/lastMessage.ts?');
-			},
-			"./bdbuilder/common/apis/clyde.ts": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "DefaultMessage": () => (/* binding */ DefaultMessage),\n/* harmony export */   "sendMessage": () => (/* binding */ sendMessage),\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nconst DefaultMessage = {\n  state: "SENT",\n  author: {\n    avatar: "betterdiscord",\n    id: "81388395867156480",\n    bot: true,\n    discriminator: "5000",\n    username: "BetterDiscord"\n  },\n  content: "Hello <:zere_zoom:477825238172958730>"\n};\nconst MessageCreators = BdApi.findModuleByProps("createBotMessage");\nconst MessageActions = BdApi.findModuleByProps("receiveMessage");\nconst AvatarDefaults = BdApi.findModuleByProps("BOT_AVATARS");\n\nif (AvatarDefaults?.BOT_AVATARS && !AvatarDefaults.BOT_AVATARS.betterdiscord) {\n  AvatarDefaults.BOT_AVATARS.betterdiscord = "https://github.com/BetterDiscord.png";\n}\n\nfunction sendMessage(channelId, message) {\n  MessageActions.receiveMessage(channelId, Object.assign({}, MessageCreators.createBotMessage(channelId, message?.content), DefaultMessage, message));\n}\nconst Clyde = {\n  sendMessage,\n  DefaultMessage\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Clyde);\n\n//# sourceURL=webpack://LibraryPluginHack/./bdbuilder/common/apis/clyde.ts?');
-			},
-			"./bdbuilder/common/apis/commands.ts": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "DiscordCommands": () => (/* binding */ DiscordCommands),\n/* harmony export */   "Types": () => (/* binding */ Types),\n/* harmony export */   "OptionTypes": () => (/* binding */ OptionTypes),\n/* harmony export */   "PermissionTypes": () => (/* binding */ PermissionTypes),\n/* harmony export */   "registerCommand": () => (/* binding */ registerCommand),\n/* harmony export */   "unregisterAllCommands": () => (/* binding */ unregisterAllCommands),\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nconst DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");\nconst DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");\n/* Aliases */\n\nconst Types = DiscordCommandTypes.ApplicationCommandType;\nconst OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;\nconst PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;\n\nif (!DiscordCommands.BUILT_IN_SECTIONS.some(e => e.id === "betterdiscord")) {\n  DiscordCommands.BUILT_IN_SECTIONS.push({\n    icon: "https://github.com/BetterDiscord.png",\n    id: "betterdiscord",\n    name: "BetterDiscord",\n    type: 0\n  });\n}\n\nfunction registerCommand(caller, options) {\n  const cmd = Object.assign({}, options, {\n    __registerId: caller,\n    applicationId: "betterdiscord",\n    type: Types.BOT,\n    target: 1\n  });\n  DiscordCommands.BUILT_IN_COMMANDS.push(cmd);\n  return () => {\n    const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);\n    if (index < 0) return false;\n    DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);\n  };\n}\nfunction unregisterAllCommands(caller) {\n  let index = DiscordCommands.BUILT_IN_COMMANDS.findIndex(cmd => cmd.__registerId === caller);\n\n  while (index > -1) {\n    DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);\n    index = DiscordCommands.BUILT_IN_COMMANDS.findIndex(cmd => cmd.__registerId === caller);\n  }\n}\nconst Commands = {\n  registerCommand,\n  unregisterAllCommands\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Commands);\n\n//# sourceURL=webpack://LibraryPluginHack/./bdbuilder/common/apis/commands.ts?');
-			},
-			"./bdbuilder/common/apis/strings.ts": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "addStrings": () => (/* binding */ addStrings),\n/* harmony export */   "removeStrings": () => (/* binding */ removeStrings),\n/* harmony export */   "addStringsObject": () => (/* binding */ addStringsObject),\n/* harmony export */   "removeStringsObject": () => (/* binding */ removeStringsObject),\n/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @discord/i18n */ "@discord/i18n");\n/* harmony import */ var _discord_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_discord_i18n__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @discord/stores */ "@discord/stores");\n/* harmony import */ var _discord_stores__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_discord_stores__WEBPACK_IMPORTED_MODULE_1__);\n\n\nconst loadedStrings = {}; // @ts-ignore\n\n_discord_stores__WEBPACK_IMPORTED_MODULE_1__.SettingsStore.addChangeListener(injectStrings);\n\nfunction injectStrings() {\n  Object.assign((_discord_i18n__WEBPACK_IMPORTED_MODULE_0___default()._proxyContext.messages), loadedStrings[_discord_i18n__WEBPACK_IMPORTED_MODULE_0___default().getLocale()] ?? {});\n  if (loadedStrings["en-US"]) Object.assign((_discord_i18n__WEBPACK_IMPORTED_MODULE_0___default()._proxyContext.defaultMessages), loadedStrings["en-US"]);\n}\n\nfunction addStrings(locale, strings) {\n  if (!loadedStrings[locale]) loadedStrings[locale] = {};\n  Object.assign(loadedStrings[locale], strings);\n  injectStrings();\n}\nfunction removeStrings(locale, strings) {\n  if (!loadedStrings[locale]) return;\n\n  for (let str in strings) {\n    delete loadedStrings[locale][str];\n  }\n\n  injectStrings();\n}\nfunction addStringsObject(strings) {\n  for (let locale in strings) {\n    addStrings(locale, strings[locale]);\n  }\n}\nfunction removeStringsObject(strings) {\n  for (let locale in strings) {\n    removeStrings(locale, strings[locale]);\n  }\n}\nconst LocaleManager = {\n  addStringsObject,\n  addStrings,\n  removeStringsObject,\n  removeStrings\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LocaleManager);\n\n//# sourceURL=webpack://LibraryPluginHack/./bdbuilder/common/apis/strings.ts?');
-			},
-			"./bdbuilder/common/classes/updater.js": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ Updater)\n/* harmony export */ });\nclass Updater {\n  constructor() {\n    const updates = this.events = Array.from(arguments).flat(10);\n\n    for (const event of updates) {\n      if (~["on", "off", "subscribe", "unsubscribe", "events"].indexOf(event)) continue;\n\n      const eventFunction = this[event] = listener => eventFunction.on(listener);\n\n      Object.assign(eventFunction, {\n        listeners: new Set(),\n\n        subscribe(listener) {\n          if (typeof listener !== "function") throw new Error("Argument \'Listener\' must be a function. Received " + typeof listener);\n          return this.listeners.add(listener), () => this.listeners.delete(listener);\n        },\n\n        unsubscribe(listener) {\n          return this.listeners.delete(listener);\n        },\n\n        emit(...args) {\n          return this.listeners.forEach(listener => listener(...args));\n        },\n\n        get on() {\n          return this.subscribe;\n        },\n\n        get off() {\n          return this.unsubscribe;\n        }\n\n      });\n    }\n  }\n\n  unsubscribe(event, listener) {\n    if (!this[event] || typeof listener !== "function") throw new Error("Invalid arguments.");\n    return this[event].unsubscribe(listener);\n  }\n\n  subscribe(event, listener) {\n    if (!this[event] || typeof listener !== "function") throw new Error("Invalid arguments.");\n    return this[event].subscribe(listener);\n  }\n\n  emit(event, ...args) {\n    if (!this[event]) throw new Error("Invalid arguments.");\n    return this[event].emit(...args);\n  }\n\n  emitAll(...args) {\n    for (const event of this.events) {\n      this[event].emit(...args);\n    }\n  }\n\n  get on() {\n    return this.subscribe;\n  }\n\n  get off() {\n    return this.unsubscribe;\n  }\n\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./bdbuilder/common/classes/updater.js?');
-			},
-			"./bdbuilder/common/util/noerror.ts": (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-				eval('__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   "default": () => (/* binding */ SuppressErrors)\n/* harmony export */ });\nfunction SuppressErrors(func, onError = () => {}) {\n  const wrapped = function () {\n    try {\n      return func.apply(this, arguments);\n    } catch (error) {\n      onError(error);\n    }\n  };\n\n  Object.assign(wrapped, func);\n\n  wrapped.toString = () => func.toString();\n\n  return wrapped;\n}\n\n//# sourceURL=webpack://LibraryPluginHack/./bdbuilder/common/util/noerror.ts?');
-			},
-			"./bdbuilder/node_modules/css-loader/dist/runtime/api.js": module => {
-				eval('\n\n/*\n  MIT License http://www.opensource.org/licenses/mit-license.php\n  Author Tobias Koppers @sokra\n*/\n// css base code, injected by the css-loader\n// eslint-disable-next-line func-names\nmodule.exports = function (cssWithMappingToString) {\n  var list = []; // return the list of modules as css string\n\n  list.toString = function toString() {\n    return this.map(function (item) {\n      var content = cssWithMappingToString(item);\n\n      if (item[2]) {\n        return "@media ".concat(item[2], " {").concat(content, "}");\n      }\n\n      return content;\n    }).join("");\n  }; // import a list of modules into the list\n  // eslint-disable-next-line func-names\n\n\n  list.i = function (modules, mediaQuery, dedupe) {\n    if (typeof modules === "string") {\n      // eslint-disable-next-line no-param-reassign\n      modules = [[null, modules, ""]];\n    }\n\n    var alreadyImportedModules = {};\n\n    if (dedupe) {\n      for (var i = 0; i < this.length; i++) {\n        // eslint-disable-next-line prefer-destructuring\n        var id = this[i][0];\n\n        if (id != null) {\n          alreadyImportedModules[id] = true;\n        }\n      }\n    }\n\n    for (var _i = 0; _i < modules.length; _i++) {\n      var item = [].concat(modules[_i]);\n\n      if (dedupe && alreadyImportedModules[item[0]]) {\n        // eslint-disable-next-line no-continue\n        continue;\n      }\n\n      if (mediaQuery) {\n        if (!item[2]) {\n          item[2] = mediaQuery;\n        } else {\n          item[2] = "".concat(mediaQuery, " and ").concat(item[2]);\n        }\n      }\n\n      list.push(item);\n    }\n  };\n\n  return list;\n};\n\n//# sourceURL=webpack://LibraryPluginHack/./bdbuilder/node_modules/css-loader/dist/runtime/api.js?');
-			},
-			"@zlibrary/plugin": module => {
-				module.exports = BasePlugin;
-			},
-			react: module => {
+			832: module => {
 				module.exports = BdApi.React;
-			},
-			"react-dom": module => {
-				module.exports = BdApi.ReactDOM;
-			},
-			"@zlibrary": module => {
-				module.exports = PluginApi;
-			},
-			"@zlibrary/discord": module => {
-				module.exports = PluginApi.DiscordModules;
-			},
-			styles: module => {
-				module.exports = StyleLoader;
-			},
-			"@discord/actions": module => {
-				module.exports = Modules["@discord/actions"];
-			},
-			"@discord/components": module => {
-				module.exports = Modules["@discord/components"];
-			},
-			"@discord/connections": module => {
-				module.exports = Modules["@discord/connections"];
-			},
-			"@discord/constants": module => {
-				module.exports = Modules["@discord/constants"];
-			},
-			"@discord/flux": module => {
-				module.exports = Modules["@discord/flux"];
-			},
-			"@discord/forms": module => {
-				module.exports = Modules["@discord/forms"];
-			},
-			"@discord/i18n": module => {
-				module.exports = Modules["@discord/i18n"];
-			},
-			"@discord/modules": module => {
-				module.exports = Modules["@discord/modules"];
-			},
-			"@discord/sanitize": module => {
-				module.exports = Modules["@discord/sanitize"];
-			},
-			"@discord/stores": module => {
-				module.exports = Modules["@discord/stores"];
-			},
-			"@discord/utils": module => {
-				module.exports = Modules["@discord/utils"];
 			}
 		};
 		var __webpack_module_cache__ = {};
@@ -584,7 +2586,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__("./UserDetails/index.js");
+		var __webpack_exports__ = __webpack_require__(214);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

@@ -188,13 +188,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return ___createMemoize___(this, 'SelectedChannels', () => BdApi.findModuleByProps('getChannelId', 'getLastSelectedChannelId'))
 				},
 				get 'Info'() {
-					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getCurrentUser'))
+					return ___createMemoize___(this, 'Info', () => BdApi.findModuleByProps('getSessionId'))
 				},
 				get 'Status'() {
 					return ___createMemoize___(this, 'Status', () => BdApi.findModuleByProps('getStatus'))
 				},
 				get 'Users'() {
-					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser'))
+					return ___createMemoize___(this, 'Users', () => BdApi.findModuleByProps('getUser', 'getCurrentUser'))
 				},
 				get 'SettingsStore'() {
 					return ___createMemoize___(this, 'SettingsStore', () => BdApi.findModuleByProps('afkTimeout', 'status'))
@@ -221,6 +221,9 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			'@discord/actions': {
 				get 'ProfileActions'() {
 					return ___createMemoize___(this, 'ProfileActions', () => BdApi.findModuleByProps('fetchProfile'))
+				},
+				get 'GuildActions'() {
+					return ___createMemoize___(this, 'GuildActions', () => BdApi.findModuleByProps('requestMembersById'))
 				}
 			},
 			get '@discord/i18n'() {
@@ -276,7 +279,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 			}
 		};
 		var __webpack_modules__ = {
-			901: (module, __webpack_exports__, __webpack_require__) => {
+			36: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -292,7 +295,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			571: (module, __webpack_exports__, __webpack_require__) => {
+			713: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -301,9 +304,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
 					return i[1];
 				}));
-				___CSS_LOADER_EXPORT___.push([module.id, "#voicechatnotifications{position:absolute;left:20px;z-index:9}.VoiceChatNotifications-notification-container{min-width:220px;margin-top:20px;position:relative;align-items:center;overflow:hidden;display:flex;pointer-events:all;padding:15px;border-radius:4px}.VoiceChatNotifications-notification-closeButton{color:#ddd;position:absolute;right:3px;top:3px;opacity:.7}.VoiceChatNotifications-notification-progress{bottom:0;height:3px;position:absolute;width:100%;left:0}.VoiceChatNotifications-notification-progressBar{height:3px;background:#0870f3}.VoiceChatNotifications-notification-content{color:#ddd;display:flex}.VoiceChatNotifications-notification-closeButton:hover{opacity:1}.VoiceChatNotifications-notification-wrapper{display:flex;flex-direction:column;margin-left:10px}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header{display:flex;flex-direction:row}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-username{color:#fff;font-weight:700}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-timestamp{font-size:.75rem;padding-top:3px;color:var(--channels-default)}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-message{line-height:10px}", ""]);
+				___CSS_LOADER_EXPORT___.push([module.id, "#voicechatnotifications{position:absolute;z-index:999}#voicechatnotifications .VoiceChatNotifications-notification-container{z-index:999}.VoiceChatNotifications-notification-container{min-width:220px;margin-top:20px;position:relative;align-items:center;overflow:hidden;display:flex;pointer-events:all;padding:15px;border-radius:4px}.VoiceChatNotifications-notification-topLeft{left:20px}.VoiceChatNotifications-notification-topRight{right:20px}.VoiceChatNotifications-notification-bottomLeft{bottom:20px;left:20px}.VoiceChatNotifications-notification-bottomRight{bottom:20px;right:20px}.VoiceChatNotifications-notification-closeButton{color:#ddd;position:absolute;right:3px;top:3px;opacity:.7}.VoiceChatNotifications-notification-progress{bottom:0;height:3px;position:absolute;width:100%;left:0}.VoiceChatNotifications-notification-progressBar{height:3px;background:#0870f3}.VoiceChatNotifications-notification-content{color:#ddd;display:flex}.VoiceChatNotifications-notification-closeButton:hover{opacity:1}.VoiceChatNotifications-notification-wrapper{display:flex;flex-direction:column;margin-left:10px}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header{display:flex;flex-direction:row}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-username{color:#fff;font-weight:700}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-header .VoiceChatNotifications-notification-timestamp{font-size:.75rem;padding-top:3px;color:var(--channels-default)}.VoiceChatNotifications-notification-wrapper .VoiceChatNotifications-notification-message{line-height:10px}", ""]);
 				___CSS_LOADER_EXPORT___.locals = {
 					container: "VoiceChatNotifications-notification-container",
+					topLeft: "VoiceChatNotifications-notification-topLeft",
+					topRight: "VoiceChatNotifications-notification-topRight",
+					bottomLeft: "VoiceChatNotifications-notification-bottomLeft",
+					bottomRight: "VoiceChatNotifications-notification-bottomRight",
 					closeButton: "VoiceChatNotifications-notification-closeButton",
 					progress: "VoiceChatNotifications-notification-progress",
 					progressBar: "VoiceChatNotifications-notification-progressBar",
@@ -317,7 +324,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			0: (module, __webpack_exports__, __webpack_require__) => {
+			865: (module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.d(__webpack_exports__, {
 					Z: () => __WEBPACK_DEFAULT_EXPORT__
 				});
@@ -336,7 +343,32 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
 				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
 			},
-			101: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+			911: (module, __webpack_exports__, __webpack_require__) => {
+				__webpack_require__.d(__webpack_exports__, {
+					Z: () => __WEBPACK_DEFAULT_EXPORT__
+				});
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(645);
+				var _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+				var ___CSS_LOADER_EXPORT___ = _css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()((function(i) {
+					return i[1];
+				}));
+				___CSS_LOADER_EXPORT___.push([module.id, ".VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact{position:inherit}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header{display:flex;align-items:center;justify-content:space-between;padding:2px;padding-left:10px;text-transform:uppercase;font-weight:600;font-size:.9rem}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-caret{float:right;display:inline-flex;color:var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-stroke{background-color:var(--background-modifier-accent);height:2px;flex:1;margin:0 5px 0 10px}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-header .VoiceChatNotifications-category-label{color:var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-compact .VoiceChatNotifications-category-content{padding-left:20px;width:calc(100% - 40px)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default{background:rgba(32,34,37,.3);border:1px solid #202225;margin:5px;cursor:pointer;border-radius:3px;--color: var(--interactive-normal)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default:hover{--color: var(--interactive-hover)}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header{padding-right:5px;padding:10px 15px;padding-bottom:0;display:flex;align-items:center;justify-content:space-between}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-stroke{display:none}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-divider{position:relative}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-label{font-size:1rem;font-weight:600;color:#fff;text-transform:uppercase}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default .VoiceChatNotifications-category-header .VoiceChatNotifications-category-caret{color:var(--color);transition:color .3s}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default.VoiceChatNotifications-category-opened .VoiceChatNotifications-category-content{padding:8px}.VoiceChatNotifications-category-category.VoiceChatNotifications-category-default.VoiceChatNotifications-category-opened .VoiceChatNotifications-category-header{background:rgba(32,34,37,.6)}", ""]);
+				___CSS_LOADER_EXPORT___.locals = {
+					category: "VoiceChatNotifications-category-category",
+					compact: "VoiceChatNotifications-category-compact",
+					header: "VoiceChatNotifications-category-header",
+					caret: "VoiceChatNotifications-category-caret",
+					stroke: "VoiceChatNotifications-category-stroke",
+					label: "VoiceChatNotifications-category-label",
+					content: "VoiceChatNotifications-category-content",
+					default: "VoiceChatNotifications-category-default",
+					divider: "VoiceChatNotifications-category-divider",
+					opened: "VoiceChatNotifications-category-opened"
+				};
+				StyleLoader.append(module.id, ___CSS_LOADER_EXPORT___.toString());
+				const __WEBPACK_DEFAULT_EXPORT__ = Object.assign(___CSS_LOADER_EXPORT___, ___CSS_LOADER_EXPORT___.locals);
+			},
+			856: (__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 				__webpack_require__.r(__webpack_exports__);
 				__webpack_require__.d(__webpack_exports__, {
 					default: () => VoiceChatNotifications
@@ -348,7 +380,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				const external_BasePlugin_namespaceObject = BasePlugin;
 				var external_BasePlugin_default = __webpack_require__.n(external_BasePlugin_namespaceObject);
 				const components_namespaceObject = Modules["@discord/components"];
-				var components_button = __webpack_require__(901);
+				var components_button = __webpack_require__(36);
 				var React = __webpack_require__(832);
 				function _extends() {
 					_extends = Object.assign || function(target) {
@@ -396,7 +428,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					return obj;
 				}
 				class SettingsManager extends flux_namespaceObject.Store {
-					constructor(pluginName) {
+					constructor(pluginName, defaultSettings = {}) {
 						super(modules_namespaceObject.Dispatcher, {});
 						_defineProperty(this, "settings", void 0);
 						_defineProperty(this, "pluginName", void 0);
@@ -408,13 +440,13 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							return value;
 						}));
 						this.pluginName = pluginName;
-						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, {});
+						this.settings = external_PluginApi_namespaceObject.PluginUtilities.loadSettings(pluginName, defaultSettings);
 					}
 				}
 				const package_namespaceObject = JSON.parse('{"um":{"u2":"VoiceChatNotifications"}}');
 				const Settings = new SettingsManager(package_namespaceObject.um.u2, {});
 				const settings = Settings;
-				var notification = __webpack_require__(571);
+				var notification = __webpack_require__(713);
 				const external_StyleLoader_namespaceObject = StyleLoader;
 				var external_StyleLoader_default = __webpack_require__.n(external_StyleLoader_namespaceObject);
 				const external_PluginApi_DiscordModules_namespaceObject = PluginApi.DiscordModules;
@@ -456,7 +488,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						return collector(api.getState());
 					}, api];
 				}
-				var panel = __webpack_require__(0);
+				var panel = __webpack_require__(865);
 				var panel_React = __webpack_require__(832);
 				const ChannelMessage = external_PluginApi_namespaceObject.WebpackModules.getModule((m => "ChannelMessage" === m?.type?.displayName));
 				const dummyChannel = new classes_namespaceObject.Channel({
@@ -534,6 +566,66 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						}
 					}
 				};
+				const icons_namespaceObject = Modules["@discord/icons"];
+				const utils_namespaceObject = Modules["@discord/utils"];
+				var category = __webpack_require__(911);
+				function Category({
+					label,
+					children,
+					className,
+					look = Category.Looks.DEFAULT
+				}) {
+					const [opened, toggle] = (0, external_BdApi_React_.useState)(false);
+					const isCompact = look === category.Z.compact;
+					return external_BdApi_React_default().createElement("div", {
+						className: (0, utils_namespaceObject.joinClassNames)(className, look, category.Z.category, {
+							[category.Z.opened]: opened
+						})
+					}, external_BdApi_React_default().createElement("div", {
+						className: category.Z.header,
+						onClick: () => toggle(!opened)
+					}, external_BdApi_React_default().createElement("div", {
+						className: category.Z.label
+					}, label), isCompact ? external_BdApi_React_default().createElement("div", {
+						className: category.Z.stroke
+					}) : null, external_BdApi_React_default().createElement(icons_namespaceObject.Caret, {
+						direction: opened ? icons_namespaceObject.Caret.Directions.DOWN : isCompact ? icons_namespaceObject.Caret.Directions.LEFT : icons_namespaceObject.Caret.Directions.RIGHT,
+						className: category.Z.caret
+					})), !isCompact ? external_BdApi_React_default().createElement("div", {
+						className: category.Z.divider
+					}) : null, external_BdApi_React_default().createElement("div", {
+						className: category.Z.content
+					}, opened ? children : null));
+				}
+				Category.Looks = {
+					COMPACT: category.Z.compact,
+					DEFAULT: category.Z.default
+				};
+				var createUpdateWrapper_React = __webpack_require__(832);
+				function createUpdateWrapper_extends() {
+					createUpdateWrapper_extends = Object.assign || function(target) {
+						for (var i = 1; i < arguments.length; i++) {
+							var source = arguments[i];
+							for (var key in source)
+								if (Object.prototype.hasOwnProperty.call(source, key)) target[key] = source[key];
+						}
+						return target;
+					};
+					return createUpdateWrapper_extends.apply(this, arguments);
+				}
+				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange", valueIndex = 0) => props => {
+					const [value, setValue] = createUpdateWrapper_React.useState(props[valueProp]);
+					return createUpdateWrapper_React.createElement(Component, createUpdateWrapper_extends({}, props, {
+						[valueProp]: value,
+						[changeProp]: (...args) => {
+							const value = args[valueIndex];
+							if ("function" === typeof props[changeProp]) props[changeProp](value);
+							setValue(value);
+						}
+					}));
+				};
+				const hooks_createUpdateWrapper = createUpdateWrapper;
+				const forms_namespaceObject = Modules["@discord/forms"];
 				function Settings_extends() {
 					Settings_extends = Object.assign || function(target) {
 						for (var i = 1; i < arguments.length; i++) {
@@ -545,17 +637,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					};
 					return Settings_extends.apply(this, arguments);
 				}
-				const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
-					const [value, setValue] = external_BdApi_React_default().useState(props[valueProp]);
-					return external_BdApi_React_default().createElement(Component, Settings_extends({}, props, {
-						[valueProp]: value,
-						[changeProp]: value => {
-							if ("function" === typeof props[changeProp]) props[changeProp](value);
-							setValue(value);
-						}
-					}));
-				};
-				const SwitchItem = createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+				const SwitchItem = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("SwitchItem"));
+				const NotificationSetting = hooks_createUpdateWrapper(external_PluginApi_namespaceObject.WebpackModules.getByDisplayName("NotificationSettings"), "position", "onChange", 1);
 				const otherSettings = {
 					ignoreSelf: {
 						value: false,
@@ -567,11 +650,6 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						note: "Suppress desktop notifications in DND, this automatically enables the In-App notification api.",
 						name: "Suppress in DND"
 					},
-					inppNotifications: {
-						value: true,
-						note: "Shows In-App Notifications instead of desktop notifications.",
-						name: "In-App Notifications"
-					},
 					notifications: {
 						value: true,
 						note: "Defines if notifications should be shown when an event happens in your current call.",
@@ -579,12 +657,25 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}
 				};
 				function SettingsPanel() {
-					return external_BdApi_React_default().createElement("div", null, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, otherSettings[key], {
+					return external_BdApi_React_default().createElement("div", null, external_BdApi_React_default().createElement(Category, {
+						label: "General",
+						look: Category.Looks.COMPACT
+					}, Object.keys(otherSettings).map((key => external_BdApi_React_default().createElement(SwitchItem, Settings_extends({}, otherSettings[key], {
 						value: settings.get(key, otherSettings[key].value),
 						onChange: value => {
 							settings.set(key, value);
 						}
-					}), otherSettings[key].name))), Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
+					}), otherSettings[key].name))), external_BdApi_React_default().createElement(forms_namespaceObject.FormItem, {
+						title: "InApp Notifications"
+					}, external_BdApi_React_default().createElement(NotificationSetting, {
+						position: settings.get("inappPosition", "topleft"),
+						onChange: value => settings.set("inappPosition", value)
+					}), external_BdApi_React_default().createElement(forms_namespaceObject.FormText, {
+						type: "description"
+					}, "Defines if notifications should be shown when an event happens in your current call."))), external_BdApi_React_default().createElement(Category, {
+						label: "Voice Updates",
+						look: Category.Looks.COMPACT
+					}, Object.keys(constants.VOICE_STATES).reduce(((items, key) => {
 						items.push(external_BdApi_React_default().createElement(SwitchItem, {
 							value: settings.get(key, true),
 							onChange: value => {
@@ -593,9 +684,8 @@ function buildPlugin([BasePlugin, PluginApi]) {
 							note: constants.VOICE_STATES[key].description
 						}, _.upperFirst(key)));
 						return items;
-					}), []));
+					}), [])));
 				}
-				const utils_namespaceObject = Modules["@discord/utils"];
 				const external_Modules_react_spring_namespaceObject = Modules["react-spring"];
 				var notification_React = __webpack_require__(832);
 				function notification_extends() {
@@ -692,10 +782,11 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					notifications: {},
 					paused: false
 				});
+				const DOMNode = Object.assign(document.createElement("div"), {
+					id: "voicechatnotifications",
+					className: "VoiceChatNotifications-notification-" + settings.get("inappPosition", "topleft")
+				});
 				function initialize() {
-					const DOMNode = Object.assign(document.createElement("div"), {
-						id: "voicechatnotifications"
-					});
 					external_BdApi_ReactDOM_default().render(notifications_React.createElement(VoiceNotifications, null), DOMNode);
 					document.getElementById("app-mount").appendChild(DOMNode);
 				}
@@ -728,6 +819,10 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					})));
 					return id;
 				}
+				settings.addChangeListener((() => {
+					const value = settings.get("inappPosition", "topleft");
+					DOMNode.className = "VoiceChatNotifications-notification-" + value;
+				}));
 				function VoiceNotifications() {
 					const state = notifications_useStore((e => Object.entries(e.notifications)));
 					return state.map((([id, props]) => notifications_React.createElement(notification_Notification, notifications_extends({}, props, {
@@ -735,20 +830,26 @@ function buildPlugin([BasePlugin, PluginApi]) {
 					}))));
 				}
 				const DiscordCommands = BdApi.findModuleByProps("BUILT_IN_COMMANDS");
-				if (!DiscordCommands.BUILT_IN_SECTIONS.some((e => "betterdiscord" === e.id))) DiscordCommands.BUILT_IN_SECTIONS.push({
+				const DiscordCommandTypes = BdApi.findModuleByProps("ApplicationCommandType");
+				const Types = DiscordCommandTypes.ApplicationCommandType;
+				const OptionTypes = DiscordCommandTypes.ApplicationCommandOptionType;
+				const PermissionTypes = DiscordCommandTypes.ApplicationCommandPermissionType;
+				if (!DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"]) DiscordCommands.BUILT_IN_SECTIONS["betterdiscord"] = {
 					icon: "https://github.com/BetterDiscord.png",
 					id: "betterdiscord",
 					name: "BetterDiscord",
 					type: 0
-				});
+				};
 				function registerCommand(caller, options) {
 					const cmd = Object.assign({}, options, {
 						__registerId: caller,
-						applicationId: "betterdiscord"
+						applicationId: "betterdiscord",
+						type: Types.BOT,
+						target: 1
 					});
 					DiscordCommands.BUILT_IN_COMMANDS.push(cmd);
 					return () => {
-						const index = DiscordCommands.BUILT_IN_COMMANDS.findIndex((c => c === cmd));
+						const index = DiscordCommands.BUILT_IN_COMMANDS.indexOf(cmd);
 						if (index < 0) return false;
 						DiscordCommands.BUILT_IN_COMMANDS.splice(index, 1);
 					};
@@ -942,7 +1043,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 						channelId
 					}) {
 						if (!settings.get("notifications", true) || LogsPanel.Store.getState().paused) return;
-						const useInApp = settings.get("suppressInDnd", true) && "dnd" === stores_namespaceObject.SettingsStore.status || settings.get("inppNotifications", true);
+						const useInApp = settings.get("suppressInDnd", true) && "dnd" === stores_namespaceObject.SettingsStore.status || "disabled" !== settings.get("inappPosition", "topLeft");
 						if (useInApp) show(VoiceChatNotifications_React.createElement(VoiceChatNotifications_React.Fragment, null, VoiceChatNotifications_React.createElement(AnimatedAvatar, {
 							isMobile: false,
 							status: stores_namespaceObject.Status.getStatus(user.id),
@@ -1059,7 +1160,7 @@ function buildPlugin([BasePlugin, PluginApi]) {
 				});
 			};
 		})();
-		var __webpack_exports__ = __webpack_require__(101);
+		var __webpack_exports__ = __webpack_require__(856);
 		module.exports.LibraryPluginHack = __webpack_exports__;
 	})();
 	const PluginExports = module.exports.LibraryPluginHack;

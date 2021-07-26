@@ -1,0 +1,61 @@
+/* hide nitro tab in DMs */
+#private-channels a[href="/store"] { display: none; }
+/* hide stage discovery in DMs */
+#private-channels a[href="/discovery"] { display: none; }
+
+/* hide red "new" unread messages indicator at the top and bottom of the server list */
+.unreadMentionsIndicatorBottom-2mDYbI, .unreadMentionsIndicatorTop-2-tcdU { display: none; }
+
+/* hide badges from user popout */
+.profileBadges-ohc0Vu { display: none }
+/* hide badges from user profile */
+#.badgeList-1R1WgZ { visibility: hidden }
+
+/* help button in the top-right */
+.toolbar-1t6TWx > a[href="https://support.discord.com"] { display: none; }
+
+
+/* some color difference for ServerFolders plugin folder container */
+ul[role=tree][data-list-id="guildfoldersnav"] > div {
+    background-color: rgba(255,255,255,.01);
+}
+
+
+/* Shorter Bot Tags */
+.botTagVerified-1klIIt + .botText-1526X_ { display: none; }
+.botTagVerified-1klIIt { margin-right: -4px; }
+
+/* Role color background in member list - by Aaron */
+span.roleColor-rz2vM0::after {
+    content: "";
+    background: currentColor;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0.075;
+    left: 0;
+    top: 0;
+}
+
+.setIdentityLink-1t8Ahd {display: none}
+
+.buttons-3JBrkn > .buttonContainer-28fw2U:nth-last-of-type(1) .icon-3D60ES {
+    height: 21px;
+}
+
+.UserBackgrounds-banner-container:not(:hover) .UserBackgrounds-banner-badge { display: none; }
+.UserBackgrounds-banner-container:not(:hover) .UserBackgrounds-banner-arrow { display: none; }
+
+/* UserBackground Plugin My Account fix */
+.accountProfileCard-1XCH88 > .UserBackgrounds-banner-container {
+    height: 100px
+}
+.accountProfileCard-1XCH88 > .UserBackgrounds-banner-container > [data-user-id] {
+    width: 100%;
+    background: center / cover;
+}
+
+#floating-editor-window.resizable {
+    max-height: unset;
+    max-width: unset;
+}
